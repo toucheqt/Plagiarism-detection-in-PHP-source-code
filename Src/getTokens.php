@@ -33,13 +33,23 @@
 			  // get tokens
 			  $this->content = token_get_all(&$this->content);
 			  
-			  foreach($this->content as &$value) {
-				  echo $value[0]."\n";
-				  $value = token_name($value[0]);
+			  // format tokens and remove whitespaces
+			  $tmpArray = array();
+			  $arrayLen = count(&$this->content);
+			  for ($i = 0; $i < $arrayLen; $i++) {
+				  
+				  // dont add whitespaces
+				  if ($this->content[$i][0] != T_WHITESPACE) { 
+					  if (is_numeric($this->content[$i][0])) array_push($tmpArray, token_name($this->content[$i][0]));
+					  else $this->content[$i] = array_push($tmpArray, $this->content[$i]);
+				  }
+				 
 			  }
-			  print_r( $this->content);
+			  $this->content = $tmpArray;
+
+			  $this->content = json_encode(&$this->content);
 			  
-			  //$this->content = json_encode(&$this->content);
+			  print_r($this->content);
 
 			  return true;			  
 		  }
@@ -61,7 +71,7 @@
 		 }
 	 }
 	 
-	 $tokenizer = new Tokenizer("./Tests/EnWhitespace2.php");
+	 $tokenizer = new Tokenizer("./../Tests/EnWhitespace2.php");
 	 //for ($i = 0; $i < 700; $i++) {
 	 $tokenizer->getTokens();
 	//}
