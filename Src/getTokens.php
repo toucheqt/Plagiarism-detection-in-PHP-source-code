@@ -17,12 +17,12 @@
 		  * @param string Filename of file that will be processed. This argument is optional.
 		  */
 		  public function Tokenizer($file = NULL) {
-			  if (!isset($file)) $this->setFile($file);
+			  if (isset($file)) $this->setFile($file);
 			  else {
-				  $this->fileName = NULL;
-				  $this->filePath = NULL;
+				  $this->setFileName();
+				  $this->setFilePath();
 			  }
-			  $this->content = NULL;
+			  $this->setContent();
 		  }
 		  
 		  /**
@@ -31,40 +31,39 @@
 		   * @return bool Returns success of operation.
 		   */
 		  public function getTokens() {
-			  
+
 			  // check if filename is not null
-			  if (!isset($this->fileName)) return false;
-			  
+			  if (!$this->getFileName()) return false;
+
 			  // load file
-			  if (($this->content = file_get_contents($this->filePath . $this->fileName)) === false) return false;
+			  if (($this->setContent(file_get_contents($this->getFilePath() . $this->getFileName()))) === false) return false;
 			  
 			  // get tokens
-			  $this->content = token_get_all(&$this->content);
+			  $this->setContent(token_get_all($this->getContent()));
 			  
 			  // format tokens and remove whitespaces
 			  $tmpArray = array();
-			  $arrayLen = count(&$this->content);
+			  $arrayLen = count($this->getContent());
+			  $srcArray = $this->getContent();
 			  for ($i = 0; $i < $arrayLen; $i++) {
 				  
 				  // dont add whitespaces
-				  if ($this->content[$i][0] != T_WHITESPACE) { 
-					  if (is_numeric($this->content[$i][0])) array_push($tmpArray, token_name($this->content[$i][0]));
-					  else $this->content[$i] = array_push($tmpArray, $this->content[$i]);
+				  if ($srcArray[$i][0] != T_WHITESPACE) {
+					  if (is_numeric($srcArray[$i][0])) array_push($tmpArray, token_name($srcArray[$i][0]));
+					  else $srcArray[$i] = array_push($tmpArray, $srcArray[$i]);
 				  }
 				 
 			  }
-			  $this->content = $tmpArray;
+			  $this->setContent(json_encode($tmpArray));
 
 			  // writes tokens to file
 			  if (!file_exists('./../Tokens')) {
 				  if (!mkdir('./../Tokens')) return false;
 			  }
-			  
-			  if (!file_put_contents('./../Tokens/' . str_replace('.php', '.json', &$this->fileName), &$this->content, FILE_USE_INCLUDE_PATH)) {
+
+			  if (!file_put_contents('./../Tokens/' . str_replace('.php', '.json', $this->getFileName()), $this->getContent(), FILE_USE_INCLUDE_PATH)) {
 				  return false;
 			  }
-
-			  $this->content = json_encode(&$this->content);
 
 			  return true;			  
 		  }
@@ -76,9 +75,9 @@
 		 public function setFile($file) {
 			 
 			 for ($i = strlen(&$file) - 1; $i >= 0; $i--) {
-				 if (!strcmp($file[$i], "/")) {
-					 $this->fileName = substr($file, $i + 1, strlen(&$file) - $i);
-					 $this->filePath = substr($file, 0, $i + 1);
+				 if (!strcmp($file[$i], '/')) {
+					 $this->setFileName(substr($file, $i + 1, strlen($file) - $i));
+					 $this->setFilePath(substr($file, 0, $i + 1));
 					 break;
 				 }		
 			 }		 
@@ -90,6 +89,54 @@
 		  */
 		 public function getFile() {
 			 return $this->filePath . $this->fileName;
+		 }
+
+		 /**
+		  * Setter for class variable filename.
+		  * @param string Name of the file. This is optional argument.
+		  */
+		 private function setFileName($fileName = NULL) {
+			 $this->fileName = $fileName;
+		 }
+		 
+		 /**
+		  * Getter for class variable filename.
+		  * @return string Name of the file.
+		  */
+		 private function getFileName() {
+			 return $this->fileName;
+		 }
+		 
+		 /**
+		  * Setter for class variable filepath.
+		  * @param string Path to the file. This is optional argument.
+		  */
+		 private function setFilePath($filePath = NULL) {
+			 $this->filePath = $filePath;
+		 }
+		 
+		 /**
+		  * Getter for class variable filepath.
+		  * @return string Path to the file.
+		  */
+		 private function getFilePath() {
+			 return $this->filePath;
+		 }
+		 
+		 /**
+		  * Setter for class variable content.
+		  * @param string Sets content of the file. This is optional argument.
+		  */
+		 private function setContent($content = NULL) {
+			 $this->content = $content;
+		 }
+		 
+		 /**
+		  * Getter for class variable content.
+		  * @return string Returns content of the file.
+		  */
+		 private function getContent() {
+			 return $this->content;
 		 }
 	 }
 
