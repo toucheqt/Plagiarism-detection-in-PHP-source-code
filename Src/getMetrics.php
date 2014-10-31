@@ -9,6 +9,9 @@
  
 	class Metrics {
 		
+		// default number of functions in every program is one, becouse all program must contain main method
+		const DEF_FUNCTION_COUNT = 1;
+		
 		// variables with file attributes
 		private $fileName;
 		private $filePath;
@@ -21,23 +24,15 @@
 		 * @param string Filename of file that will be processed. This argument is optional.
 		 */
 		 public function Metrics($file = NULL) {
+			 
 			 if (isset($file)) $this->setFile($file);
 			 else {
-				 $this->fileName = NULL;
-				 $this->filePath = NULL;
+				 $this->setFileName();
+				 $this->setFilePath();
 			 }
-			 $this->content = NULL;
-		 }
-		 
-		 public function getContent() { // dbg private
 			 
-			 // load file
-			 if (($this->content = file_get_contents($this->filePath . $this->fileName)) === false) return false;
+			 $this->setFunctionCount('DEF_FUNCTION_COUNT');
 			 
-			 // decode
-			 $this->content = json_decode(&$this->content);
-			 
-			 print_r( $this->content);
 		 }
 		
 		 /**
@@ -48,11 +43,12 @@
 			 
 			 for ($i = strlen(&$file) - 1; $i >= 0; $i--) {
 				 if (!strcmp($file[$i], '/')) {
-					 $this->fileName = substr($file, $i + 1, strlen(&$file) - $i);
-					 $this->filePath = substr($file, 0, $i + 1);
+					 $this->setFileName(substr($file, $i + 1, strlen($file) - $i));
+					 $this->setFilePath(substr($file, 0, $i + 1));
 					 break;
 				 }		
-			 }		 
+			 }	
+			 	 
 		 }
 		 
 		 /**
@@ -63,11 +59,86 @@
 			 return $this->filePath . $this->fileName;
 		 }
 		 
-		// public function getCount
+		 /**
+		  * Load content of json file, decode the content from json and saves it into class variable content.
+		  */
+		 private function decode() {
+			 
+			 // load file
+			 if (($this->content = file_get_contents($this->filePath . $this->fileName)) === false) return false;
+			 
+			 // decode
+			 $this->content = json_decode(&$this->content);
+			 
+		 }
+		 
+		 /**
+		  * Setter for class variable filename.
+		  * @param string Name of the file. This is optional argument.
+		  */
+		 private function setFileName($fileName = NULL) {
+			 $this->fileName = $fileName;
+		 }
+		 
+		 /**
+		  * Getter for filename stored in this object. 
+		  * @return string Filepath combined with filename.
+		  */
+		 private function getFileName() {
+			 return $this->fileName;
+		 }
+		 
+		 /**
+		  * Setter for class variable filepath.
+		  * @param string Path to the file. This is optional argument.
+		  */
+		 private function setFilePath($filePath = NULL) {
+			 $this->filePath = $filePath;
+		 }
+		 
+		 /**
+		  * Getter for filepath to file stored in this object. 
+		  * @return string Returns file path to the file stored in this object.
+		  */
+		 private function getFilePath() {
+			 return $this->filePath;
+		 }
+		 
+		 /**
+		  * Setter for class variable content.
+		  * @param string Content of the selected file.
+		  */
+		 private function setContent($content) {
+			 $this->content = $content;
+		 }
+		 
+		 /**
+		  * Getter for the content of the file stored in this object.
+		  * @return string Returns content of the file that is stored in this object.
+		  */
+		 private function getContent() {
+			 return $this->content;
+		 }
+		 
+		 /**
+		  * Setter for class variable function count. Sets the number of function tokens in selected json file.
+		  * @param int Number of function tokens in selected file.
+		  */
+		 private function setFunctionCount($count) {
+			 $this->functionCount = $count;
+		 }
+		 
+		 /**
+		  * Getter for class variable function count. 
+		  * @return int Returns count of the appearance of the function tokens in selected json file.
+		  */
+		 private function getFunctionCount() {
+			 return $this->functionCount;
+		 }	 
 	}
 	
-	$metrics = new Metrics("./../Tokens/HelloWorld.json");
-	$metrics->getContent();
+	$metrics = new Metrics("./../Tokens/Function.json");
+	//$metrics->decode();
 
 
 ?>

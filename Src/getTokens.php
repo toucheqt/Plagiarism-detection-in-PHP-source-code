@@ -17,13 +17,16 @@
 		  * @param string Filename of file that will be processed. This argument is optional.
 		  */
 		  public function Tokenizer($file = NULL) {
+			  
 			  if (isset($file)) $this->setFile($file);
 			  else {
 				  $this->setFileName();
 				  $this->setFilePath();
 			  }
 			  $this->setContent();
+			  
 		  }
+		  
 		  
 		  /**
 		   * Method will open selected file and load its content in the string. After that it will transform source code
@@ -65,7 +68,8 @@
 				  return false;
 			  }
 
-			  return true;			  
+			  return true;	
+			  		  
 		  }
 		 
 		 /**
@@ -80,7 +84,8 @@
 					 $this->setFilePath(substr($file, 0, $i + 1));
 					 break;
 				 }		
-			 }		 
+			 }
+			 		 
 		 }
 		 
 		 /**
