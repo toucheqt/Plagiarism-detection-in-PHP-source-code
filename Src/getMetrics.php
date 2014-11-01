@@ -1,10 +1,12 @@
 <?php
 
 /* todo: 1. nactu soubor s jsonem
- * 2. dekoduju to do struktury
- * 3. zkontrolovat pocet funkci/trid/metod
- * 4. vhodne je ulozit
- * 5. haelstedova technika
+ * 2. dekoduju to do struktury - done
+ * 3. zkontrolovat pocet funkci/trid/metod - done
+ * 4. vhodne je ulozit - done
+ * 5. haelstedova technika - nebylo by spatne to udelat tak, ze se to automaticky zkontroluje pro vsechny funkce
+ * a pokud by to pak nekde naslo urcenou podobnost, tak by se to pak dalo projet i pro pripadne vetveni/cykly NEBO by se to
+ * jeste dalo rovnou zapnout parametrem.
  */
  
 	class Metrics {
@@ -31,8 +33,20 @@
 				 $this->setFilePath();
 			 }
 			 
-			 $this->setFunctionCount('DEF_FUNCTION_COUNT');
+			 $this->setFunctionCount(self::DEF_FUNCTION_COUNT);
 			 
+		 }
+		 
+		 /**
+		  * Method will count all functions used in program. In PHP function is either function or class method.
+		  * @return int Count of function declarations used in php file.
+		  */
+		 public function countFunctions() {
+			 
+			 foreach ($this->getContent() as $value) {
+				 if ($value == 'T_FUNCTION') $this->setFunctionCount($this->getFunctionCount() + 1);
+			 }
+
 		 }
 		
 		 /**
@@ -137,8 +151,4 @@
 		 }	 
 	}
 	
-	$metrics = new Metrics("./../Tokens/Function.json");
-	//$metrics->decode();
-
-
 ?>
