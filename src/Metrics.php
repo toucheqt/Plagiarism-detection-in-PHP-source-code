@@ -22,17 +22,10 @@
 		private $functionCount;
 		
 		/**
-		 * Constructor with one argument - filename. This argument will be set to class variable fileName.
-		 * @param string Filename of file that will be processed. This argument is optional.
+		 * Constructor with no argument, that will only initialize class variables.
 		 */
-		 public function Metrics($file = NULL) {
-			 
-			 if (isset($file)) $this->setFile($file);
-			 else {
-				 $this->setFileName();
-				 $this->setFilePath();
-			 }
-			 
+		 public function Metrics() {
+		
 			 $this->setFunctionCount(self::DEF_FUNCTION_COUNT);
 			 
 		 }
@@ -51,6 +44,7 @@
 		
 		 /**
 		  * Setter for file. This could include even filepath to file. Not just name of the file.
+		  * 
 		  * @param string Filename of with optional file path to file.
 		  */
 		 public function setFile($file) {
@@ -61,7 +55,9 @@
 					 $this->setFilePath(substr($file, 0, $i + 1));
 					 break;
 				 }		
-			 }	
+			 }
+			 
+			 if (!decode) return false;
 			 	 
 		 }
 		 

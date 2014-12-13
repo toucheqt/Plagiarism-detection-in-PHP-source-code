@@ -10,29 +10,30 @@
 	
 	class TokensTest extends Tester\TestCase {
 		
-		private $phpFile;
-		private $jsonFile;
+		const srcFilePath = './test-files/';
+		const srcFileName = 'HelloWorld.php';
 		
-		public function TokensTest() {
-			$this->phpFile = './test-files/HelloWorld.php';
-			$this->jsonFile = './../tokens/HelloWorld.json';
-		}
-	
+		const dscFilePath = './../tokens/';
+		const dscFileName = 'HelloWorld.json';
+			
 		public function testTokens() {
 			
 			$object = new Tokenizer();
 			
 			// set filepath and filename to file HelloWorld.php located at ./test-files/
-			$object->setFile($this->phpFile);
+			$object->setFile(self::srcFilePath . self::srcFileName);
 			
-			Assert::same('HelloWorld.php', $object->getFileName());
-			Assert::same('./test-files/', $object->getFilePath());
+			Assert::same(self::srcFileName, $object->getFileName());
+			Assert::same(self::srcFilePath, $object->getFilePath());
 			
 			// get tokens from file and check if whitespaces has been removed
 			Assert::true($object->getTokens());
-			Assert::notContains(T_WHITESPACE, $object->getContent());
+			Assert::notContains('T_WHITESPACE', $object->getContent());
 			
-			Assert::true(file_exists($this->jsonFile));
+			// check end php tag
+			Assert::contains('T_CLOSE_TAG', $object->getContent());
+			
+			Assert::true(file_exists(self::dscFilePath . self::dscFileName));
 			
 		}
 	

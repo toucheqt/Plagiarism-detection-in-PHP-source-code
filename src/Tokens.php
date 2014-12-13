@@ -2,7 +2,7 @@
 
 	 /**
 	  * Class used for transforming source code from one file to stream of tokens and saving them into serialized format .json.
-	  * All files will be saved into directory ./../Tokens
+	  * All files will be saved into directory ./../tokens
 	  * @author Ondrej Krpec, xkrpecqt@gmail.com
 	  */
 	 
