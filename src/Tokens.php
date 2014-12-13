@@ -10,23 +10,7 @@
 		 
 		 private $fileName;
 		 private $filePath;
-		 private $content;
-		 	 
-		 /**
-		  * Constructor with one argument - filename. This argument will be set to class variable fileName
-		  * @param string Filename of file that will be processed. This argument is optional.
-		  */
-		  public function Tokenizer($file = NULL) {
-			  
-			  if (isset($file)) $this->setFile($file);
-			  else {
-				  $this->setFileName();
-				  $this->setFilePath();
-			  }
-			  $this->setContent();
-			  
-		  }
-		  
+		 private $content;	  
 		  
 		  /**
 		   * Method will open selected file and load its content in the string. After that it will transform source code
@@ -60,11 +44,11 @@
 			  $this->setContent(json_encode($tmpArray));
 
 			  // writes tokens to file
-			  if (!file_exists('./../Tokens')) { // TODO: tady by to chtelo tu cestu delat mozna jinak
-				  if (!mkdir('./../Tokens')) return false;
+			  if (!file_exists('./../tokens')) { // TODO: tady by to chtelo tu cestu delat mozna jinak
+				  if (!mkdir('./../tokens')) return false; // TODO chtelo by to vyhazovat vyjimky a ne vracet false
 			  }
 
-			  if (!file_put_contents('./../Tokens/' . str_replace('.php', '.json', $this->getFileName()), $this->getContent(), FILE_USE_INCLUDE_PATH)) {
+			  if (!file_put_contents('./../tokens/' . str_replace('.php', '.json', $this->getFileName()), $this->getContent(), FILE_USE_INCLUDE_PATH)) {
 				  return false;
 			  }
 
