@@ -44,8 +44,9 @@
 		
 		 /**
 		  * Setter for file. This could include even filepath to file. Not just name of the file.
-		  * 
+		  * Selected file will be decoded from .json format into class array variable content.
 		  * @param string Filename of with optional file path to file.
+		  * @return Returns success of operation.
 		  */
 		 public function setFile($file) {
 			 
@@ -57,7 +58,9 @@
 				 }		
 			 }
 			 
-			 if (!decode) return false;
+			 if (!$this->decode()) return false;
+			 
+			 return true;
 			 	 
 		 }
 		 
@@ -71,15 +74,16 @@
 		 
 		 /**
 		  * Load content of json file, decode the content from json and saves it into class variable content.
+		  * @return Returns success of operation.
 		  */
 		 private function decode() {
 			 
 			 // load file
-			 if (($this->content = file_get_contents($this->filePath . $this->fileName)) === false) return false;
+			 if (($this->content = file_get_contents($this->getFile())) === false) return false;
 			 
 			 // decode
 			 $this->content = json_decode(&$this->content);
-			 
+			 return true;
 		 }
 		 
 		 /**

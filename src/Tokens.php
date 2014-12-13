@@ -2,7 +2,6 @@
 
 	 /**
 	  * Class used for transforming source code from one file to stream of tokens and saving them into serialized format .json.
-	  * All files will be saved into directory ./../tokens
 	  * @author Ondrej Krpec, xkrpecqt@gmail.com
 	  */
 	 
@@ -15,9 +14,14 @@
 		  /**
 		   * Method will open selected file and load its content in the string. After that it will transform source code
 		   * from file to stream of tokens, remove T_WHITESPACEs from it and save it to the .JSON file for further use.
+		   * @param filePath Determines path where should be saved tokens loaded from file in class variable. At the end of the path will
+		   * 		always be created directory /tokens.
+		   * 		If the parameter is NULL, then directory /tokens will be created in current directory.
 		   * @return bool Returns success of operation.
 		   */
-		  public function getTokens() {
+		  public function getTokens($filePath = NULL) {
+			  
+			  if (!isset($filePath)) $filePath = '.';
 
 			  // check if filename is not null
 			  if (!$this->getFileName()) return false;
@@ -43,12 +47,13 @@
 			  }
 			  $this->setContent(json_encode($tmpArray));
 
-			  // writes tokens to file
-			  if (!file_exists('./../tokens')) { // TODO: tady by to chtelo tu cestu delat mozna jinak
-				  if (!mkdir('./../tokens')) return false; // TODO chtelo by to vyhazovat vyjimky a ne vracet false
+			  // create /tokens directory at certain path
+			  if (!file_exists($filePath . '/tokens')) {
+				  if (!mkdir($filePath . '/tokens')) return false;
 			  }
 
-			  if (!file_put_contents('./../tokens/' . str_replace('.php', '.json', $this->getFileName()), $this->getContent(), FILE_USE_INCLUDE_PATH)) {
+			  // saves tokens into .json file
+			  if (!file_put_contents($filePath . '/tokens/' . str_replace('.php', '.json', $this->getFileName()), $this->getContent(), FILE_USE_INCLUDE_PATH)) {
 				  return false;
 			  }
 
