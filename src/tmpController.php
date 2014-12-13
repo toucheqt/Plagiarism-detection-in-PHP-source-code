@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'HelloWorld';
+	$file = 'Function';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -20,5 +20,13 @@
 		exit();
 	}
 	
+	// print tokens
+	print_r($metrics->getContent());
+	
+	// print functions count
+	$metrics->getMetrics();
+	echo 'Number of functions in ' . $file . '.php = ' . $metrics->getFunctionCount() . "\n";
+	echo 'Number of global variables in ' . $file . '.php = ' . $metrics->getGlobalVarCount() . "\n";
+	echo 'Number of @ in ' . $file . '.php = ' . $metrics->getAtUsageCount() . "\n";	
 	 
 ?>

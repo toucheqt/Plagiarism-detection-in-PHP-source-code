@@ -1,6 +1,9 @@
 <?php
+
 function €() {
+	
    echo 'foo';
+   
 }
 
 €();

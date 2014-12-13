@@ -7,6 +7,13 @@
  * 5. haelstedova technika - nebylo by spatne to udelat tak, ze se to automaticky zkontroluje pro vsechny funkce
  * a pokud by to pak nekde naslo urcenou podobnost, tak by se to pak dalo projet i pro pripadne vetveni/cykly NEBO by se to
  * jeste dalo rovnou zapnout parametrem.
+ * 
+ * 
+ * zavinac
+ * eval
+ * global var
+ * 
+ * 
  */
  
 	class Metrics {
@@ -20,27 +27,34 @@
 		private $content;
 		
 		private $functionCount;
+		private $globalVarCount;
+		private $atUsageCount;
 		
 		/**
 		 * Constructor with no argument, that will only initialize class variables.
 		 */
-		 public function Metrics() {
+		 public function __construct() {
 		
 			 $this->setFunctionCount(self::DEF_FUNCTION_COUNT);
+			 $this->setGlobalVarCount(0);
+			 $this->setAtUsageCount(0);
 			 
 		 }
 		 
 		 /**
-		  * Method will count all functions used in program. In PHP function is either function or class method.
-		  * @return int Count of function declarations used in php file.
+		  * Method will get all useful metrics of code like count of function or methods, global variables or usage
+		  * of @ token. All metrics will be stored in class variables.
 		  */
-		 public function countFunctions() {
+		 public function getMetrics() {
 			 
 			 foreach ($this->getContent() as $value) {
 				 if ($value == 'T_FUNCTION') $this->setFunctionCount($this->getFunctionCount() + 1);
+				 else if ($value == 'T_GLOBAL') $this->setGlobalVarCount($this->getGlobalVarCount() + 1);
+				 else if ($value == '@') $this->setAtUsageCount($this->getAtUsageCount() + 1);
 			 }
-
+			 
 		 }
+		 
 		
 		 /**
 		  * Setter for file. This could include even filepath to file. Not just name of the file.
@@ -98,7 +112,7 @@
 		  * Getter for filename stored in this object. 
 		  * @return string Filepath combined with filename.
 		  */
-		 private function getFileName() {
+		 public function getFileName() {
 			 return $this->fileName;
 		 }
 		 
@@ -114,7 +128,7 @@
 		  * Getter for filepath to file stored in this object. 
 		  * @return string Returns file path to the file stored in this object.
 		  */
-		 private function getFilePath() {
+		 public function getFilePath() {
 			 return $this->filePath;
 		 }
 		 
@@ -130,7 +144,7 @@
 		  * Getter for the content of the file stored in this object.
 		  * @return string Returns content of the file that is stored in this object.
 		  */
-		 private function getContent() {
+		 public function getContent() {
 			 return $this->content;
 		 }
 		 
@@ -146,9 +160,42 @@
 		  * Getter for class variable function count. 
 		  * @return int Returns count of the appearance of the function tokens in selected json file.
 		  */
-		 private function getFunctionCount() {
+		 public function getFunctionCount() {
 			 return $this->functionCount;
-		 }	 
+		 }
+		 
+		 /**
+		  * Setter for class variable globalVarCount. Sets the number of globalVariable tokens in selected json file.
+		  * @param int Number of globalVariable tokens in selected file.
+		  */
+		 private function setGlobalVarCount($count) {
+			 $this->globalVarCount = $count;
+		 }
+		 
+		 /**
+		  * Getter for class variable globalVarCount. 
+		  * @return int Returns count of the appearance of the globalVariable tokens in selected json file.
+		  */
+		 public function getGlobalVarCount() {
+			 return $this->globalVarCount;
+		 }	
+		 
+		 /**
+		  * Setter for class variable atUsageCount. Sets the number of @ tokens in selected json file.
+		  * @param int Number of @ tokens in selected file.
+		  */
+		 private function setAtUsageCount($count) {
+			 $this->atUsageCount = $count;
+		 }
+		 
+		 /**
+		  * Getter for class variable atUsageCount. 
+		  * @return int Returns count of the appearance of the @ tokens in selected json file.
+		  */
+		 public function getAtUsageCount() {
+			 return $this->atUsageCount;
+		 }
+		  
 	}
 	
 ?>
