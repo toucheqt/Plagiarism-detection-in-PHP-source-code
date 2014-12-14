@@ -14,14 +14,16 @@
 	}
 	
 	$metrics = new Metrics();
-	if ($metrics->setFile('./tokens/' . $file . '.json')) echo 'Successfuly decode ' . $file . ".json\n";
+	if ($metrics->setFile('./tokens/' . $file . '.json')) echo 'Successfuly decoded ' . $file . ".json\n";
 	else {
 		echo 'Couldnt decode file ' . $file . ".json\nEnding now...\n";
 		exit();
 	}
 	
 	// print tokens
+	echo "\n";
 	print_r($metrics->getContent());
+	echo "\n";
 	
 	// print functions count
 	$metrics->getMetrics();
