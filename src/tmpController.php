@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'Globals2';
+	$file = 'Disaster';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -31,5 +31,6 @@
 	echo 'Number of global variables in ' . $file . '.php = ' . $metrics->getGlobalVarCount() . "\n";
 	echo 'Number of @ in ' . $file . '.php = ' . $metrics->getAtUsageCount() . "\n";
 	echo 'Number of eval() in ' . $file . '.php = ' . $metrics->getEvalCount() . "\n";	
+	echo 'Number of goto in ' . $file . '.php = ' . $metrics->getGotoCount() . "\n";	
 	 
 ?>

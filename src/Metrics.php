@@ -34,6 +34,7 @@
 		private $globalVarArray;
 		private $atUsageCount;
 		private $evalCount;
+		private $gotoCount;
 		
 		/**
 		 * Constructor with no argument, that will only initialize class variables.
@@ -77,6 +78,10 @@
 						
 					case 'T_EVAL':
 						$this->setEvalCount($this->getEvalCount() + 1);
+						break;
+						
+					case 'T_GOTO':
+						$this->setGotoCount($this->getGotoCount() + 1);
 						break;
 						
 					case '@': 
@@ -305,6 +310,22 @@
 		 */
 		public function getEvalCount() {
 			return $this->evalCount;
+		}
+		
+		/**
+		 * Setter for class variable gotoCount. Sets the number of T_GOTO tokens in selected json file.
+		 * @param int Number of T_GOTO tokens in selected file.
+		 */
+		private function setGotoCount($count) {
+			$this->gotoCount = $count;
+		}
+		
+		/**
+		 * Getter for class variable gotoCount.
+		 * @return int Returns count of the appearance of the T_GOTO tokens in selected json file.
+		 */
+		public function getGotoCount() {
+			return $this->gotoCount;
 		}
 		  
 	}
