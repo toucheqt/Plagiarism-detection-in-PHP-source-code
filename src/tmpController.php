@@ -29,6 +29,7 @@
 	$metrics->getMetrics();
 	echo 'Number of functions in ' . $file . '.php = ' . $metrics->getFunctionCount() . "\n";
 	echo 'Number of global variables in ' . $file . '.php = ' . $metrics->getGlobalVarCount() . "\n";
-	echo 'Number of @ in ' . $file . '.php = ' . $metrics->getAtUsageCount() . "\n";	
+	echo 'Number of @ in ' . $file . '.php = ' . $metrics->getAtUsageCount() . "\n";
+	echo 'Number of eval() in ' . $file . '.php = ' . $metrics->getEvalCount() . "\n";	
 	 
 ?>

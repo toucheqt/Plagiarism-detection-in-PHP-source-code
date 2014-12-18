@@ -33,6 +33,7 @@
 		private $globalVarCount;
 		private $globalVarArray;
 		private $atUsageCount;
+		private $evalCount;
 		
 		/**
 		 * Constructor with no argument, that will only initialize class variables.
@@ -43,6 +44,7 @@
 			$this->setGlobalVarCount(0);
 			$this->setAtUsageCount(0);
 			$this->setGlobalVarArray();
+			$this->setEvalCount(0);
 			 
 		}
 		 
@@ -54,8 +56,6 @@
 			
 			$isGlobal = false;
 			$isGlobalArray = false;
-			
-			print_r($this->getContent());
 			 
 			foreach ($this->getContent() as $value) {
 				
@@ -73,6 +73,10 @@
 						
 					case 'T_GLOBAL':
 						$isGlobal = true;
+						break;
+						
+					case 'T_EVAL':
+						$this->setEvalCount($this->getEvalCount() + 1);
 						break;
 						
 					case '@': 
@@ -285,6 +289,22 @@
 		 */
 		public function getAtUsageCount() {
 			return $this->atUsageCount;
+		}
+		
+		/**
+		 * Setter for class variable evalCount. Sets the number of T_EVAL tokens in selected json file.
+		 * @param int Number of T_EVAL tokens in selected file.
+		 */
+		private function setEvalCount($count) {
+			$this->evalCount = $count;
+		}
+		
+		/**
+		 * Getter for class variable evalCount.
+		 * @return int Returns count of the appearance of the T_EVAL tokens in selected json file.
+		 */
+		public function getEvalCount() {
+			return $this->evalCount;
 		}
 		  
 	}
