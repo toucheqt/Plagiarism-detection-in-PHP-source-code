@@ -1,8 +1,10 @@
 <?php
 
+$var1 = 3
+
 function €() {
 	
-	$var1 = 1;
+	global $var1 = 1;
 	echo "foo\n";
 	$var2 = 2;
 	echo "foo\n";
@@ -11,6 +13,6 @@ function €() {
    
 }
 
-€();
+@€();
 
 ?>
