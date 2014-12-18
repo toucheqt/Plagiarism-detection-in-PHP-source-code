@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'Function';
+	$file = 'IPP';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');

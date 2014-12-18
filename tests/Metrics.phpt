@@ -46,7 +46,25 @@
 			Assert::same(1, $object->getAtUsageCount());
 			
 		}
-	
+		
+		public function testBasicMetricsComplex() {
+			
+			$srcFilePath = './../tokens/';
+			$srcFileName = 'IPP.json';
+			
+			$object = new Metrics();
+			
+			// set filepath and filename to file HelloWorld.json located at ./../tokens/
+			Assert::true($object->setFile($srcFilePath . $srcFileName));
+			
+			// get and test metrics
+			$object->getMetrics();
+			
+			Assert::same(10, $object->getFunctionCount());
+			Assert::same(3, $object->getGlobalVarCount());
+			Assert::same(1, $object->getAtUsageCount());
+			
+		}
 	}
 	
 	# run tests
