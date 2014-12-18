@@ -13,6 +13,8 @@
 		exit();
 	}
 	
+	exit(); // tmp exit
+	
 	$metrics = new Metrics();
 	if ($metrics->setFile('./tokens/' . $file . '.json')) echo 'Successfuly decoded ' . $file . ".json\n";
 	else {
