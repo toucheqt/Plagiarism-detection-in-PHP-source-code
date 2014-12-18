@@ -29,9 +29,11 @@
 			Assert::same(1, $object->getFunctionCount());
 			Assert::same(0, $object->getGlobalVarCount());
 			Assert::same(0, $object->getAtUsageCount());
+			Assert::same(0, $object->getEvalCount());
+			Assert::same(0, $object->getGotoCount());
 			
 			// test complicated file
-			$srcFileName = 'Function.json';
+			$srcFileName = 'Disaster.json';
 			
 			Assert::true($object->setFile($srcFilePath . $srcFileName));
 			
@@ -42,8 +44,10 @@
 			$object->getMetrics();
 			
 			Assert::same(2, $object->getFunctionCount());
-			Assert::same(1, $object->getGlobalVarCount());
-			Assert::same(1, $object->getAtUsageCount());
+			Assert::same(2, $object->getGlobalVarCount());
+			Assert::same(0, $object->getAtUsageCount());
+			Assert::same(1, $object->getEvalCount());
+			Assert::same(2, $object->getGotoCount());
 			
 		}
 		
@@ -63,6 +67,8 @@
 			Assert::same(10, $object->getFunctionCount());
 			Assert::same(1, $object->getGlobalVarCount());
 			Assert::same(1, $object->getAtUsageCount());
+			Assert::same(0, $object->getEvalCount());
+			Assert::same(0, $object->getGotoCount());
 			
 		}
 	}

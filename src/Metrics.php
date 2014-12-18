@@ -4,7 +4,7 @@
  * 2. dekoduju to do struktury - done
  * 3. zkontrolovat pocet funkci/trid/metod - done
  * 4. vhodne je ulozit - done
- * 5. kontrolovat goto a eval
+ * 5. kontrolovat goto a eval - done
  * 6. haelstedova technika - nebylo by spatne to udelat tak, ze se to automaticky zkontroluje pro vsechny funkce
  * a pokud by to pak nekde naslo urcenou podobnost, tak by se to pak dalo projet i pro pripadne vetveni/cykly NEBO by se to
  * jeste dalo rovnou zapnout parametrem.
@@ -46,6 +46,7 @@
 			$this->setAtUsageCount(0);
 			$this->setGlobalVarArray();
 			$this->setEvalCount(0);
+			$this->setGotoCount(0);
 			 
 		}
 		 

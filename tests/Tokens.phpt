@@ -21,6 +21,46 @@
 			$object = new Tokenizer();
 			
 			// set filepath and filename to file HelloWorld.php located at ./test-files/
+			$object->setFile(self::srcFilePath . $srcFileName);
+			
+			Assert::same($srcFileName, $object->getFileName());
+			Assert::same(self::srcFilePath, $object->getFilePath());
+			
+			// get tokens from file and check if whitespaces has been removed
+			Assert::true($object->getTokens());
+			Assert::notContains('T_WHITESPACE', $object->getContent());
+			
+			// check end php tag
+			Assert::contains('T_CLOSE_TAG', $object->getContent());
+			
+			Assert::true(file_exists(self::dscFilePath . $dscFileName));
+	
+			$srcFileName = 'Disaster.php';
+			$dscFileName = 'Disaster.json';
+			
+			// set filepath and filename to file HelloWorld.php located at ./test-files/
+			$object->setFile(self::srcFilePath . $srcFileName);
+			
+			Assert::same($srcFileName, $object->getFileName());
+			Assert::same(self::srcFilePath, $object->getFilePath());
+			
+			// get tokens from file and check if whitespaces has been removed
+			Assert::true($object->getTokens());
+			Assert::notContains('T_WHITESPACE', $object->getContent());
+			
+			// check end php tag
+			Assert::contains('T_CLOSE_TAG', $object->getContent());
+			
+			Assert::true(file_exists(self::dscFilePath . $dscFileName));
+			
+		}
+		
+		public function complexTest() {
+			
+			$srcFileName = 'Disaster.php';
+			$dscFileName = 'Disaster.json';
+			
+			// set filepath and filename to file HelloWorld.php located at ./test-files/
 			$object->setFile(self::srcFilePath . srcFileName);
 			
 			Assert::same(srcFileName, $object->getFileName());
@@ -34,7 +74,7 @@
 			Assert::contains('T_CLOSE_TAG', $object->getContent());
 			
 			Assert::true(file_exists(self::dscFilePath . dscFileName));
-			
+		
 		}
 	
 	}
