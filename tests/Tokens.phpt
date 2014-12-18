@@ -11,19 +11,19 @@
 	class TokensTest extends Tester\TestCase {
 		
 		const srcFilePath = './test-files/';
-		const srcFileName = 'HelloWorld.php';
-		
 		const dscFilePath = './../tokens/';
-		const dscFileName = 'HelloWorld.json';
 			
 		public function testTokens() {
+			
+			$srcFileName = 'HelloWorld.php';
+			$dscFileName = 'HelloWorld.json'; 
 			
 			$object = new Tokenizer();
 			
 			// set filepath and filename to file HelloWorld.php located at ./test-files/
-			$object->setFile(self::srcFilePath . self::srcFileName);
+			$object->setFile(self::srcFilePath . srcFileName);
 			
-			Assert::same(self::srcFileName, $object->getFileName());
+			Assert::same(srcFileName, $object->getFileName());
 			Assert::same(self::srcFilePath, $object->getFilePath());
 			
 			// get tokens from file and check if whitespaces has been removed
@@ -33,7 +33,7 @@
 			// check end php tag
 			Assert::contains('T_CLOSE_TAG', $object->getContent());
 			
-			Assert::true(file_exists(self::dscFilePath . self::dscFileName));
+			Assert::true(file_exists(self::dscFilePath . dscFileName));
 			
 		}
 	

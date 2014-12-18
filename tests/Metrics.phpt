@@ -61,7 +61,7 @@
 			$object->getMetrics();
 			
 			Assert::same(10, $object->getFunctionCount());
-			Assert::same(3, $object->getGlobalVarCount());
+			Assert::same(1, $object->getGlobalVarCount());
 			Assert::same(1, $object->getAtUsageCount());
 			
 		}

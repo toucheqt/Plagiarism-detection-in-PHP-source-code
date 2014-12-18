@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'IPP';
+	$file = 'Globals2';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -21,9 +21,9 @@
 	}
 	
 	// print tokens
-	echo "\n";
-	print_r($metrics->getContent());
-	echo "\n";
+	//echo "\n";
+	//print_r($metrics->getContent());
+	//echo "\n";
 	
 	// print functions count
 	$metrics->getMetrics();
