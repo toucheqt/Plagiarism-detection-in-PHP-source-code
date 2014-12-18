@@ -222,6 +222,13 @@
 		 
 		/**
 		 * Setter for class variable globalVarCount. Sets the number of globalVariable tokens in selected json file.
+		 * Known problems: Problem will count following code as two global variables, not just one.
+		 * // GLOBAL VAIRABLE DECLARED HERE
+		 * $global_variable = 1;
+		 * 
+		 * // INSIDE FUNCTION
+		 * $variable = 'global_variable';
+		 * $result = $GLOBALS[$variable] + $GLOBALS['global_variable']; // this will be counted as two due to usage of $variable
 		 * @param int Number of globalVariable tokens in selected file.
 		 */
 		private function setGlobalVarCount($count) {

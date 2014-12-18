@@ -6,7 +6,7 @@ $b = 2;
 function Sum()
 {
 	$zaloha = 'b';
-    $GLOBALS["b"] = $GLOBALS['a'] + $GLOBALS['b'];
+    $GLOBALS[$zaloha] = $GLOBALS['a'] + $GLOBALS['b'] + $GLOBALS["b"];
 } 
 
 Sum();
