@@ -48,9 +48,9 @@
 		 public function getMetrics() {
 			 
 			 foreach ($this->getContent() as $value) {
-				 if ($value == 'T_FUNCTION') $this->setFunctionCount($this->getFunctionCount() + 1);
-				 else if ($value == 'T_GLOBAL') $this->setGlobalVarCount($this->getGlobalVarCount() + 1);
-				 else if ($value == '@') $this->setAtUsageCount($this->getAtUsageCount() + 1);
+				 if ($value[0] == 'T_FUNCTION') $this->setFunctionCount($this->getFunctionCount() + 1);
+				 else if ($value[0] == 'T_GLOBAL') $this->setGlobalVarCount($this->getGlobalVarCount() + 1);
+				 else if ($value[0] == '@') $this->setAtUsageCount($this->getAtUsageCount() + 1);
 			 }
 			 
 		 }
