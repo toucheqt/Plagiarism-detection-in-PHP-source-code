@@ -2,6 +2,8 @@
 
 $var1 = 3
 
+function();
+
 function €() {
 	
 	global $var1 = 1;

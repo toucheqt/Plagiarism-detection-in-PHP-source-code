@@ -10,7 +10,12 @@
  * jeste dalo rovnou zapnout parametrem.
  * 
  * 
- * 
+ * TODO 
+ * nejprve potrebuju spocitat vsechny operandy a operatory
+ * potom potrebuju spocitat vsechny unikatni operandy a operatory
+ * potom to muzu pridat do pole
+ * po projiti celeho kodu napisu do halstead.php funkci eval, ktera spocita vsechny ty kravinky okolo
+ * ??? profit
  * 
  */
  
@@ -29,12 +34,16 @@
 		private $filePath;
 		private $content;
 		
+		// variable containing file metrics
 		private $functionCount;
 		private $globalVarCount;
 		private $globalVarArray;
 		private $atUsageCount;
 		private $evalCount;
 		private $gotoCount;
+		
+		// array with Halstead objects containing halstead metrics of given code, one element in array equals to one function in given code
+		private $halsteadMetrics;
 		
 		/**
 		 * Constructor with no argument, that will only initialize class variables.
@@ -47,6 +56,7 @@
 			$this->setGlobalVarArray();
 			$this->setEvalCount(0);
 			$this->setGotoCount(0);
+			$this->halsteadMetrics = array();
 			 
 		}
 		 
@@ -56,20 +66,37 @@
 		 */
 		public function getMetrics() {
 			
-			$isGlobal = false;
-			$isGlobalArray = false;
+			$isGlobal = false; // variable determines if currently loaded tokens might be global variable - keyword global
+			$isGlobalArray = false; // variable determines if currently loaded tokens might be global variable - array $GLOBALS
+			$isFunction = false; // variable determines if currently loaded tokens are within function or method
+			$bracketCount = 0; // variable to determine the end of function or method by counting left and right brackets
 			 
 			foreach ($this->getContent() as $value) {
 				
 				switch ($value[self::TOKEN_NAME]) {
 					
 					case 'T_FUNCTION':
-						$this->setFunctionCount($this->getFunctionCount() + 1);
+						$isFunction = true;
 						break;
 						
 					case 'T_VARIABLE':
 						if ($value[self::ORIGINAL_TOKEN] === '$GLOBALS') {
 							$isGlobalArray = true;
+						}
+						break;
+						
+					case ';':
+						if ($isFunction && ($bracketCount === 0)) {
+							$isFunction = false; // we encounterd only declaration of function
+						}
+						break;
+						
+					case '{':
+						if ($isFunction) {
+							if ($bracketCount === 0) { // new definition of function
+								$this->setFunctionCount($this->getFunctionCount() + 1);
+							}
+							$bracketCount++;
 						}
 						break;
 						
@@ -116,6 +143,14 @@
 				// end searching for globals
 				if ($isGlobal && $value[self::TOKEN_NAME] == ';') $isGlobal = false;
 				if ($isGlobalArray && $value[self::TOKEN_NAME] == ']') $isGlobalArray = false;
+				
+				// check if is needed to load functions / methods
+				if ($isFunction && ($bracketCount > 0)) {
+					
+					if ($value[self::TOKEN_NAME] == '}') $bracketCount--;
+					if ($bracketCount === 0) $isFunction = false;					
+				
+				}
 						
 			} // end foreach
 			 
@@ -327,6 +362,22 @@
 		 */
 		public function getGotoCount() {
 			return $this->gotoCount;
+		}
+		
+		/**
+		 * Method will add given Halstead object to the class list with halstead metrics.
+		 * @param Halstead Halstead metrics of specified function.
+		 */
+		public function addHalsteadMetric($halstead) {
+			array_push($this->halsteadMetrics, $halstead);
+		}
+		
+		/**
+		 * Getter for class variable halsteadMetrics.
+		 * @return array Returns array with Halstead objects containing halstead metrics of specified file.
+		 */
+		public function getHalsteadMetrics() {
+			return $this->halsteadMetrics;
 		}
 		  
 	}

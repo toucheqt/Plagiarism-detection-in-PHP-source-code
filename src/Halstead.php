@@ -2,72 +2,81 @@
 
 	class Halstead {
 		
-		private $usedOperators;
-		private $usedOperands;
+		// Amount of operands and operators used in selected block of code
+		private $operatorsCount;
+		private $operandsCount;
 		
+		// Unique operands and operators used in selected block of code
 		private $uniqueOperators;
 		private $uniqueOperands;
 		
+		public function __construct() {
+		
+			$this->uniqueOperators = array();
+			$this->uniqueOperands = array();
+		
+		}
+				
 		
 		/**
-		 * Setter for class variable usedOperators. In this variable should be stored count of all operators used in given source code.
+		 * Setter for class variable operatorsCount. In this variable should be stored count of all operators used in given source code.
 		 * @param int Count of all operators used in given source code.
 		 */
-		private function setUsedOperators($count) {
-			$this->usedOperators = $count;
+		private function setOperatorsCount($count) {
+			$this->operatorsCount = $count;
 		}
 		
 		/**
-		 * Getter for class variable usedOperators.
+		 * Getter for class variable operatorsCount.
 		 * @return int Returns count of all operators used in given source code.
 		 */
-		public function getUsedOperators($count) {
-			return $this->usedOperators;
+		public function getOperatorsCount($count) {
+			return $this->operatorsCount;
 		}
 		
 		/**
-		 * Setter for class variable usedOperands. In this variable should be stored count of all operands used in given source code.
+		 * Setter for class variable operandsCount. In this variable should be stored count of all operands used in given source code.
 		 * @param int Count of all operands used in given source code.
 		 */
-		private function setUsedOperands($count) {
-			$this->usedOperands = $count;
+		private function setOperandsCount($count) {
+			$this->operandsCount = $count;
 		}
 		
 		/**
-		 * Getter for class variable usedOperands.
+		 * Getter for class variable operandsCount.
 		 * @return int Returns count of all operands used in given source code.
 		 */
-		public function getUsedOperands($count) {
-			return $this->usedOperands;
+		public function getOperandsCount($count) {
+			return $this->operandsCount;
 		}
 		
 		/**
-		 * Setter for class variable uniqueOperators. In this variable should be stored count of all unique operators used in given source code.
-		 * @param int Count of all unique operators used in given source code.
+		 * Method will add given operator to the list of unique operators used in given block of code.
+		 * @param Unique operator used in given block of code.
 		 */
-		private function setUniqueOperators($count) {
-			$this->uniqueOperators = $count;
+		public function addUniqueOperator($operator) {
+			array_push($this->uniqueOperators, $operator);
 		}
 		
 		/**
 		 * Getter for class variable uniqueOperators.
-		 * @return int Count of all unique operators used in given source code.
+		 * @return array Returns all unique operators used in given block of code.
 		 */
 		public function getUniqueOperators() {
 			return $this->uniqueOperators;
 		}
 		
 		/**
-		 * Setter for class variable uniqueOperands. In this variable should be stored count of all unique operands used in given source code.
-		 * @param int Count of all unique operands used in given source code.
+		 * Method will add given operands to the list of unique operands used in given block of code.
+		 * @param Unique operand used in given block of code.
 		 */
-		private function setUniqueOperands($count) {
-			$this->uniqueOperands = $count;
+		private function setUniqueOperands($operand) {
+			array_push($this->uniqueOperands, $operand);
 		}
 		
 		/**
 		 * Getter for class variable uniqueOperands.
-		 * @return int Count of all unique operands used in given source code.
+		 * @return array Returns all unique operands used in given block of code.
 		 */
 		public function getUniqueOperands() {
 			return $this->uniqueOperands;

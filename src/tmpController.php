@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'Disaster';
+	$file = 'Function';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -20,10 +20,9 @@
 		exit();
 	}
 	
-	// print tokens
-	//echo "\n";
-	//print_r($metrics->getContent());
-	//echo "\n";
+	echo "\n";
+	print_r($metrics->getContent());
+	echo "\n";
 	
 	// print functions count
 	$metrics->getMetrics();
