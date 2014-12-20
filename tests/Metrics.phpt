@@ -86,8 +86,8 @@
 			$halstead = $object->getHalsteadMetrics();
 			
 			Assert::equal(20.26466250649, $halstead[0]->getProgramLength());
-			Assert::equal(88.757900040385, $halstead[0]->getVolume());
-			Assert::equal(5.5, $halstead[0]->getDifficulty());
+			Assert::equal(139.47670006346, $halstead[0]->getVolume());
+			Assert::equal(8.0, $halstead[0]->getDifficulty());
 			
 		}
 	}

@@ -60,6 +60,7 @@
 	}
 	
 	$metrics2->getMetrics();
+	print_r($metrics2->getContent());
 	$tmp2 = $metrics2->getHalsteadMetrics();
 	
 	$functionIndex = 1;
@@ -73,9 +74,9 @@
 		for ($i = 0; $i < count($tmp2); $i++) {
 			$gravity = 0; // zavaznost prestupku, kazda promenna length, volume, atd v rozmezi 10% od puvodni hodnoty inkrementuje gravity
 			// checking if its within 10% radius
-			if (($tmp2[$i]->getProgramLength() >= $length*0.9) && ($tmp2[$i]->getProgramLength() <= $length*1.1)) $gravity++;
-			if (($tmp2[$i]->getVolume() >= $volume*0.9) && ($tmp2[$i]->getVolume() <= $volume*1.1)) $gravity++;
-			if (($tmp2[$i]->getDifficulty() >= $difficulty*0.9) && ($tmp2[$i]->getDifficulty() <= $difficulty*1.1)) $gravity++;
+			if (($tmp2[$i]->getProgramLength() >= $length*0.8) && ($tmp2[$i]->getProgramLength() <= $length*1.8)) $gravity++;
+			if (($tmp2[$i]->getVolume() >= $volume*0.8) && ($tmp2[$i]->getVolume() <= $volume*1.8)) $gravity++;
+			if (($tmp2[$i]->getDifficulty() >= $difficulty*0.8) && ($tmp2[$i]->getDifficulty() <= $difficulty*1.8)) $gravity++;
 			
 			if ($gravity > 0) {
 				$copied = array();
