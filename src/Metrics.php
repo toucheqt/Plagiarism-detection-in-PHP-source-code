@@ -12,12 +12,14 @@
  * jeste dalo rovnou zapnout parametrem.
  * 
  * 
+ * 
+ * 
  * TODO 
- * nejprve potrebuju spocitat vsechny operandy a operatory
- * potom potrebuju spocitat vsechny unikatni operandy a operatory
- * potom to muzu pridat do pole
- * po projiti celeho kodu napisu do halstead.php funkci eval, ktera spocita vsechny ty kravinky okolo
- * ??? profit
+ * nekontrolovat to po funkcich, ale po radcich
+ * 
+ * 
+ * 
+ * 
  * 
  */
  
