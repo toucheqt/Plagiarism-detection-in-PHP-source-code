@@ -1,5 +1,11 @@
 <?php
 
+	/**
+	 * Class used to get halstead metrics of given operators and operands. This can also compute these metrics such as
+	 * calculated program length, volume and difficulty.
+	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 */
+
 	class Halstead {
 		
 		// Amount of operands and operators used in selected block of code
