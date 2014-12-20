@@ -1,1 +1,0 @@
-[["T_OPEN_TAG","<?php\n",1],["T_WHITESPACE","\t",2],["T_IF","if",2],["T_WHITESPACE"," ",2],"(",["T_STRING","true",2],")",["T_WHITESPACE"," ",2],["T_ECHO","echo",2],["T_WHITESPACE"," ",2],["T_CONSTANT_ENCAPSED_STRING","\"Hello world!\\n\"",2],";",["T_WHITESPACE","\n",2],["T_CLOSE_TAG","?>\n",3]]
