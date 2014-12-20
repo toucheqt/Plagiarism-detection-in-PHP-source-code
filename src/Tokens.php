@@ -37,7 +37,7 @@
 			for ($i = 0; $i < count($this->getContent()); $i++) {  
 				
 				// dont add whitespaces and comments
-				if (($this->getContentElement($i, 0) != T_WHITESPACE) || ($this->getContentElement($i, 0) != T_COMMENT) ||
+				if (($this->getContentElement($i, 0) != T_WHITESPACE) && ($this->getContentElement($i, 0) != T_COMMENT) &&
 						($this->getContentElement($i, 0) != T_DOC_COMMENT)) {
 							
 					if (is_numeric($this->getContentElement($i, 0))) {
