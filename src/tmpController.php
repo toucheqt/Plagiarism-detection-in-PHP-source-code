@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'Function';
+	$file = 'IPP';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -31,5 +31,12 @@
 	echo 'Number of @ in ' . $file . '.php = ' . $metrics->getAtUsageCount() . "\n";
 	echo 'Number of eval() in ' . $file . '.php = ' . $metrics->getEvalCount() . "\n";	
 	echo 'Number of goto in ' . $file . '.php = ' . $metrics->getGotoCount() . "\n";	
+	
+	$tmp = $metrics->getHalsteadMetrics();
+	
+	echo 'Number of operands in first function in ' . $file . '.php = ' . $tmp[1]->getOperandsCount() . "\n";
+	echo 'Number of unique operands in first function in ' . $file . '.php = ' . count($tmp[1]->getUniqueOperands()) . "\n";
+	echo 'Number of operators in first function in ' . $file . '.php = ' . $tmp[1]->getOperatorsCount() . "\n";
+	echo 'Number of unique operators in first function in ' . $file . '.php = ' . count($tmp[1]->getUniqueOperators()) . "\n";
 	 
 ?>

@@ -1,5 +1,7 @@
 <?php
 
+	include 'Halstead.php';
+
 /* todo: 1. nactu soubor s jsonem
  * 2. dekoduju to do struktury - done
  * 3. zkontrolovat pocet funkci/trid/metod - done
@@ -70,6 +72,7 @@
 			$isGlobalArray = false; // variable determines if currently loaded tokens might be global variable - array $GLOBALS
 			$isFunction = false; // variable determines if currently loaded tokens are within function or method
 			$bracketCount = 0; // variable to determine the end of function or method by counting left and right brackets
+			$halsteadFunction; // variable to store halstead values of current function
 			 
 			foreach ($this->getContent() as $value) {
 				
@@ -95,6 +98,9 @@
 						if ($isFunction) {
 							if ($bracketCount === 0) { // new definition of function
 								$this->setFunctionCount($this->getFunctionCount() + 1);
+								$halsteadFunction = new Halstead();
+								$bracketCount++;
+								continue 2;
 							}
 							$bracketCount++;
 						}
@@ -146,16 +152,218 @@
 				
 				// check if is needed to load functions / methods
 				if ($isFunction && ($bracketCount > 0)) {
+
+					if ($value[self::TOKEN_NAME] === '}') $bracketCount--;
+					if ($bracketCount === 0) {
+						$isFunction = false;
+						$this->addHalsteadMetric($halsteadFunction);
+						unset($halsteadFunction);
+						continue;
+					}		
 					
-					if ($value[self::TOKEN_NAME] == '}') $bracketCount--;
-					if ($bracketCount === 0) $isFunction = false;					
+					if ($this->isOperator($value[self::TOKEN_NAME])) {
+						// TODO toto by slo optimalizovat na add
+						$halsteadFunction->setOperatorsCount($halsteadFunction->getOperatorsCount() + 1);
+						$halsteadFunction->addUniqueOperator($value[self::TOKEN_NAME]);
+					}
+					
+					else {
+						$halsteadFunction->setOperandsCount($halsteadFunction->getOperandsCount() + 1);
+						$halsteadFunction->addUniqueOperand($value[self::TOKEN_NAME]);
+					}			
 				
 				}
 						
 			} // end foreach
 			 
 		}
-		 
+		
+		/**
+		 * Method will determine if the given token by argument $token is operator in language PHP5.
+		 * @param string Token of php5 language.
+		 * @return boolean Returns true if the token is operator in language php5, false otherwise.
+		 */
+		public function isOperator($token) {
+			// TODO tady by to slo optimalizovat resp. seradit to podle nejpouzivanejsich operatoru
+			switch ($token) {
+				
+				case 'T_CLONE':
+					return true;
+					
+				case 'T_NEW':
+					return true;
+					
+				case '[':
+					return true;
+					
+				case 'T_POW': // **
+					return true;
+					
+				case 'T_INC': // ++
+					return true;
+					
+				case 'T_DEC': // --
+					return true;
+					
+				case '~':
+					return true;
+					
+				case 'T_INT_CAST': // (int) or (integer)
+					return true;
+					
+				case 'T_DOUBLE_CAST': // (double) or (real) or (float)
+					return true;
+					
+				case 'T_STRING_CAST': // (string)
+					return true;
+					
+				case 'T_ARRAY_CAST': // (array)
+					return true;
+					
+				case 'T_OBJECT_CAST': // (object)
+					return true;
+					
+				case 'T_BOOL_CAST': // (bool) or (boolean)
+					return true;
+					
+				case '@':
+					return true;
+					
+				case 'T_INSTANCEOF':
+					return true;
+					
+				case '!':
+					return true;
+					
+				case '*':
+					return true;
+					
+				case '/':
+					return true;
+					
+				case '%':
+					return true;
+					
+				case '+':
+					return true;
+					
+				case '-':
+					return true;
+					
+				case '.':
+					return true;
+					
+				case 'T_SL': // <<
+					return true;
+					
+				case 'T_SR': // >>
+					return true;
+					
+				case '<':
+					return true;
+					
+				case 'T_IS_SMALLER_OR_EQUAL': // <=
+					return true;
+					
+				case '>':
+					return true;
+					
+				case 'T_IS_GREATER_OR_EQUAL': // >=
+					return true;
+					
+				case 'T_IS_EQUAL': // ==
+					return true;
+					
+				case 'T_IS_NOT_EQUAL': // != or <>
+					return true;
+					
+				case 'T_IS_IDENTICAL': // ===
+					return true;
+					
+				case 'T_IS_NOT_IDENTICAL': // !==
+					return true;
+					
+				case '&':
+					return true;
+					
+				case '^':
+					return true;
+					
+				case '|':
+					return true;
+				
+				case 'T_BOOLEAN_AND':
+					return true;
+					
+				case 'T_BOOLEAN_OR':
+					return true;
+					
+				case '?':
+					return true;
+					
+				case ':':
+					return true;
+					
+				case '=';
+					return true;
+					
+				case 'T_PLUS_EQUAL': // +=
+					return true;
+					
+				case 'T_MINUS_EQUAL': // -=
+					return true;
+					
+				case 'T_MUL_EQUAL': // *=
+					return true;
+					
+				case 'T_POW_EQUAL': // **=
+					return true;
+					
+				case 'T_DIV_EQUAL': // /=
+					return true;
+					
+				case 'T_CONCAT_EQUAL': // .=
+					return true;
+					
+				case 'T_MOD_EQUAL': // %=
+					return true;
+					
+				case 'T_AND_EQUAL': // &=
+					return true;
+					
+				case 'T_OR_EQUAL': // |=
+					return true;
+					
+				case 'T_XOR_EQUAL': // ^=
+					return true;
+					
+				case 'T_SL_EQUAL': // <<=
+					return true;
+					
+				case 'T_SR_EQUAL': // >>=
+					return true;
+					
+				case 'T_DOUBLE_ARROW': // =>
+					return true;
+					
+				case 'T_LOGICAL_AND': // and
+					return true;
+					
+				case 'T_LOGICAL_XOR': // xor
+					return true;
+					
+				case 'T_LOGICAL_OR': // or
+					return true;
+					
+				case ',':
+					return true;
+					
+				default:
+					return false;			
+							
+			} // end switch
+		
+		}		 
 		
 		/**
 		 * Setter for file. This could include even filepath to file. Not just name of the file.

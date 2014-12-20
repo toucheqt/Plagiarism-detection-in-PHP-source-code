@@ -1,4 +1,5 @@
 <?php
+
 	class SimpleClass {
 		// property declaration
 		public $var = 'a default value';
@@ -8,4 +9,7 @@
 			echo $this->var;
 		}
 	}
+	
+	$object = new SimpleClass();
+
 ?>

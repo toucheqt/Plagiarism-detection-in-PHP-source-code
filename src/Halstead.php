@@ -14,6 +14,9 @@
 		
 			$this->uniqueOperators = array();
 			$this->uniqueOperands = array();
+			
+			$this->operandsCount = 0;
+			$this->operatorsCount = 0;
 		
 		}
 				
@@ -22,7 +25,7 @@
 		 * Setter for class variable operatorsCount. In this variable should be stored count of all operators used in given source code.
 		 * @param int Count of all operators used in given source code.
 		 */
-		private function setOperatorsCount($count) {
+		public function setOperatorsCount($count) {
 			$this->operatorsCount = $count;
 		}
 		
@@ -30,7 +33,7 @@
 		 * Getter for class variable operatorsCount.
 		 * @return int Returns count of all operators used in given source code.
 		 */
-		public function getOperatorsCount($count) {
+		public function getOperatorsCount() {
 			return $this->operatorsCount;
 		}
 		
@@ -38,7 +41,7 @@
 		 * Setter for class variable operandsCount. In this variable should be stored count of all operands used in given source code.
 		 * @param int Count of all operands used in given source code.
 		 */
-		private function setOperandsCount($count) {
+		public function setOperandsCount($count) {
 			$this->operandsCount = $count;
 		}
 		
@@ -46,16 +49,19 @@
 		 * Getter for class variable operandsCount.
 		 * @return int Returns count of all operands used in given source code.
 		 */
-		public function getOperandsCount($count) {
+		public function getOperandsCount() {
 			return $this->operandsCount;
 		}
 		
 		/**
 		 * Method will add given operator to the list of unique operators used in given block of code.
+		 * Operator will not be added if its duplicate.
 		 * @param Unique operator used in given block of code.
 		 */
 		public function addUniqueOperator($operator) {
-			array_push($this->uniqueOperators, $operator);
+			if (!in_array($operator, $this->getUniqueOperators())) {
+				array_push($this->uniqueOperators, $operator);
+			}
 		}
 		
 		/**
@@ -67,11 +73,14 @@
 		}
 		
 		/**
-		 * Method will add given operands to the list of unique operands used in given block of code.
+		 * Method will add given operand to the list of unique operands used in given block of code.
+		 * Operands wont be added if its duplicate.
 		 * @param Unique operand used in given block of code.
 		 */
-		private function setUniqueOperands($operand) {
-			array_push($this->uniqueOperands, $operand);
+		public function addUniqueOperand($operand) {
+			if (!in_array($operand, $this->getUniqueOperands())) {
+				array_push($this->uniqueOperands, $operand);
+			}
 		}
 		
 		/**
