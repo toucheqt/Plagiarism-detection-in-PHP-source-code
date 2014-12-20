@@ -3,7 +3,7 @@
 	include 'Tokens.php';
 	include 'Metrics.php';
 	
-	$file = 'IPP';
+	$file = 'Function';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -34,9 +34,12 @@
 	
 	$tmp = $metrics->getHalsteadMetrics();
 	
-	echo 'Number of operands in first function in ' . $file . '.php = ' . $tmp[1]->getOperandsCount() . "\n";
-	echo 'Number of unique operands in first function in ' . $file . '.php = ' . count($tmp[1]->getUniqueOperands()) . "\n";
-	echo 'Number of operators in first function in ' . $file . '.php = ' . $tmp[1]->getOperatorsCount() . "\n";
-	echo 'Number of unique operators in first function in ' . $file . '.php = ' . count($tmp[1]->getUniqueOperators()) . "\n";
+	echo 'Number of operands in first function in ' . $file . '.php = ' . $tmp[0]->getOperandsCount() . "\n";
+	echo 'Number of unique operands in first function in ' . $file . '.php = ' . count($tmp[0]->getUniqueOperands()) . "\n";
+	echo 'Number of operators in first function in ' . $file . '.php = ' . $tmp[0]->getOperatorsCount() . "\n";
+	echo 'Number of unique operators in first function in ' . $file . '.php = ' . count($tmp[0]->getUniqueOperators()) . "\n";
+	echo 'Calculated function length = ' . $tmp[0]->getProgramLength() . "\n";
+	echo 'Volume = ' . $tmp[0]->getVolume() . "\n";
+	echo 'Difficulty = ' . $tmp[0]->getDifficulty() . "\n";
 	 
 ?>

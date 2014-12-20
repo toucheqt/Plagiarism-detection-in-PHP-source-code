@@ -19,7 +19,44 @@
 			$this->operatorsCount = 0;
 		
 		}
-				
+		
+		/**
+		 * Method returns calculated function length based on pattern N = n1 * log2(n1) + n2 * log2(n2) where
+		 * n1 is the number of distinct operators and n2 is number of distinct operands.
+		 * @return float Returns calculated function length.
+		 */
+		public function getProgramLength() {
+			$N = count($this->getUniqueOperators()) * log(count($this->getUniqueOperators()), 2);
+			$N += count($this->getUniqueOperands()) * log(count($this->getUniqueOperands()), 2);
+			return $N;
+		}
+		
+		/**
+		 * Method returns volume of function based on pattern V = N * log2(n) where N = N1 + N2 and n = n1 + n2.
+		 * N1 represents the total number of operators.
+		 * N2 represents the total number of operands.
+		 * n1 represents the distinct number of operators.
+		 * n2 represents the distinct number of operands.
+		 * @return float Returns volume of function.
+		 */
+		public function getVolume() {
+			$N = $this->getOperatorsCount() + $this->getOperandsCount();
+			$n = count($this->getUniqueOperators()) + count($this->getUniqueOperands());
+			return $N * log($n, 2);
+		}
+		
+		/**
+		 * Method returns difficulty measure related to the difficulty of the program to write or understand based on pattern
+		 * D = (n1/2) * (N2/n2) where
+		 * n1 is the number of distinct operators.
+		 * N2 represents the total number of operands.
+		 * n2 represents the distinct number of operands.
+		 * @return float Returns difficulty measure of given function.
+		 */
+		public function getDifficulty() {
+			$D = (count($this->getUniqueOperators())/2) * ($this->getOperandsCount()/count($this->getUniqueOperands()));
+			return $D;
+		}
 		
 		/**
 		 * Setter for class variable operatorsCount. In this variable should be stored count of all operators used in given source code.
