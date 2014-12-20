@@ -71,6 +71,25 @@
 			Assert::same(0, $object->getGotoCount());
 			
 		}
+		
+		public function testBasicHalstead() {
+			
+			$srcFilePath = './../tokens/';
+			$srcFileName = 'Function.json';
+			
+			$object = new Metrics();
+			
+			// set filepath and filename to file HelloWorld.json located at ./../tokens/
+			Assert::true($object->setFile($srcFilePath . $srcFileName));
+			
+			$object->getMetrics();
+			$halstead = $object->getHalsteadMetrics();
+			
+			Assert::equal(20.26466250649, $halstead[0]->getProgramLength());
+			Assert::equal(88.757900040385, $halstead[0]->getVolume());
+			Assert::equal(5.5, $halstead[0]->getDifficulty());
+			
+		}
 	}
 	
 	# run tests
