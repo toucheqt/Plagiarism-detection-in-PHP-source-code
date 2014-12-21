@@ -1,0 +1,24 @@
+\begin{thebibliography}{1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\selectlanguage}[1]{\relax}
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem{Pravidla}
+{Kolektiv autorù}: \emph{Pravidla èeského pravopisu}. Academia, 2005,
+  iSBN~80-200-1327-X.
+
+\bibitem{Rybicka}
+Rybièka, J.: \emph{{\LaTeX} pro zaèáteèníky}. Konvoj, 1999, iSBN~80-85615-77-0.
+
+\bibitem{fitWeb}
+Rábová, Z.; Hanáèek, P.; Peringer, P.; aj.: U¾iteèné rady pro psaní odborného
+  textu [online]. {\tt
+  http://www.fit.vutbr.cz/info/statnice/psani\_textu.html}, 2008-11-01 [cit.
+  2008-11-28].
+
+\end{thebibliography}
