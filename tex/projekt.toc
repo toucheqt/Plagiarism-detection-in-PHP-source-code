@@ -1,11 +1,10 @@
 \select@language {czech}
 \contentsline {chapter}{\numberline {1}\'Uvod}{2}{chapter.1}
-\contentsline {section}{\numberline {1.1}Mus\IeC {\'\i }me m\IeC {\'\i }t co \v r\IeC {\'\i }ci}{2}{section.1.1}
-\contentsline {section}{\numberline {1.2}Mus\IeC {\'\i }me v\v ed\v et, komu to chceme \v r\IeC {\'\i }ci}{2}{section.1.2}
-\contentsline {section}{\numberline {1.3}Mus\IeC {\'\i }me si dokonale promyslet obsah}{2}{section.1.3}
-\contentsline {section}{\numberline {1.4}Mus\IeC {\'\i }me ps\'at strukturovan\v e}{3}{section.1.4}
-\contentsline {chapter}{\numberline {2}N\v ekolik form\'aln\IeC {\'\i }ch pravidel}{4}{chapter.2}
-\contentsline {chapter}{\numberline {3}Nikdy to nebude naprosto dokonal\'e}{5}{chapter.3}
-\contentsline {chapter}{\numberline {4}Typografick\'e a~jazykov\'e z\'asady}{6}{chapter.4}
-\contentsline {section}{\numberline {4.1}Co to je normovan\'a str\'anka?}{7}{section.4.1}
-\contentsline {chapter}{\numberline {5}Z\'av\v er}{9}{chapter.5}
+\contentsline {section}{\numberline {1.1}Plagi\'atorstv\IeC {\'\i }}{2}{section.1.1}
+\contentsline {section}{\numberline {1.2}Typy plagi\'atorstv\IeC {\'\i }}{3}{section.1.2}
+\contentsline {section}{\numberline {1.3}Jazyk PHP}{3}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Specifika jazyka PHP}{4}{subsection.1.3.1}
+\contentsline {subsection}{\numberline {1.3.2}Kvalita k\'odu}{4}{subsection.1.3.2}
+\contentsline {chapter}{\numberline {2}Typografick\'e a~jazykov\'e z\'asady}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}Co to je normovan\'a str\'anka?}{6}{section.2.1}
+\contentsline {chapter}{\numberline {3}Z\'av\v er}{8}{chapter.3}

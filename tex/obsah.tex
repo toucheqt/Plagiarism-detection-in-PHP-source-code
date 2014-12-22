@@ -2,54 +2,79 @@
 % (c) Michal Bidlo, Bohuslav Køena, 2008
 
 \chapter{Úvod}
-Abychom mohli napsat odborný text jasnì a~srozumitelnì, musíme splnit nìkolik základních pøedpokladù:
+Plagiátorství je záva¾ným problémem nejen ve vzdìlávacích a~vìdeckých institucích a má velmi dlouhou a~bohatou historii. 
+Mezinárodní norma ÈSN ISO 5127-2003 jej popisuje jako pøedstavení du¹evního díla jiného autora, pùjèeného nebo napodobeného 
+vcelku nebo zèásti, jako svého vlastního. Nicménì nejvíce pøípadù plagiátorství se stále nachází v~akademických institucích, 
+kde studenti kopírují své práce mezi sebou, v~pøesvìdèení, ¾e zahladili v¹echny stopy vedoucí k odhalení plagiátu.
+
+Pokud se zamìøíme èistì na plagiáty ve zdrojových kódech, mù¾eme je definovat jako program, který byl vytvoøený z~jiného programu tak, aby na první pohled nebylo mo¾né rozeznat originál od kopie. Mezi základní transformace zdrojového kódu, tedy ty, na které se tato práce zamìøuje mù¾eme oznaèit zmìnu komentáøù, identifikátorù, øídících struktur, restrukturalizaci zdrojového kódu nebo zmìnu toku programu (výmìna podmínek ve vyhodnocení {\tt if-else}).
+
+V rámci této bakaláøské práce se pokusím ukázat zpùsoby, jak odhalit právì plagiáty studentských prací napsaných v jazyce PHP a~poukázat na problémy, ke kterým mù¾e pøi automatické detekci plagiátorství docházet.
+
+TODO: strucne popsany obsah tz
+%\begin{itemize}
+%\item Musíme mít co øíci,
+%\item musíme vìdìt, komu to chceme øíci,
+%\item musíme si dokonale promyslet obsah,
+%\item musíme psát strukturovanì. 
+%\end{itemize} TODO SMAZAT
+
+\section{Plagiátorství}
+Jak ji¾ bylo uvedeno vý¹e, plagiátorství je na akademické pùdì záva¾ným problémem a tudí¾ by mìlo být i~pøíslu¹nì potrestáno. Nicménì plagiátorství zdrojových kódu sebou pøiná¹í nìkolik problému, které znaènì stì¾ují schopnost odli¹it plagiát od~originálu. Tyto problémy mù¾eme rozli¹it do ¹esti kategorií (Figure 1.1), z nich¾ pouze jednu mù¾eme oznaèit jako plagiát.
 \begin{itemize}
-\item Musíme mít co øíci,
-\item musíme vìdìt, komu to chceme øíci,
-\item musíme si dokonale promyslet obsah,
-\item musíme psát strukturovanì. 
+\item \textbf{Zdrojový kód tøetích stran}, kterým jsou my¹leny rùzné open-source kódy pøípadnì rùzné knihovny.
+\item \textbf{Nástroje na automatické generování kódu}, kde jako pøíklad mù¾eme uvést vývojové prostøedí Netbeans IDE, které automaticky vytváøí nìkteré metody.
+\item \textbf{Obvykle pou¾ívané identifikátory} jako napøíklad promìnné \textit{result} nebo~\textit{i}.
+\item \textbf{Obvykle pou¾ívané algoritmy} budou ve vìt¹inì pøipadech implementované stejným zpùsobem. Jako pøíklad zde lze uvést témìø libovolný øadící algoritmus.
+\item \textbf{Spoleèný autor} jednoho nebo více programù mù¾e vytvoøit více rùzných verzí programù, které se mohou jevit jako plagiáty, proto¾e autor má tendenci psát kód svým nauèeným zpùsobem.
+\item \textbf{Opsaný kód}, který jako jediný mù¾e být oznaèet jako plagiát, proto¾e zde do¹lo ke kopírování nebo transformaci cizího kódu bez patøièného uvedení jeho autora. 
 \end{itemize}
+\begin{center}
+Figure 1.1: Zeidmanùv seznam ¹esti kategorií podobností kódu [odkaz na Bob Zeidman. What, exactly, is software plagiarism? Intellectual Property Today, 2007.]
+\end{center}
 
-Tyto a dal¹í pokyny jsou dostupné té¾ na ¹kolních internetových stránkách \cite{fitWeb}.
+Detekce plagiátorství na akademické úrovni sebou bohu¾el pøiná¹í je¹tì dal¹í problémy. Zadávané úkoly, hlavnì ty v~zaèatecnických kurzech programování bývají standardizované a velmi striktnì zadávané, co¾ mù¾e vyústit v~podobnì napsané programy, pøesto¾e studenti vypracovávali zadaný úkol samostatnì.
 
-Pøehled základù typografie a tvorby dokumentù s vyu¾itím systému \LaTeX je 
-uveden v~\cite{Rybicka}.
+\section{Typy plagiátorství}
+Jako plagiátorství oznaèujeme nejen jednoduché zkopírování zdrojového kódu, ale také jeho transformace. Tyto mohou být velice jednoduché jako pouhá zmìna, odebrání nebo pøidávání komentáøù, pøípadnì pøejmenováním promìnných, ale mohou být také komplikovanìj¹í jako tøeba zmìna struktury kódu tj. rùzné vnoøování funkcí nebo pøepsání {\tt for} cyklù na {\tt do-while} cykly. Páni J. A. W. Faidhi a S. K. Robinson podle tìchto pøedpokladù definovali ¹est úrovní plagiátorství zdrojového kódu (Figure 1.2) od~nejjednodu¹¹ích technik a¾ po ty nejslo¾itìj¹í.
 
-\section{Musíme mít co øíci}
-Dal¹ím dùle¾itým pøedpokladem dobrého psaní je {\it psát pro nìkoho}. Pí¹eme-li si poznámky sami pro sebe, pí¹eme je jinak ne¾ výzkumnou zprávu, èlánek, diplomovou práci, knihu nebo dopis. Podle pøedpokládaného ètenáøe se rozhodneme pro zpùsob psaní, rozsah informace a~míru detailù.
+\begin{itemize}
+\item \textbf{Úroveò 1} - zmìna komentáøù ve zdrojovém kódu
+\item \textbf{Úroveò 2} - zmìna názvu identifikátorù
+\item \textbf{Úroveò 3} - zmìna pozice promìnných ve zdrojovém kódu
+\item \textbf{Úroveò 4} - zmìna konstant a funkcí
+\item \textbf{Úroveò 5} - zmìna cyklù
+\item \textbf{Úroveò 6} - zmìna struktur urèených pro kontrolu toku programu
+\end{itemize}
+\begin{center}
+Figure 1.2: Faidhi a Robinson definovali ¹est úrovní plagiátorství zdrojového kódu.[J. A. Faidhi and S. K. Robinson. An empirical approach for detecting program similarity and
+plagiarism within a university programming environment. 1987.]
+\end{center}
 
-\section{Musíme vìdìt, komu to chceme øíci}
-Dal¹ím dùle¾itým pøedpokladem dobrého psaní je psát pro nìkoho. Pí¹eme-li si poznámky sami pro sebe, pí¹eme je jinak ne¾ výzkumnou zprávu, èlánek, diplomovou práci, knihu nebo dopis. Podle pøedpokládaného ètenáøe se rozhodneme pro zpùsob psaní, rozsah informace a~míru detailù.
+Tato práce je zamìøena na odhalení v¹ech ¹esti úrovní plagiátorství, pøièem¾ hlavní pozornost je vìnována prvním ètyøem úrovním, které by mìly být odhaleny v¾dy ji¾ pøi povrchním porovnávání zdrojových kódù.
 
-\section{Musíme si dokonale promyslet obsah}
-Musíme si dokonale promyslet a~sestavit obsah sdìlení a~vytvoøit poøadí, v~jakém chceme ètenáøi své my¹lenky prezentovat. 
-Jakmile víme, co chceme øíci a~komu, musíme si rozvrhnout látku. Ideální je takové rozvr¾ení, které tvoøí logicky pøesný a~psychologicky stravitelný celek, ve kterém je pro v¹echno místo a~jeho¾ jednotlivé èásti do sebe pøesnì zapadají. Jsou jasné v¹echny souvislosti a~je zøejmé, co kam patøí.
+\section{Jazyk PHP}
+Jazyk PHP se ve své první formì objevil ji¾ v roce 1994, kdy se pan Rasmus Lerdorf rozhodl, ¾e vytvoøí jednoduchý systém, který bude zapoèítávat pøístup na webové stránky. První verze byla napsána v jazyce PERL, nicménì vzhledem ke znaènému zatí¾ení serveru bylo poté PHP pøepsáno do jazyka C. V prùbìhu let následovalo vydání nìkolika dal¹ích verzí, a¾ nakonec v~roce 2003 byla oficiálnì vydána beta verze PHP5, která pøinesla nejvìt¹í zmìnu v podobì pøidání objektového modelu.
 
-Abychom tohoto cíle dosáhli, musíme peèlivì organizovat látku. Rozhodneme, co budou hlavní kapitoly, co podkapitoly a~jaké jsou mezi nimi vztahy. Diagramem takové organizace je graf, který je velmi podobný stromu, ale ne øetìzci. Pøi organizaci látky je stejnì dùle¾itá otázka, co do osnovy zahrnout, jako otázka, co z~ní vypustit. Pøíli¹ mnoho podrobností mù¾e ètenáøe právì tak odradit jako ¾ádné detaily.
+Jazyk získal velké uplatnìní zejména z~dùvodu, ¾e je nezávislý na platformì a~rozdíly v~rùzných operaèních systémech se omezují pouze na nìkolik systémovì závislých funkcí. Nicménì stejnì jako ostatní jazyky, má i~PHP nevýhody. Nejvìt¹í nevýhodou je fakt, ¾e se jedná o~jazyk interpretovaný, co¾ znamená, ¾e pøi jakémkoliv spu¹tìní i~toho nejmen¹ího skriptu, je potøeba soubor s~tímto skriptem znovu kompilovat.
 
-Výsledkem této etapy je osnova textu, kterou tvoøí sled hlavních my¹lenek a~mezi nì zaøazené detaily.
+\subsection{Specifika jazyka PHP}
+Jak ji¾ bylo uvedeno vý¹e, tak objektový model byl do jazyka pøidán a¾ pozdìji, co¾ nyní programátorùm umo¾òuje vybrat si, jestli budou své programy psát vyu¾ívajíc imperativního nebo objektovì orientovaného paradigmatu. Tento výbìr ov¹em také napomáhá ¹íøení plagiátorství, proto¾e lze pøepsáním originálního zdrojového kódu do jiného programovacího paradigmatu vytvoøit na první pohled odli¹ný kód.
 
-\section{Musíme psát strukturovanì} 
-Musíme zaèít psát strukturovanì a~souèasnì pracujeme na co nejsrozumitelnìj¹í formì, vèetnì dobrého slohu a~dokonalého znaèení. 
-Máme-li tedy my¹lenku, pøedstavu o~budoucím ètenáøi, cíl a~osnovu textu, mù¾eme zaèít psát. Pøi psaní prvního konceptu se sna¾íme zaznamenat v¹echny své my¹lenky a~názory vztahující se k~jednotlivým kapitolám a~podkapitolám. Ka¾dou my¹lenku musíme vysvìtlit, popsat a~prokázat. Hlavní my¹lenku má v¾dy vyjadøovat hlavní vìta a~nikoliv vìta vedlej¹í.
+\subsection{Kvalita kódu}
+Jazyk PHP byl dlouho definován pouze svou implementací a~oficiální specifikace jazyka byla oznámena teprve na konci èervence 2014. Pokud k~tomuto pøipoèteme fakt, ¾e v~jazyku panuje nekonzistentní pojmenování funkcí, pøípadnì nejednotné poøadí parametrù ve funkcích a~vezmeme v~potaz i~to, ¾e jazyk samotný není obtí¾né se nauèit, dostaneme jako výsledek mnoho nekvalitního kódu.
 
-I k~procesu psaní textu pøistupujeme strukturovanì. Souèasnì s~tím, jak si ujasòujeme strukturu písemné práce, vytváøíme kostru textu, kterou postupnì doplòujeme. Vyu¾íváme ty prostøedky DTP programu, které podporují strukturovanou stavbu textu (pøeddefinované typy pro nadpisy a~bloky textu). 
-
-
-\chapter{Nìkolik formálních pravidel}
-Na¹ím cílem je vytvoøit jasný a~srozumitelný text. Vyjadøujeme se proto pøesnì, pí¹eme dobrou èe¹tinou (nebo zpravidla angliètinou) a~dobrým slohem podle obecnì pøijatých zvyklostí. Text má upravit ètenáøi cestu k~rychlému pochopení problému, pøedvídat jeho obtí¾e a~pøedcházet jim. Dobrý sloh pøedpokládá bezvadnou gramatiku, správnou interpunkci a~vhodnou volbu slov. Sna¾íme se, aby ná¹ text nepùsobil pøíli¹ jednotvárnì pou¾íváním malého výbìru slov a~tím, ¾e nìkterá zvlá¹» oblíbená slova pou¾íváme pøíli¹ èasto. Pokud pou¾íváme cizích slov, je samozøejmým pøedpokladem, ¾e známe jejich pøesný význam. Ale i~èeských slov musíme pou¾ívat ve správném smyslu. Napø. platí jistá pravidla pøi pou¾ívání slova {\it zøejmì}. Je {\it zøejmé} opravdu zøejmé? A~pøesvìdèili jsme se, zda to, co je {\it zøejmé} opravdu platí? Pozor bychom si mìli dát i~na pøíli¹ èasté pou¾ívání zvratného se. Napøíklad obratu {\it dokázalo se}, ¾e... zásadnì nepou¾íváme. Není ¹patné pou¾ívat autorského {\it my}, tím pøedpokládáme, ¾e nìco øe¹íme, nebo napøíklad zobecòujeme spolu se ètenáøem. V~kvalifikaèních pracích pou¾ijeme autorského {\it já} (napøíklad kdy¾ vymezujeme podíl vlastní práce vùèi pøevzatému textu), ale v~bì¾ném textu se nadmìrné pou¾ívání první osoby jednotného èísla nedoporuèuje.
-
-Za peèlivý výbìr stojí i~symbolika, kterou pou¾íváme ke {\it znaèení}. Máme tím na mysli volbu zkratek a~symbolù pou¾ívaných napøíklad pro vyjádøení typù souèástek, pro oznaèení hlavních èinností programu, pro pojmenování ovládacích kláves na klávesnici, pro pojmenování promìnných v~matematických formulích a~podobnì. Výsti¾né a~dùsledné znaèení mù¾e ètenáøi pøi èetbì textu velmi pomoci. Je vhodné uvést seznam znaèení na zaèátku textu. Nejen ve znaèení, ale i~v~odkazech a~v~celkové tiskové úpravì je dùle¾itá dùslednost.
-
-S tím souvisí i~pojem z~typografie nazývaný {\it vyznaèování}. Zde máme na mysli zpùsob sazby textu pro jeho zvýraznìní. Pro zvolené znaèení by mìl být zvolen i~zpùsob vyznaèování v~textu. Tak napøíklad klávesy mohou být umístìny do obdélníèku, identifikátory ze zdrojového textu mohou být vypisovány {\tt písmem typu psací stroj} a~podobnì.
-
-Uvádíme-li nìkterá fakta, neskrýváme jejich pùvod a~ná¹ vztah k~nim. Kdy¾ nìco tvrdíme, v¾dycky výslovnì uvedeme, co z~toho bylo dokázáno, co teprve bude dokázáno v~na¹em textu a~co pøebíráme z~literatury s~uvedením odkazu na pøíslu¹ný zdroj. V~tomto smìru nenecháváme ètenáøe nikdy na pochybách, zda jde o~my¹lenku na¹i nebo pøevzatou z~literatury.
-
-Nikdy neplýtváme ètenáøovým èasem výkladem triviálních a~nepodstatných informací. Neuvádíme rovnì¾ nìkolikrát toté¾ jen jinými slovy. Pøi pozdìj¹ích úpravách textu se nám mù¾e nìkterá døíve napsaná pasá¾ jevit jako zbyteènì podrobná nebo dokonce zcela zbyteèná. Vypu¹tìní takové pasá¾e nebo alespoò její zestruènìní pøispìje k~lep¹í èitelnosti práce! Tento krok ale vy¾aduje odvahu zahodit èas, který jsme jejímu vytvoøení vìnovali. 
-
-
-\chapter{Nikdy to nebude naprosto dokonalé}
-Kdy¾ jsme u¾ napsali v¹e, o~èem jsme pøemý¹leli, udìláme si den nebo dva dny volna a~pak si pøeèteme sami rukopis znovu. Udìláme je¹tì poslední úpravy a~skonèíme. Jsme si vìdomi toho, ¾e v¾dy zùstane nìco nedokonèeno, v¾dy existuje lep¹í zpùsob, jak nìco vysvìtlit, ale ka¾dá etapa úprav musí být koneèná.
+Kvalitu zdrojového kódu lze podle Dr. Billa Curtise definovat jako pìtici po¾adovaných vlastností softwaru, nutných k~zaji¹tìní jeho obchodní hodnoty. Tento model byl pozdìji uveden jako CISQ model kvality. (Figure 1.3)
+\begin{itemize}
+\item \textbf{Spolehlivost} - Urèuje míru rizika a~pravdìpodobnosti pøípadných selhání aplikace.
+\item \textbf{Efektivita} - Zdrojový kód a~jeho struktura jsou hlavními faktory, které urèují rychlost bìhu aplikace.
+\item \textbf{Bezpeènost} - Metrika na urèení náchylnosti programu na prolomení bezpeènosti zapøíèinìné ¹patnými praktikami v~návrhu a~naprogramování aplikace.
+\item \textbf{Udr¾ovatelnost} - Zahrnuje srozumitelnost a~pøenositelnost aplikace, jak mezi jednotlivými operaèními systémy, tak mezi jednotlivými vývojovými týmy.
+\item \textbf{Velikost} - Aèkoliv velikost pøímo neovlivòuje kvalitu zdrojového kódu, tak stále má velký vliv na udr¾ovatelnost kódu a tedy nepøímo i na kvalitu výsledného kódu.  
+\end{itemize}
+\begin{center}
+Figure 1.3: Definice kvality zdrojového kódu podle CISQ modelu[link na cisq]
+\end{center}
 
 
 \chapter{Typografické a~jazykové zásady}
