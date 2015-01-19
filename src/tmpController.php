@@ -5,7 +5,7 @@
 	
 	
 	// ************************************************** FILE ONE ************************************************************ //
-	$file = 'Function';
+	$file = 'Halstead';
 	
 	$tokenizer = new Tokenizer();
 	$tokenizer->setFile('./tests/test-files/' . $file . '.php');
@@ -25,6 +25,7 @@
 	// print functions count
 	$metrics->getMetrics();
 	$tmp = $metrics->getHalsteadMetrics();
+	
 	/*
 	echo 'Number of functions in ' . $file . '.php = ' . $metrics->getFunctionCount() . "\n";
 	echo 'Number of global variables in ' . $file . '.php = ' . $metrics->getGlobalVarCount() . "\n";

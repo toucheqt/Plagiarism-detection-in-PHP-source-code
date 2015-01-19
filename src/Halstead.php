@@ -32,6 +32,9 @@
 		 * @return float Returns calculated function length.
 		 */
 		public function getProgramLength() {
+			echo "operandy = " . count($this->uniqueOperands) . "\n";
+			echo "operatory = " . count($this->uniqueOperators) . "\n";
+			print_r($this->uniqueOperands);
 			$N = count($this->getUniqueOperators()) * log(count($this->getUniqueOperators()), 2);
 			$N += count($this->getUniqueOperands()) * log(count($this->getUniqueOperands()), 2);
 			return $N;

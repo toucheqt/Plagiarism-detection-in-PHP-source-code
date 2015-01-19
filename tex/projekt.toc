@@ -2,9 +2,25 @@
 \contentsline {chapter}{\numberline {1}\'Uvod}{2}{chapter.1}
 \contentsline {section}{\numberline {1.1}Plagi\'atorstv\IeC {\'\i }}{2}{section.1.1}
 \contentsline {section}{\numberline {1.2}Typy plagi\'atorstv\IeC {\'\i }}{3}{section.1.2}
-\contentsline {section}{\numberline {1.3}Jazyk PHP}{3}{section.1.3}
+\contentsline {section}{\numberline {1.3}Jazyk PHP}{4}{section.1.3}
 \contentsline {subsection}{\numberline {1.3.1}Specifika jazyka PHP}{4}{subsection.1.3.1}
 \contentsline {subsection}{\numberline {1.3.2}Kvalita k\'odu}{4}{subsection.1.3.2}
-\contentsline {chapter}{\numberline {2}Typografick\'e a~jazykov\'e z\'asady}{5}{chapter.2}
-\contentsline {section}{\numberline {2.1}Co to je normovan\'a str\'anka?}{6}{section.2.1}
-\contentsline {chapter}{\numberline {3}Z\'av\v er}{8}{chapter.3}
+\contentsline {chapter}{\numberline {2}Anal\'yza probl\'emu}{5}{chapter.2}
+\contentsline {section}{\numberline {2.1}Tokenizace}{5}{section.2.1}
+\contentsline {section}{\numberline {2.2}Abstraktn\IeC {\'\i } syntaktick\'y strom}{6}{section.2.2}
+\contentsline {section}{\numberline {2.3}Halsteadova metrika}{6}{section.2.3}
+\contentsline {section}{\numberline {2.4}Levenshteinova vzd\'alenost}{8}{section.2.4}
+\contentsline {section}{\numberline {2.5}Otisky dokument\r u}{8}{section.2.5}
+\contentsline {chapter}{\numberline {3}N\'avrh \v re\v sen\IeC {\'\i }}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}Lexik\'aln\IeC {\'\i } anal\'yza}{9}{section.3.1}
+\contentsline {section}{\numberline {3.2}Anal\'yza token\r u}{9}{section.3.2}
+\contentsline {section}{\numberline {3.3}Halsteadova metrika}{10}{section.3.3}
+\contentsline {section}{\numberline {3.4}Levenstheinova vzd\'alenost}{10}{section.3.4}
+\contentsline {section}{\numberline {3.5}Porovn\'an\IeC {\'\i } abstraktn\IeC {\'\i }ch syntaktick\'ych strom\r u}{10}{section.3.5}
+\contentsline {section}{\numberline {3.6}Metoda winnowing}{10}{section.3.6}
+\contentsline {section}{\numberline {3.7}\v R\IeC {\'\i }zen\IeC {\'\i } programu}{10}{section.3.7}
+\contentsline {chapter}{\numberline {4}Experimenty}{11}{chapter.4}
+\contentsline {chapter}{\numberline {5}V\'ysledky a zhodnocen\IeC {\'\i } pr\'ace}{12}{chapter.5}
+\contentsline {section}{\numberline {5.1}Testov\'an\IeC {\'\i } a statistiky}{12}{section.5.1}
+\contentsline {section}{\numberline {5.2}N\'avrhy na roz\v s\IeC {\'\i }\v ren\IeC {\'\i }}{12}{section.5.2}
+\contentsline {chapter}{\numberline {6}Z\'av\v er}{13}{chapter.6}

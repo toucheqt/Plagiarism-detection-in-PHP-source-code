@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.12.21)  22 DEC 2014 15:37
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2014.12.21)  19 JAN 2015 23:26
 entering extended mode
  %&-line parsing enabled.
 **projekt
@@ -362,14 +362,14 @@ LaTeX Font Info:    Created by CsPsFont utility v.1.0f (C) Z. Wagner, 1998/12/2
 \@vyskartext=\skip47
 \@vyskaobr=\skip48
 
-<fig/vut-zp2.pdf, id=45, 109.40875pt x 109.40875pt>
+<fig/vut-zp2.pdf, id=109, 109.40875pt x 109.40875pt>
 File: fig/vut-zp2.pdf Graphic file (type pdf)
  <use fig/vut-zp2.pdf>
 Overfull \hbox (109.58464pt too wide) in paragraph at lines 115--115
 [][] 
  []
 
-<fig/fit-zp2.pdf, id=46, 120.45pt x 120.45pt>
+<fig/fit-zp2.pdf, id=110, 120.45pt x 120.45pt>
 File: fig/fit-zp2.pdf Graphic file (type pdf)
  <use fig/fit-zp2.pdf>
 Overfull \hbox (109.58464pt too wide) in paragraph at lines 115--115
@@ -433,7 +433,7 @@ File: il2cmtt.fd 1997/08/20 CSLaTeX font definitions
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.30 \item \textbf
+l.22 \item \textbf
                   {Opsaný kód}, který jako jediný mù¾e být oznaèet jako plag...
 [2
 
@@ -441,59 +441,87 @@ l.30 \item \textbf
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.60 
+l.50 
       [3]pdfTeX warning (ext4): destination with the same identifier (name{page
 .4}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.80 \chapter
-             {Typografické a~jazykové zásady} [4]
+l.71 \chapter
+             {Analýza problému} [4]
 Kapitola 2.
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--90
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--90
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--90
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 84--90
+
+ []
+
 [5
 
-]
-LaTeX Font Info:    Try loading font information for OMS+cmtt on input line 98.
+] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 143--151
 
-LaTeX Font Info:    No file OMScmtt.fd. on input line 98.
+ []
 
-
-LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 98.
-
-[6] [7]
+[7] [8]
 Kapitola 3.
-) (./projekt.bbl [8
+[9
 
-]) (./prilohy.tex) [9
+] [10]
+Kapitola 4.
+[11
+
+]
+Kapitola 5.
+[12
+
+]
+Kapitola 6.
+) (./projekt.bbl [13
+
+]) (./prilohy.tex) [14
 
 ] (./projekt.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.28pt have occurred.
 
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
  ) 
 Here is how much of TeX's memory you used:
- 7207 strings out of 495027
- 95484 string characters out of 1181418
- 169530 words of memory out of 3000000
- 10226 multiletter control sequences out of 15000+50000
+ 7244 strings out of 495027
+ 95890 string characters out of 1181418
+ 168530 words of memory out of 3000000
+ 10244 multiletter control sequences out of 15000+50000
  20582 words of font info for 57 fonts, out of 3000000 for 9000
  38 hyphenation exceptions out of 8191
- 38i,5n,36p,1112b,421s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,5n,36p,938b,420s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8a.enc}</usr/share/texmf-texli
-ve/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive/fonts/ty
-pe1/public/cs/csbx10.pfb></usr/share/texmf-texlive/fonts/type1/public/cs/csbx12
-.pfb></usr/share/texmf-texlive/fonts/type1/public/cs/csr10.pfb></usr/share/texm
-f-texlive/fonts/type1/public/cs/csti10.pfb></usr/share/texmf-texlive/fonts/type
-1/public/cs/cstt10.pfb></usr/share/texmf-texlive/fonts/type1/urw/helvetic/uhvr8
-a.pfb>
-Output written on projekt.pdf (13 pages, 117440 bytes).
+ve/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/a
+msfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
+mr6.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr
+/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texm
+f-texlive/fonts/type1/public/cs/csbx10.pfb></usr/share/texmf-texlive/fonts/type
+1/public/cs/csbx12.pfb></usr/share/texmf-texlive/fonts/type1/public/cs/csr10.pf
+b></usr/share/texmf-texlive/fonts/type1/public/cs/csti10.pfb></usr/share/texmf-
+texlive/fonts/type1/public/cs/cstt10.pfb></usr/share/texmf-texlive/fonts/type1/
+urw/helvetic/uhvr8a.pfb>
+Output written on projekt.pdf (18 pages, 182095 bytes).
 PDF statistics:
- 147 PDF objects out of 1000 (max. 8388607)
- 22 named destinations out of 1000 (max. 500000)
- 83 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 273 PDF objects out of 1000 (max. 8388607)
+ 43 named destinations out of 1000 (max. 500000)
+ 211 words of extra memory for PDF output out of 10000 (max. 10000000)
 
