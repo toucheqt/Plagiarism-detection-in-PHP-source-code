@@ -10,92 +10,35 @@
 	 */
 	class Halstead {
 		
-		const TOKEN_TYPE = 0;
-		const TOKEN_VALUE = 1;
-		const TOKEN_LINE_NUMBER = 2;
-		
-		const DEFAULT_BLOCK_LENGTH = 10;
-		const MIN_BLOCK_LENGTH = 2;
-		
-		private $tokens;
-		private $halsteadBlocks;
-		
-		public function __construct($tokens) {
-			$this->tokens = $tokens;
-			$this->halsteadBlocks = array();
-		}
-		
-		// ====== Methods ======
-		
-	public function processTokens() {
-			
-			if (is_null($this->tokens)) {
-				$errorMessage = "Input tokens can not be null.\n";
-				echo $errorMessage;
-				throw new InvalidArgumentException($errorMessage);
-			}
-			
-			if (!is_null($blockLength) && $blockLength < self::MIN_BLOCK_LENGTH) {
-				fprintf(STDERR, '[WARNING] Halstead.php >>> Code block length can not be smaller than ' 
-						. self::MIN_BLOCK_LENGTH . ".\n");
-				fprintf(STDERR, '[INFO] Halstead.php >>> Code block length was set to ' 
-						. self::DEFAULT_BLOCK_LENGTH . ".\n");
-				$blockLength = self::DEFAULT_BLOCK_LENGTH;
-			}
-			if (is_null($blockLength)) $blockLength = self::DEFAULT_BLOCK_LENGTH;
-			
-			$currentBlockLength = 0;
-			$lastLine = 0;
-			$tmpBlock = array();
-			foreach ($this->tokens as $token) {
-				if (is_array($token)) {
-					if ($lastLine < $token[self::TOKEN_LINE_NUMBER]) {
-						$lastLine = $token[self::TOKEN_LINE_NUMBER];
-						$currentBlockLength++;
-					}
-				}
-				
-				if ($currentBlockLength < $blockLength) {
-					array_push($tmpBlock, $token);
-					continue;
-				}
-				$currentBlockLength = 0;
-				$halsteadBlock = new HalsteadBlock($tmpBlock);
-				$this->halsteadBlocks[] = $halsteadBlock;
-				$tmpBlock = array();
-				array_push($tmpBlock, $token);				
-			}
-			$halsteadBlock = new HalsteadBlock($tmpBlock);
-			$this->halsteadBlocks[] = $halsteadBlock;	
-
-			$this->evalMetrics();	
-		}
+		private function __construct();
 		
 		/**
 		 * Evaluates halstead metrics for code block
+		 * @param $halsteadBlock
 		 */
-		private function evalMetrics() {
+		public static function evalMetrics($halsteadBlock) {
 			
-			foreach ($this->halsteadBlocks as $block) {
-				foreach ($block->getBlock() as $token) {
-					if ($this->isOperator($token[self::TOKEN_TYPE])) {
-						$block->addUniqueOperator($token);
-					}
-					else {
-						$block->addUniqueOperand($token);
-					}
+			foreach ($halsteadBlock->getBlock() as $token) {
+				if (Halstead::isOperator($token[TokenBlock::TOKEN_TYPE])) {
+					$halsteadBlock->addUniqueOperator($token);
 				}
-
-				$block->setProgramLength($this->evalProgramLength($block));
-				$block->setVolume($this->evalVolume($block));
-				$block->setDifficulty($this->evalDifficulty($block));
-			}		
+				else {
+					$halsteadBlock->addUniqueOperand($token);
+				}
+			}
+			
+			$halsteadBlock->setProgramLength(Halstead::evalProgramLength($halsteadBlock->getBlock()));
+			$halsteadBlock->setVolume(Halstead::evalVolume($halsteadBlock->getBlock()));
+			$halsteadBlock->setDifficulty(Halstead::evalDifficulty($halsteadBlock->getBlock()));
+			
+			return $halsteadBlock;
+			
 		}
 		
 		/**
 		 * Evaluates program length of given codeblock
 		 */
-		private function evalProgramLength($block) {
+		private static function evalProgramLength($block) {
 			$N = count($block->getUniqueOperators()) * log(count($block->getUniqueOperators()), 2);
 			$N += count($block->getUniqueOperands()) * log(count($block->getUniqueOperands()), 2);
 			return $N;
@@ -104,7 +47,7 @@
 		/**
 		 * Evaluates volume of given codeblock
 		 */
-		private function evalVolume($block) {
+		private static function evalVolume($block) {
 			$N = $block->getOperators() + $block->getOperands();
 			$n = count($block->getUniqueOperators()) + count($block->getUniqueOperands());
 			return $N * log($n, 2);
@@ -113,14 +56,14 @@
 		/**
 		 * Evaluates difficulty of given codeblock
 		 */
-		private function evalDifficulty($block) {
+		private static function evalDifficulty($block) {
 			$D = (count($block->getUniqueOperators())/2);
 			$D *= ($block->getOperands()/count($block->getUniqueOperands()));
 			return $D;
 		}
 		
-		private function isOperator($token) {
-			switch ($token) {
+		private static function isOperator($tokenType) {
+			switch ($tokenType) {
 				
 				case 'T_CLONE':
 					return true;
@@ -299,24 +242,5 @@
 			} // end switch
 		} // end isOperator method
 		
-		// ====== Getters/Setters ======
-		
-		public function getTokens() {
-			return $this->tokens;
-		}
-		
-		public function setTokens($tokens) {
-			$this->tokens = $tokens;
-		}
-		
-		public function getHalsteadBlocks() {
-			return $this->halsteadBlocks;
-		}
-		
-		public function setHalsteadBlock($halsteadBlocks) {
-			$this->halsteadBlocks = $halsteadBlocks;
-		}
-		
-	}
-
+	}		
 ?>

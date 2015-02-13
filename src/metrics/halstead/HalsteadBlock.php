@@ -10,8 +10,6 @@
 	 */
 	class HalsteadBlock {
 		
-		private $block;
-		
 		private $operators;
 		private $operands;
 		private $uniqueOperators;
@@ -21,8 +19,7 @@
 		private $volume;
 		private $difficulty;
 		
-		public function __construct($block) {
-			$this->block = $block;
+		public function __construct() {
 			$this->uniqueOperators = array();
 			$this->uniqueOperands = array();
 			$this->operands = 0;
@@ -89,15 +86,6 @@
 		}
 		
 		// ====== Getters/Setters ======
-		
-		public function getBlock() {
-			return $this->block;
-		}
-		
-		public function setBlock($block) {
-			$this->block = $block;
-		}
-		
 		public function getOperators() {
 			return $this->operators;
 		}
