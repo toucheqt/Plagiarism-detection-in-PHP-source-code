@@ -18,6 +18,6 @@
 	echo "[INFO] Sucessfuly encoded input file to json.\n";
 	
 	$halstead = new Halstead($tokensWorker->getTokens());
-	$halstead->processTokens(-1);
+	$halstead->processTokens();
 
 ?>

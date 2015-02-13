@@ -8,7 +8,7 @@
 	 * @author Ondrej Krpec, xkrpecqt@gmail.com
 	 *
 	 */
-	class CodeBlock {
+	class HalsteadBlock {
 		
 		private $block;
 		
