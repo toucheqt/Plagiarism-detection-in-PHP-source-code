@@ -35,7 +35,7 @@
 				throw new InvalidArgumentException($errorMessage);
 			}
 			
-			if ($blockLength < self::MIN_BLOCK_LENGTH) {
+			if (!is_null($blockLength) && $blockLength < self::MIN_BLOCK_LENGTH) {
 				fprintf(STDERR, '[WARNING] Halstead.php >>> Code block length can not be smaller than ' 
 						. self::MIN_BLOCK_LENGTH . ".\n");
 				fprintf(STDERR, '[INFO] Halstead.php >>> Code block length was set to ' 
