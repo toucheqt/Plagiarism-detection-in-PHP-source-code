@@ -3,6 +3,7 @@
 	include '../parser/TokensWorker.php';
 	include '../parser/JsonConverter.php';
 	include '../metrics/halstead/Halstead.php';
+	include '../metrics/levenshtein/Levenshtein.php';
 
 	// ====== get tokens =======
 	$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\test-files\\Halstead.php";
@@ -18,6 +19,12 @@
 	echo "[INFO] Sucessfuly encoded input file to json.\n";
 	
 	$halstead = new Halstead($tokensWorker->getTokens());
-	$halstead->processTokens(-1);
+	$halstead->processTokens();
+	
+	echo "[INFO] Sucessfuly processed tokens.\n";
+	echo "[INFO] Sucessfuly evaluated halstead metrics.\n";
+	
+	$blocks = $halstead->getHalsteadBlocks();
+	$levenshtein = new Levenshtein($blocks[0]);
 
 ?>

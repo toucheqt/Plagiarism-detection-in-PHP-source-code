@@ -1,6 +1,6 @@
 <?php
 
-	include_once 'CodeBlock.php';
+	include_once 'HalsteadBlock.php';
 
 	/**
 	 * 
@@ -18,11 +18,11 @@
 		const MIN_BLOCK_LENGTH = 2;
 		
 		private $tokens;
-		private $codeBlocks;
+		private $halsteadBlocks;
 		
 		public function __construct($tokens) {
 			$this->tokens = $tokens;
-			$this->codeBlocks = array();
+			$this->halsteadBlocks = array();
 		}
 		
 		// ====== Methods ======
@@ -35,7 +35,7 @@
 				throw new InvalidArgumentException($errorMessage);
 			}
 			
-			if ($blockLength < self::MIN_BLOCK_LENGTH) {
+			if (!is_null($blockLength) && $blockLength < self::MIN_BLOCK_LENGTH) {
 				fprintf(STDERR, '[WARNING] Halstead.php >>> Code block length can not be smaller than ' 
 						. self::MIN_BLOCK_LENGTH . ".\n");
 				fprintf(STDERR, '[INFO] Halstead.php >>> Code block length was set to ' 
@@ -60,26 +60,15 @@
 					continue;
 				}
 				$currentBlockLength = 0;
-				$codeBlock = new CodeBlock($tmpBlock);
-				$this->codeBlocks[] = $codeBlock;
+				$halsteadBlock = new HalsteadBlock($tmpBlock);
+				$this->halsteadBlocks[] = $halsteadBlock;
 				$tmpBlock = array();
 				array_push($tmpBlock, $token);				
 			}
-			$codeBlock = new CodeBlock($tmpBlock);
-			$this->codeBlocks[] = $codeBlock;	
+			$halsteadBlock = new HalsteadBlock($tmpBlock);
+			$this->halsteadBlocks[] = $halsteadBlock;	
 
 			$this->evalMetrics();	
-			
-			foreach ($this->codeBlocks as $codeBlock) {
-				echo "================ CODE BLOCK ===================\n";
-				print_r($codeBlock->getBlock());
-				echo "\n================= LENGTH =====================\n";
-				echo $codeBlock->getProgramLength();
-				echo "\n================= VOLUME =====================\n";
-				echo $codeBlock->getVolume();
-				echo "\n================= DIFFICULTY =====================\n";
-				echo $codeBlock->getDifficulty();
-			}
 		}
 		
 		/**
@@ -87,46 +76,46 @@
 		 */
 		private function evalMetrics() {
 			
-			foreach ($this->codeBlocks as $codeBlock) {
-				foreach ($codeBlock->getBlock() as $token) {
+			foreach ($this->halsteadBlocks as $block) {
+				foreach ($block->getBlock() as $token) {
 					if ($this->isOperator($token[self::TOKEN_TYPE])) {
-						$codeBlock->addUniqueOperator($token);
+						$block->addUniqueOperator($token);
 					}
 					else {
-						$codeBlock->addUniqueOperand($token);
+						$block->addUniqueOperand($token);
 					}
 				}
 
-				$codeBlock->setProgramLength($this->evalProgramLength($codeBlock));
-				$codeBlock->setVolume($this->evalVolume($codeBlock));
-				$codeBlock->setDifficulty($this->evalDifficulty($codeBlock));
+				$block->setProgramLength($this->evalProgramLength($block));
+				$block->setVolume($this->evalVolume($block));
+				$block->setDifficulty($this->evalDifficulty($block));
 			}		
 		}
 		
 		/**
 		 * Evaluates program length of given codeblock
 		 */
-		private function evalProgramLength($codeBlock) {
-			$N = count($codeBlock->getUniqueOperators()) * log(count($codeBlock->getUniqueOperators()), 2);
-			$N += count($codeBlock->getUniqueOperands()) * log(count($codeBlock->getUniqueOperands()), 2);
+		private function evalProgramLength($block) {
+			$N = count($block->getUniqueOperators()) * log(count($block->getUniqueOperators()), 2);
+			$N += count($block->getUniqueOperands()) * log(count($block->getUniqueOperands()), 2);
 			return $N;
 		}
 		
 		/**
 		 * Evaluates volume of given codeblock
 		 */
-		private function evalVolume($codeBlock) {
-			$N = $codeBlock->getOperators() + $codeBlock->getOperands();
-			$n = count($codeBlock->getUniqueOperators()) + count($codeBlock->getUniqueOperands());
+		private function evalVolume($block) {
+			$N = $block->getOperators() + $block->getOperands();
+			$n = count($block->getUniqueOperators()) + count($block->getUniqueOperands());
 			return $N * log($n, 2);
 		}
 		
 		/**
 		 * Evaluates difficulty of given codeblock
 		 */
-		private function evalDifficulty($codeBlock) {
-			$D = (count($codeBlock->getUniqueOperators())/2);
-			$D *= ($codeBlock->getOperands()/count($codeBlock->getUniqueOperands()));
+		private function evalDifficulty($block) {
+			$D = (count($block->getUniqueOperators())/2);
+			$D *= ($block->getOperands()/count($block->getUniqueOperands()));
 			return $D;
 		}
 		
@@ -318,6 +307,14 @@
 		
 		public function setTokens($tokens) {
 			$this->tokens = $tokens;
+		}
+		
+		public function getHalsteadBlocks() {
+			return $this->halsteadBlocks;
+		}
+		
+		public function setHalsteadBlock($halsteadBlocks) {
+			$this->halsteadBlocks = $halsteadBlocks;
 		}
 		
 	}
