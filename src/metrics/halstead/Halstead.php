@@ -27,7 +27,7 @@
 		
 		// ====== Methods ======
 		
-		public function processTokens($blockLength = NULL) {
+	public function processTokens() {
 			
 			if (is_null($this->tokens)) {
 				$errorMessage = "Input tokens can not be null.\n";
