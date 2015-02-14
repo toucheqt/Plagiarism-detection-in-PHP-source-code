@@ -10,15 +10,16 @@
 	 */
 	class Halstead {
 		
-		private function __construct();
+		private function __construct() {}
 		
 		/**
 		 * Evaluates halstead metrics for code block
 		 * @param $halsteadBlock
+		 * @param $block
 		 */
-		public static function evalMetrics($halsteadBlock) {
+		public static function evalMetrics($halsteadBlock, $block) {
 			
-			foreach ($halsteadBlock->getBlock() as $token) {
+			foreach ($block as $token) {
 				if (Halstead::isOperator($token[TokenBlock::TOKEN_TYPE])) {
 					$halsteadBlock->addUniqueOperator($token);
 				}
@@ -27,9 +28,9 @@
 				}
 			}
 			
-			$halsteadBlock->setProgramLength(Halstead::evalProgramLength($halsteadBlock->getBlock()));
-			$halsteadBlock->setVolume(Halstead::evalVolume($halsteadBlock->getBlock()));
-			$halsteadBlock->setDifficulty(Halstead::evalDifficulty($halsteadBlock->getBlock()));
+			$halsteadBlock->setProgramLength(Halstead::evalProgramLength($halsteadBlock));
+			$halsteadBlock->setVolume(Halstead::evalVolume($halsteadBlock));
+			$halsteadBlock->setDifficulty(Halstead::evalDifficulty($halsteadBlock));
 			
 			return $halsteadBlock;
 			

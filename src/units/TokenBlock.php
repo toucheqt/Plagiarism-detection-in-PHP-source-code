@@ -14,9 +14,11 @@
 		const TOKEN_LINE_NUMBER = 2;	
 		
 		private $tokens;
+		private $halsteadBlock;
 		
 		public function __construct($tokens) {
 			$this->tokens = $tokens;
+			$halsteadBlock = Halstead::evalMetrics(new HalsteadBlock(), $this->tokens);
 		}
 		
 		// ===== Methods =======
