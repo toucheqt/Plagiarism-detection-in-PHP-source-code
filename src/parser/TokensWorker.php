@@ -89,8 +89,6 @@
 					array_push($this->tokens, $token);
 				}
 			}	
-
-			$this->tokens = $tmpArray;
 		}
 		
 		// ===== Getters/Setters =====

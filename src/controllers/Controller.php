@@ -7,11 +7,11 @@
 	include '../units/TokenBlock.php';
 
 	// ====== get tokens =======
-	$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\test-files\\Halstead.php";
+	$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\test-files\\All.php";
 	try {
 		$tokensWorker = new TokensWorker($filename);
 		$converter = new JsonConverter();
-		$converter->saveToJson("D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tokens\\" , 'Halstead.json', $tokensWorker->getTokens());
+		$converter->saveToJson("D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tokens\\" , 'All.json', $tokensWorker->getTokens());
 	}
 	catch (InvalidArgumentException $ex) {
 		echo 'Skipping file ' . $filename;

@@ -1,5 +1,7 @@
 <?php
 
+	include_once '../metrics/levenshtein/Levenshtein.php';
+
 	/**
 	 * 
 	 * Enter description here ...
@@ -14,15 +16,17 @@
 		const TOKEN_LINE_NUMBER = 2;	
 		
 		private $tokens;
+		
 		private $halsteadBlock;
+		private $levenshteinBlocks;
 		
 		public function __construct($tokens) {
 			$this->tokens = $tokens;
-			$halsteadBlock = Halstead::evalMetrics(new HalsteadBlock(), $this->tokens);
+			$this->halsteadBlock = Halstead::evalMetrics(new HalsteadBlock(), $this->tokens);
+			$this->levenshteinBlocks = Levenshtein::parseBlock($tokens);
 		}
 		
 		// ===== Methods =======
-		
 		
 		
 		// ===== Getters/Setters =======
