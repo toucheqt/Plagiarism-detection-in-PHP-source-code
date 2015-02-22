@@ -2,9 +2,14 @@
 
 	include '../parser/TokensWorker.php';
 	include '../parser/JsonConverter.php';
+	include '../parser/ArgParser.php';
 	include '../metrics/halstead/Halstead.php';
 	include '../metrics/levenshtein/Levenshtein.php';
 	include '../units/TokenBlock.php';
+	
+	// ====== parse arguments
+	$argParser = new ArgParser($argc, $argv);
+	$argParser->parseArguments();
 
 	// ====== get tokens =======
 	$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\test-files\\All.php";
@@ -23,8 +28,6 @@
 	
 	echo "[INFO] Sucessfuly processed tokens.\n";
 	echo "[INFO] Sucessfuly evaluated halstead metrics.\n";
-	
-	// TODO testy na halsteada
-	// TODO levenshtein
+	echo "[INFO] Sucessfuly parsed levenshtein metrics.\n";
 	
 ?>
