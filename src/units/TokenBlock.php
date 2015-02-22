@@ -23,7 +23,7 @@
 		public function __construct($tokens) {
 			$this->tokens = $tokens;
 			$this->halsteadBlock = Halstead::evalMetrics(new HalsteadBlock(), $this->tokens);
-			$this->levenshteinBlocks = Levenshtein::parseBlock($tokens);
+			$this->levenshteinBlocks = Levenshtein::getAbstractBlocks($tokens);
 		}
 		
 		// ===== Methods =======
