@@ -1,6 +1,7 @@
 <?php
 
-	include '../units/SearchUtils.php';
+	include '../entity/Arguments.php';
+	include '../utils/SearchUtils.php';
 
 	/**
 	 * 
@@ -17,7 +18,6 @@
 		private $templateDirectory;
 		
 		private $isRemoveComments;
-		private $isHelp;
 		
 		public function __construct($argc, $argv) {
 			$this->argc = $argc;
@@ -25,13 +25,10 @@
 			$this->workingDirectory = null;
 			$this->templateDirectory = null;
 			$this->isRemoveComments = false;
-			$this->isHelp = false;
 		}
 		
 		public function parseArguments() {
 			self::validateArgumentsPresence();
-			if ($this->isHelp)
-				return;
 			
 			$lastArgument = null;
 			foreach ($this->argv as $argument) {
@@ -49,18 +46,26 @@
 					$lastArgument = null;
 				}
 				
-				if (strcmp('--workingDir', $argument) || strcmp('templateDir', $argument)) {
+				if (!strcmp('--workingDir', $argument) || !strcmp('templateDir', $argument)) {
 					$lastArgument = $argument;
 				}
-				
-				else if (strcmp('--help', $argument)) {
-					$this->isHelp = true;
+				else if (!strcmp("--help", $argument) == 0) {
+					return new Arguments(NULL, true);
 				}
 				
 				else if (strcmp('-c', $argument)) {
 					$this->isRemoveComments = true;
 				}
 			} // end foreach
+			
+			self::validateArgumentsCorectness();
+			
+			$arguments = new Arguments($this->workingDirectory);
+			$arguments->setTemplateDirectory($this->templateDirectory);
+			$arguments->setIsRemoveComments($this->isRemoveComments);
+			
+			return $arguments;
+			
 		}
 		
 		/**
@@ -89,6 +94,24 @@
 		}
 		
 		/**
+		 * Validates if used arguments are ok. 
+		 */
+		public function validateArgumentsCorectness() {
+			$errorMessage = null;
+			
+			if (!is_dir($this->workingDirectory))
+				$errorMessage = "Working directory is not valid. ";
+				
+			if (!is_dir($this->templateDirectory))
+				$errorMessage = "Template directory is not valid. ";
+				
+			if (!is_null($errorMessage)) {
+				echo $errorMessage;
+				throw new InvalidArgumentException($errorMessage);
+			}
+		}
+		
+		/**
 		 * Prints program help to stdin. 
 		 */
 		public function printHelp() {
@@ -99,45 +122,11 @@
 			$msg .= "--workingDir path > Path to directory with current projects.\n";
 			$msg .= "--templateDir path > Path to directory with stored projects.\n";
 			$msg .= "Optional arguments:\n";
-			$msg .= "--help > Prints help. Can not be combined with other arguments.";
+			$msg .= "--help > Prints help. Can not be combined with other arguments.\n";
 			$msg .= "-c > Remove comments from source projects.\n";
 			echo $msg;
 		}
-		
-		// =========== Getters/Setters =========
-		
-		public function getWorkingDirectory() {
-			return $this->workingDirectory;
-		}
-		
-		public function setWorkingDirectory($workingDirectory) {
-			$this->workingDirectory = $workingDirectory;
-		}
-		
-		public function getTemplateDirectory() {
-			return $this->templateDirectory;
-		}
-		
-		public function setTemplateDirectory($templateDirectory) {
-			$this->templateDirectory = templateDirectory;
-		}
-		
-		public function getIsRemoveComments() {
-			return $this->isRemoveComments;
-		}
-		
-		public function setIsRemoveComments($isRemoveComments) {
-			$this->isRemoveComments = $isRemoveComments;
-		}
-		
-		public function getIsHelp() {
-			return $this->isHelp;
-		}
-		
-		public function setIsHelp($isHelp) {
-			$this->isHelp = $isHelp;
-		}
-		
+				
 	}
 
 ?>

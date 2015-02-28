@@ -1,13 +1,14 @@
 <?php
 
-	include '../parser/TokensWorker.php';
+	include '../entity/TokenBlock.php';
+	include '../entity/Arguments.php';
 	include '../parser/JsonConverter.php';
 	include '../parser/ArgParser.php';
 	include '../metrics/halstead/Halstead.php';
 	include '../metrics/levenshtein/Levenshtein.php';
-	include '../units/TokenBlock.php';
+	include '../workers/TokensWorker.php';
 	
-	// ====== parse arguments
+	// ====== parse arguments ==========
 	$argParser = new ArgParser($argc, $argv);
 	try {
 		$argParser->parseArguments();
@@ -20,6 +21,10 @@
 		$argParser->printHelp();
 		return;
 	}
+	
+	// ========= get template projects =============
+	$templateDirectories = DirectoryWorker::getSubDirectories($argParser);
+	
 	
 	// todo popredavat argumenty prislusnym fcim
 

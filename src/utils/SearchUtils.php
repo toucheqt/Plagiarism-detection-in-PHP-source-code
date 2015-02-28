@@ -3,7 +3,7 @@
 	/**
 	 * 
 	 * Enter description here ...
-	 * @author Touche
+	 * @author Ondrej Krpec, xkrpecqt@gmail.com
 	 *
 	 */
 	class SearchUtils {
