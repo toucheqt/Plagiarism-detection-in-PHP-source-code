@@ -9,7 +9,19 @@
 	
 	// ====== parse arguments
 	$argParser = new ArgParser($argc, $argv);
-	$argParser->parseArguments();
+	try {
+		$argParser->parseArguments();
+	}
+	catch (InvalidArgumentException $ex) {
+		exit(1);
+	}
+	
+	if ($argParser->getIsHelp()) {
+		$argParser->printHelp();
+		return;
+	}
+	
+	// todo popredavat argumenty prislusnym fcim
 
 	// ====== get tokens =======
 	$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\test-files\\All.php";

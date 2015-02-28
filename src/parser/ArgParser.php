@@ -1,5 +1,7 @@
 <?php
 
+	include '../units/SearchUtils.php';
+
 	/**
 	 * 
 	 * Enter description here ...
@@ -15,6 +17,7 @@
 		private $templateDirectory;
 		
 		private $isRemoveComments;
+		private $isHelp;
 		
 		public function __construct($argc, $argv) {
 			$this->argc = $argc;
@@ -22,10 +25,13 @@
 			$this->workingDirectory = null;
 			$this->templateDirectory = null;
 			$this->isRemoveComments = false;
+			$this->isHelp = false;
 		}
 		
 		public function parseArguments() {
 			self::validateArgumentsPresence();
+			if ($this->isHelp)
+				return;
 			
 			$lastArgument = null;
 			foreach ($this->argv as $argument) {
@@ -47,12 +53,14 @@
 					$lastArgument = $argument;
 				}
 				
+				else if (strcmp('--help', $argument)) {
+					$this->isHelp = true;
+				}
+				
 				else if (strcmp('-c', $argument)) {
 					$this->isRemoveComments = true;
 				}
 			} // end foreach
-			
-			// todo self::validateArguments();
 		}
 		
 		/**
@@ -62,10 +70,14 @@
 		private function validateArgumentsPresence() {
 			$errorMessage = null;
 			
-			if (!in_array("--workingDir", $this->argv)) {
+			if (SearchUtils::inArray('--help', $this->argv) && $this->argc != 2) {
+				$errorMessage = "Wrong arguments. ";
+			}
+			
+			else if (!SearchUtils::inArray('--workingDir', $this->argv)) {
 				$errorMessage = "Missing argument: --workingDir. ";
 			}
-			else if (!in_array("--templateDir", $this->argv)) {
+			else if (!SearchUtils::inArray('--templateDir', $this->argv)) {
 				$errorMessage = "Missing argument: --templateDir. ";
 			}
 			
@@ -74,6 +86,22 @@
 				echo $errorMessage;
 				throw new InvalidArgumentException($errorMessage);
 			}
+		}
+		
+		/**
+		 * Prints program help to stdin. 
+		 */
+		public function printHelp() {
+			$msg = "**************************************** HELP ****************************************\n";
+			$msg .= "Author: Ondrej Krpec, xkrpecqt@gmail.com\n";
+			$msg .= "Plagiarism detection tool for PHP written as bachelor thesis at FIT VUT Brno, 2015.\n";
+			$msg .= "Mandatory arguments:\n";
+			$msg .= "--workingDir path > Path to directory with current projects.\n";
+			$msg .= "--templateDir path > Path to directory with stored projects.\n";
+			$msg .= "Optional arguments:\n";
+			$msg .= "--help > Prints help. Can not be combined with other arguments.";
+			$msg .= "-c > Remove comments from source projects.\n";
+			echo $msg;
 		}
 		
 		// =========== Getters/Setters =========
@@ -100,6 +128,14 @@
 		
 		public function setIsRemoveComments($isRemoveComments) {
 			$this->isRemoveComments = $isRemoveComments;
+		}
+		
+		public function getIsHelp() {
+			return $this->isHelp;
+		}
+		
+		public function setIsHelp($isHelp) {
+			$this->isHelp = $isHelp;
 		}
 		
 	}
