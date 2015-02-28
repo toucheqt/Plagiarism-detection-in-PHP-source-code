@@ -18,7 +18,7 @@
 			$this->templateDirectory = null;
 			$this->isRemoveComments = false;
 			$this->isHelp = false;
-			if (is_null($isHelp))
+			if (!is_null($isHelp))
 				$this->isHelp = $isHelp;
 		}
 		

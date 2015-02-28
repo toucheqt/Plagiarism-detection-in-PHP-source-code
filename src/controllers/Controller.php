@@ -1,29 +1,29 @@
 <?php
 
 	include '../entity/TokenBlock.php';
-	include '../entity/Arguments.php';
 	include '../parser/JsonConverter.php';
 	include '../parser/ArgParser.php';
 	include '../metrics/halstead/Halstead.php';
-	include '../metrics/levenshtein/Levenshtein.php';
 	include '../workers/TokensWorker.php';
+	include '../workers/DirectoryWorker.php';
 	
 	// ====== parse arguments ==========
 	$argParser = new ArgParser($argc, $argv);
+	$arguments = null;
 	try {
-		$argParser->parseArguments();
+		$arguments = $argParser->parseArguments();
 	}
 	catch (InvalidArgumentException $ex) {
 		exit(1);
 	}
 	
-	if ($argParser->getIsHelp()) {
+	if ($arguments->getIsHelp()) {
 		$argParser->printHelp();
 		return;
 	}
 	
 	// ========= get template projects =============
-	$templateDirectories = DirectoryWorker::getSubDirectories($argParser);
+	$templateDirectories = DirectoryWorker::getSubDirectories($arguments->getTemplateDirectory());
 	
 	
 	// todo popredavat argumenty prislusnym fcim
