@@ -1,7 +1,7 @@
 <?php
 
-	include '../entity/Arguments.php';
-	include '../utils/SearchUtils.php';
+	include __DIR__ . '/../entity/Arguments.php';
+	include __DIR__ . '/../utils/SearchUtils.php';
 
 	/**
 	 * 
@@ -46,14 +46,14 @@
 					$lastArgument = null;
 				}
 				
-				if (!strcmp('--workingDir', $argument) || !strcmp('templateDir', $argument)) {
+				if (!strcmp('--workingDir', $argument) || !strcmp('--templateDir', $argument)) {
 					$lastArgument = $argument;
 				}
-				else if (!strcmp("--help", $argument) == 0) {
+				else if (!strcmp("--help", $argument)) {
 					return new Arguments(NULL, true);
 				}
 				
-				else if (strcmp('-c', $argument)) {
+				else if (!strcmp('-c', $argument)) {
 					$this->isRemoveComments = true;
 				}
 			} // end foreach
@@ -79,10 +79,12 @@
 				$errorMessage = "Wrong arguments. ";
 			}
 			
-			else if (!SearchUtils::inArray('--workingDir', $this->argv)) {
+			else if (!SearchUtils::inArray('--workingDir', $this->argv)
+					&& !SearchUtils::inArray('--help', $this->argv)) {
 				$errorMessage = "Missing argument: --workingDir. ";
 			}
-			else if (!SearchUtils::inArray('--templateDir', $this->argv)) {
+			else if (!SearchUtils::inArray('--templateDir', $this->argv)
+					&& !SearchUtils::inArray('--help', $this->argv)) {
 				$errorMessage = "Missing argument: --templateDir. ";
 			}
 			

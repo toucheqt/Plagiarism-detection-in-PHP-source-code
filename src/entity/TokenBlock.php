@@ -1,6 +1,6 @@
 <?php
 
-	include_once '../metrics/levenshtein/Levenshtein.php';
+	include_once __DIR__ . '/../metrics/levenshtein/Levenshtein.php';
 
 	/**
 	 * 

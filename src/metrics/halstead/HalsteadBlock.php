@@ -1,6 +1,6 @@
 <?php
 
-	include_once 'Halstead.php';
+	include_once __DIR__ . '/Halstead.php';
 
 	/**
 	 * 

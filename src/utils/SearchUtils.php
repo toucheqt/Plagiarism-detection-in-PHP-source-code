@@ -15,7 +15,7 @@
 		 */
 		public static function inArray($needle, $array) {
 			foreach ($array as $item) {
-				if (strcmp($needle, $item))
+				if (!strcmp($needle, $item))
 					return true;
 			}
 			return false;

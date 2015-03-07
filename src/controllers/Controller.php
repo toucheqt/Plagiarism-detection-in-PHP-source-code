@@ -1,11 +1,11 @@
 <?php
 
-	include '../entity/TokenBlock.php';
-	include '../parser/JsonConverter.php';
-	include '../parser/ArgParser.php';
-	include '../metrics/halstead/Halstead.php';
-	include '../workers/TokensWorker.php';
-	include '../workers/DirectoryWorker.php';
+	include __DIR__ . '/../entity/TokenBlock.php';
+	include __DIR__ . '/../parser/JsonConverter.php';
+	include __DIR__ . '/../parser/ArgParser.php';
+	include __DIR__ . '/../metrics/halstead/Halstead.php';
+	include __DIR__ . '/../workers/TokensWorker.php';
+	include __DIR__ . '/../workers/DirectoryWorker.php';
 	
 	// ====== parse arguments ==========
 	$argParser = new ArgParser($argc, $argv);
@@ -24,12 +24,15 @@
 	
 	// ========= get template projects =============
 	$templateDirectories = DirectoryWorker::getSubDirectories($arguments->getTemplateDirectory());
+	echo json_encode($templateDirectories);
 	
+	
+	echo "[INFO] Task finished.\n";
 	
 	// todo popredavat argumenty prislusnym fcim
 
 	// ====== get tokens =======
-	$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\test-files\\All.php";
+	/*$filename = "D:\\eclipse-workspace\\php\\Bachelor-Thesis\\tests\\template";
 	try {
 		$tokensWorker = new TokensWorker($filename);
 		$converter = new JsonConverter();
@@ -46,5 +49,6 @@
 	echo "[INFO] Sucessfuly processed tokens.\n";
 	echo "[INFO] Sucessfuly evaluated halstead metrics.\n";
 	echo "[INFO] Sucessfuly parsed levenshtein metrics.\n";
+	*/
 	
 ?>
