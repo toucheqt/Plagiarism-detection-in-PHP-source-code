@@ -1,6 +1,6 @@
 <?php
 
-	include_once 'Halstead.php';
+	include_once __DIR__ . '/Halstead.php';
 
 	/**
 	 * 
@@ -9,8 +9,6 @@
 	 *
 	 */
 	class HalsteadBlock {
-		
-		private $block;
 		
 		private $operators;
 		private $operands;
@@ -21,12 +19,14 @@
 		private $volume;
 		private $difficulty;
 		
-		public function __construct($block) {
-			$this->block = $block;
+		public function __construct() {
 			$this->uniqueOperators = array();
 			$this->uniqueOperands = array();
 			$this->operands = 0;
 			$this->operators = 0;
+			$this->programLength = 0;
+			$this->volume = 0;
+			$this->difficulty = 0;
 		}
 		
 		/**
@@ -61,7 +61,7 @@
 		
 		private function isUniqueOperator($operator) {
 			foreach ($this->uniqueOperators as $usedOperator) {
-				if ($operator[Halstead::TOKEN_TYPE] == $usedOperator[Halstead::TOKEN_TYPE]) {
+				if ($operator[TokenBlock::TOKEN_TYPE] == $usedOperator[TokenBlock::TOKEN_TYPE]) {
 					return false;
 				}
 			}
@@ -71,8 +71,8 @@
 		private function isUniqueOperand($operand) {
 			if (is_array($operand)) {
 				foreach ($this->uniqueOperands as $usedOperand) {
-					if ($operand[Halstead::TOKEN_TYPE] == $usedOperand[Halstead::TOKEN_TYPE] &&
-							$operand[Halstead::TOKEN_VALUE] == $usedOperand[Halstead::TOKEN_VALUE]) {
+					if ($operand[TokenBlock::TOKEN_TYPE] == $usedOperand[TokenBlock::TOKEN_TYPE] &&
+							$operand[TokenBlock::TOKEN_VALUE] == $usedOperand[TokenBlock::TOKEN_VALUE]) {
 						return false;			
 					}
 				}
@@ -89,15 +89,6 @@
 		}
 		
 		// ====== Getters/Setters ======
-		
-		public function getBlock() {
-			return $this->block;
-		}
-		
-		public function setBlock($block) {
-			$this->block = $block;
-		}
-		
 		public function getOperators() {
 			return $this->operators;
 		}
