@@ -29,6 +29,18 @@
 			$this->difficulty = 0;
 		}
 		
+		public function to_json() {
+			return array(
+					'operators' => $this->operators,
+					'operands' => $this->operands,
+					'uniqueOperators' => $this->uniqueOperators,
+					'uniqueOperands' => $this->uniqueOperands,
+					'programLength' => $this->programLength,
+					'volume' => $this->volume,
+					'difficulty' => $this->difficulty,
+			);
+		}
+		
 		/**
 		 * Adds operator to the unique operator class variable.
 		 * Returns success of operation.

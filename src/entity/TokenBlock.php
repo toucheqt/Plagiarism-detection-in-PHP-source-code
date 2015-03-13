@@ -15,7 +15,7 @@
 		const TOKEN_VALUE = 1;
 		const TOKEN_LINE_NUMBER = 2;	
 		
-		private $tokens;
+		public $tokens;
 		
 		private $halsteadBlock;
 		private $levenshteinBlocks;
@@ -28,6 +28,13 @@
 		
 		// ===== Methods =======
 		
+		public function to_json() {
+			return array(
+					'tokens' => array($this->tokens),
+					'halsteadBlocks' => $this->halsteadBlock->to_json(),
+					'levenshteinBlocks' => $this->levenshteinBlocks,
+			);
+		}
 		
 		// ===== Getters/Setters =======
 		

@@ -27,7 +27,7 @@
 	echo json_encode($templateDirectories);
 	
 	
-	echo "[INFO] Task finished.\n";
+	//echo "[INFO] Task finished.\n";
 	
 	// todo popredavat argumenty prislusnym fcim
 

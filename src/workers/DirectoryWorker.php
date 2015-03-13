@@ -16,7 +16,7 @@
 					$item = array(
 						"path" => $fileInfo->getPath(),
 						"dir" => $fileInfo->getFilename(),
-						"files" => self::getFiles($fileInfo->getPath() . '\\' . $fileInfo->getFilename()),
+						"files" => self::getFiles($fileInfo->getPath() . '/' . $fileInfo->getFilename()),
 					);
 					$subDirectories[] = $item;
 				}
@@ -32,9 +32,11 @@
 			$dir = new DirectoryIterator($path);
 			foreach ($dir as $fileInfo) {
 				if ($fileInfo->isFile() && $fileInfo->isReadable()) {
+					$tokensWorker = new TokensWorker($fileInfo->getPathname());
+					$tokenBlock = new TokenBlock($tokensWorker->getTokens());
 					$item = array(
 						"filename" => $fileInfo->getFilename(),
-						"content" => new TokensWorker($fileInfo->getPathname()),
+						"content" => $tokenBlock->to_json(),
 					);
 					$files[] = $item;
 				}
