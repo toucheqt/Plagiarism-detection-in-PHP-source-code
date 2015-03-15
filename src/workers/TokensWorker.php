@@ -24,9 +24,8 @@
 		public function getTokensWithoutComments() {
 			
 			if (is_null($this->tokens)) {
-				$errorMessage = "Error while generating tokens without comments. Input file missing.\n";
-				echo $errorMessage;
-				throw new InvalidArgumentException($errorMessage);
+				Logger::errorFatal("Input file is missing. Could not generate tokens.");
+				throw new InvalidArgumentException();
 			}
 			
 			$tmpArray = array();
@@ -46,10 +45,9 @@
 		 * @throws InvalidArgumentException
 		 */
 		public static function removeCommentsFromTokens($tokens) {
-			if (is_null($this->tokens)) {
-				$errorMessage = "Tokens can not be null.\n";
-				echo $errorMessage;
-				throw new InvalidArgumentException($errorMessage);
+			if (is_null($tokens)) {
+				Logger::error("Could not remove comments. There are no tokens.");
+				return;
 			}
 			
 			$tmpTokens = array();
@@ -71,15 +69,13 @@
 			
 			// filename can not be null
 			if (is_null($this->filename)) {
-				$errorMessage = "Error while generating tokens from file. Filename can not be null.\n";
-				echo $errorMessage;
-				throw new InvalidArgumentException($errorMessage);
+				Logger::errorFatal('Can not read file. Filename is null.');
+				throw new InvalidArgumentException();
 			}
 
 			if (!($fileContent = file_get_contents($this->filename))) {
-				$errorMessage = 'File ' . $this->filename . " can not be opened.\n";
-				echo $errorMessage;
-				throw new InvalidArgumentException($errorMessage);
+				Logger::errorFatal('File ' . $this->filename . ' can not be opened.');
+				throw new InvalidArgumentException();
 			}
 			$tmpArray = token_get_all($fileContent);
 			

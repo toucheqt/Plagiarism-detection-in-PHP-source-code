@@ -1,11 +1,12 @@
 <?php
 
 	include __DIR__ . '/../entity/TokenBlock.php';
-	include __DIR__ . '/../parser/JsonConverter.php';
 	include __DIR__ . '/../parser/ArgParser.php';
 	include __DIR__ . '/../metrics/halstead/Halstead.php';
 	include __DIR__ . '/../workers/TokensWorker.php';
 	include __DIR__ . '/../workers/DirectoryWorker.php';
+	include __DIR__ . '/../utils/JsonUtils.php';
+	include __DIR__ . '/../utils/Logger.php';
 	
 	// ====== parse arguments ==========
 	$argParser = new ArgParser($argc, $argv);
