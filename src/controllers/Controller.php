@@ -24,8 +24,18 @@
 	
 	// ========= get template projects =============
 	$templateDirectories = DirectoryWorker::getSubDirectories($arguments->getTemplateDirectory());
-	echo json_encode($templateDirectories);
+	Logger::info("Successfuly encoded templates.");
 	
+	// save templates
+	JsonUtils::saveToJson(self::DEFAULT_PATH, "template.json", $templateDirectories);
+	
+	
+	// TODO 1. spravne rozdelovat halstead block a levensthein blocky
+	// 2. predelat nacitani parametru
+	// 3. ulozit template json do souboru
+	// 4. zpracovat template json parametr
+	// 5. to same udelat pro student projecty
+	// 6. zacit je porovnavat
 	
 	//echo "[INFO] Task finished.\n";
 	
