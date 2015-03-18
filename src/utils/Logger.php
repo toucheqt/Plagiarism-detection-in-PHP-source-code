@@ -3,7 +3,7 @@
 	/**
 	 * 
 	 * Enter description here ...
-	 * @author Touche
+	 * @author Ondrej Krpec, xkrpecqt@gmail.com
 	 *
 	 */
 	class Logger {
@@ -28,7 +28,7 @@
 		
 		public static function errorFatal($message) {
 			if (!is_null($message)) {
-				echo '[ERROR]' . $message . "\n";
+				echo '[ERROR] ' . $message . "\n";
 				echo 'Encountered fatal error. Could not continue.' . "\n";
 			}
 		}

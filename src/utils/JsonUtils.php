@@ -23,7 +23,7 @@
 				return;
 			}
 			
-			if (!file_put_contents($path . $filename, json_encode($data), FILE_USE_INCLUDE_PATH)) {
+			if (!file_put_contents($path . $filename, @json_encode($data), FILE_USE_INCLUDE_PATH)) {
 				Logger::error('File ' . $filename . ' can not be created.');
 				return;
 			}			

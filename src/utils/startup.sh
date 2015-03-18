@@ -8,4 +8,4 @@ clear
 ##### HELP #####
 #php ./../controllers/Controller.php --help
 ##### BASIC STARTUP #####
-php ./controllers/Controller.php --workingDir ./../tests/ --templateDir ./../tests/template
+php ./controllers/Controller.php --projects=./../tests/template

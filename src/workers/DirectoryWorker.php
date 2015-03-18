@@ -8,6 +8,10 @@
 	 */
 	class DirectoryWorker {
 		
+		/**
+		 * Loads directories from given path
+		 * @param $path
+		 */
 		public static function getSubDirectories($path) {
 			$subDirectories = array();
 			$dir = new DirectoryIterator($path);

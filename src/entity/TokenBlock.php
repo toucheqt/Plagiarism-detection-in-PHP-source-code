@@ -28,10 +28,10 @@
 		
 		// ===== Methods =======
 		
-		public function to_json() {
+		public function toJson() {
 			return array(
 					'tokens' => array($this->tokens),
-					'halsteadBlocks' => $this->halsteadBlock->to_json(),
+					'halsteadBlocks' => $this->halsteadBlock->toJson(),
 					'levenshteinBlocks' => $this->levenshteinBlocks,
 			);
 		}

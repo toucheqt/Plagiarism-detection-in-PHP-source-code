@@ -15,7 +15,7 @@
 		private $uniqueOperators;
 		private $uniqueOperands;
 		
-		private $programLength;
+		private $programLength = 0;
 		private $volume;
 		private $difficulty;
 		
@@ -29,7 +29,7 @@
 			$this->difficulty = 0;
 		}
 		
-		public function to_json() {
+		public function toJson() {
 			return array(
 					'operators' => $this->operators,
 					'operands' => $this->operands,

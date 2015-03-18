@@ -8,6 +8,12 @@
 	include __DIR__ . '/../utils/JsonUtils.php';
 	include __DIR__ . '/../utils/Logger.php';
 	
+	// GLOBAL PROGRAM CONSTANTS
+	define('DEFAULT_PATH', './..');
+	define('TEMPLATE_PATH', '/templates');
+	define('PROJECT_PATH', '/projects');
+
+	
 	// ====== parse arguments ==========
 	$argParser = new ArgParser($argc, $argv);
 	$arguments = null;
@@ -15,7 +21,7 @@
 		$arguments = $argParser->parseArguments();
 	}
 	catch (InvalidArgumentException $ex) {
-		exit(1);
+		exit(1); // TODO refactor this + argparser
 	}
 	
 	if ($arguments->getIsHelp()) {
@@ -28,7 +34,7 @@
 	Logger::info("Successfuly encoded templates.");
 	
 	// save templates
-	JsonUtils::saveToJson(self::DEFAULT_PATH, "template.json", $templateDirectories);
+	JsonUtils::saveToJson(DEFAULT_PATH, "template.json", $templateDirectories);
 	
 	
 	// TODO 1. spravne rozdelovat halstead block a levensthein blocky

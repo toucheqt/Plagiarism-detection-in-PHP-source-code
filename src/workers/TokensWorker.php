@@ -67,7 +67,6 @@
 		 */
 		private function loadTokens() {
 			
-			// filename can not be null
 			if (is_null($this->filename)) {
 				Logger::errorFatal('Can not read file. Filename is null.');
 				throw new InvalidArgumentException();
