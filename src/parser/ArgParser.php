@@ -11,104 +11,136 @@
 	 */
 	class ArgParser {
 		
+		const PROJECT_DIRECTORY = '--projects=';
+		const PROJECT_JSON_DIRECTORY = '--projectJSON=';
+		const TEMPLATE_DIRECTORY = '--templates=';
+		const TEMPLATE_JSON_DIRECTORY = '--templateJSON=';
+		const HELP = '--help';
+		const REMOVE_COMMENTS = '-c';
+		
 		private $argc;
 		private $argv;
-		
-		private $workingDirectory;
-		private $templateDirectory;
 		
 		private $isRemoveComments;
 		
 		public function __construct($argc, $argv) {
 			$this->argc = $argc;
 			$this->argv = $argv;
-			$this->workingDirectory = null;
-			$this->templateDirectory = null;
-			$this->isRemoveComments = false;
 		}
 		
+		// ======== Methods ============
+		
+		/**
+		 * Parse and validates arguments from command line into Arguments entity.
+		 */
 		public function parseArguments() {
-			self::validateArgumentsPresence();
 			
-			$lastArgument = null;
-			foreach ($this->argv as $argument) {
+			$arguments = new Arguments();
+			
+			foreach ($this->argv as $arg) {
 				
-				if (!is_null($lastArgument)) {
-					switch ($lastArgument) {
-						case '--workingDir':
-							$this->workingDirectory = $argument;
-							break;
-							
-						case '--templateDir':
-							$this->templateDirectory = $argument;
-							break;
-					}
-					$lastArgument = null;
+				// ignore scripts first parameter
+				if ($arg === $this->argv[0]) 
+					continue;
+				
+				if (strpos($arg, self::PROJECT_DIRECTORY) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setProjectsPath($tmpArray[1]);
 				}
 				
-				if (!strcmp('--workingDir', $argument) || !strcmp('--templateDir', $argument)) {
-					$lastArgument = $argument;
-				}
-				else if (!strcmp("--help", $argument)) {
-					return new Arguments(NULL, true);
+				else if (strpos($arg, self::PROJECT_JSON_DIRECTORY) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setProjectJSONPath($tmpArray[1]);
 				}
 				
-				else if (!strcmp('-c', $argument)) {
-					$this->isRemoveComments = true;
+				else if (strpos($arg, self::TEMPLATE_DIRECTORY) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setTemplatesPath($tmpArray[1]);
 				}
-			} // end foreach
-			
-			self::validateArgumentsCorectness();
-			
-			$arguments = new Arguments($this->workingDirectory);
-			$arguments->setTemplateDirectory($this->templateDirectory);
-			$arguments->setIsRemoveComments($this->isRemoveComments);
-			
-			return $arguments;
-			
+				
+				else if (strpos($arg, self::TEMPLATE_JSON_DIRECTORY) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setTemplateJSONPath($tmpArray[1]);
+				}
+				
+				else if (!strcmp($arg, self::HELP)) {
+					$arguments->setIsHelp(true);
+				}
+				
+				else if (!strcmp($arg, self::REMOVE_COMMENTS)) {
+					$arguments->setIsRemoveComments(true);
+				}
+				
+				else {
+					Logger::warning('Script was started with unknown parameter.');
+				}
+			}
 		}
 		
 		/**
-		 * Validates if mandatory arguments are filled
+		 * Validates arguments
+		 * @param unknown_type $arguments
 		 * @throws InvalidArgumentException
 		 */
-		private function validateArgumentsPresence() {
+		private function validateArguments($arguments) {
 			$errorMessage = null;
 			
-			if (SearchUtils::inArray('--help', $this->argv) && $this->argc != 2) {
-				$errorMessage = "Wrong arguments. ";
+			if ($arguments->getIsHelp() && $this->argc != 2) {
+				$errorMessage .= 'Can not combine \'--help\' with other arguments. ';
 			}
 			
-			else if (!SearchUtils::inArray('--workingDir', $this->argv)
-					&& !SearchUtils::inArray('--help', $this->argv)) {
-				$errorMessage = "Missing argument: --workingDir. ";
+			// validates project path
+			if (is_null($arguments->getProjectsPath()) && is_null($arguments->getProjectJSONPath())) {
+				$errorMessage .= 'Projects path was not specified. ';
 			}
-			else if (!SearchUtils::inArray('--templateDir', $this->argv)
-					&& !SearchUtils::inArray('--help', $this->argv)) {
-				$errorMessage = "Missing argument: --templateDir. ";
+
+			else if (!is_null($arguments->getProjectsPath()) && !is_null($arguments->getProjectJSONPath())) {
+				$errorMessage .= 'Expected only one project path. ';
 			}
 			
+			else if (!is_null($arguments->getProjectsPath()) && is_null($arguments->getProjectJSONPath())) {
+				if (!is_dir($arguments->getProjectsPath())) {
+					$errorMessage .= 'Specified projects path is not valid. ';
+				}
+			}
+			
+			else if (is_null($arguments->getProjectsPath()) && !is_null($arguments->getProjectJSONPath())) {
+				if (!is_file($arguments->getProjectJSONPath())) {
+					$errorMessage .= 'Specified project file is not valid. ';
+				}
+			}
+			
+			// validates templates path
+			if (!is_null($arguments->getTemplatePath()) && !is_null($arguments->getTemplateJSONPath())) {
+				$errorMessage .= 'Expected only one template path. ';
+			}
+			
+			else if (!is_null($arguments->getTemplatePath()) && is_null($arguments->getTemplateJSONPath())) {
+				if (!is_dir($arguments->getTemplatePath())) {
+					$errorMessage .= 'Specified templates path is not valid. ';
+				}
+			} 
+			
+			else if (is_null($arguments->getTemplatePath()) && !is_null($arguments->getTemplateJSONPath())) {
+				if (!is_file($arguments->getTemplateJSONPath())) {
+					$errorMessage .= 'Specified template file is not valid. ';
+				}
+			}
+			
+			// validate isRemoveComments
+			if (!is_null($arguments->getProjectJSONPath()) && $arguments->isRemoveComments()) {
+				$errorMessage .= 'Can not remove comments from projects JSON file. ';
+			}
+			
+			if (!is_null($arguments->getTemplateJSONPath()) && $arguments->isRemoveComments()) {
+				$errorMessage .= 'Can not remove comments from templates JSON file. ';
+			}
+			
+			
+			// throw exception if any error occurred
 			if (!is_null($errorMessage)) {
-				$errorMessage .= "For more information start script with argument --help.\n";
-				echo $errorMessage;
-				throw new InvalidArgumentException($errorMessage);
-			}
-		}
-		
-		/**
-		 * Validates if used arguments are ok. 
-		 */
-		public function validateArgumentsCorectness() {
-			$errorMessage = null;
-			
-			if (!is_dir($this->workingDirectory))
-				$errorMessage = "Working directory is not valid. ";
-				
-			if (!is_dir($this->templateDirectory))
-				$errorMessage = "Template directory is not valid. ";
-				
-			if (!is_null($errorMessage)) {
-				echo $errorMessage;
+				$errorMessage .= "\nFor more informations start script with argument \'--help\'";
+				Logger::errorFatal($errorMessage);
 				throw new InvalidArgumentException($errorMessage);
 			}
 		}
@@ -120,12 +152,13 @@
 			$msg = "**************************************** HELP ****************************************\n";
 			$msg .= "Author: Ondrej Krpec, xkrpecqt@gmail.com\n";
 			$msg .= "Plagiarism detection tool for PHP written as bachelor thesis at FIT VUT Brno, 2015.\n";
-			$msg .= "Mandatory arguments:\n";
-			$msg .= "--workingDir path > Path to directory with current projects.\n";
-			$msg .= "--templateDir path > Path to directory with stored projects.\n";
-			$msg .= "Optional arguments:\n";
-			$msg .= "--help > Prints help. Can not be combined with other arguments.\n";
-			$msg .= "-c > Remove comments from source projects.\n";
+			$msg .= "--projects={path} > Path to directory with current projects. Can not be combined with parameter --projectJSON={path}\n";
+			$msg .= "--projectJSON={path} > Path to file with current projects in JSON format. Can not be combined with parameter --projects={path}\n";
+			$msg .= "--templates={path} > Path to directory with templates projects. Can not be combined with parameter --templateJSON={path}\n";
+			$msg .= "--templateJSON={path} > Path to file with template projects in JSON format. Can not be combined with parameter --templates={path}\n";
+			$msg .= "--help > Prints out help. Can not be combined with other arguments.\n";
+			$msg .= "-c > Force remove comments from projects. Can not be combined with paramters --projectJSON={path} and --templateJSON={path}\n"; 
+			
 			echo $msg;
 		}
 				

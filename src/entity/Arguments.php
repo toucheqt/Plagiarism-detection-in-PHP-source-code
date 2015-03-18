@@ -7,45 +7,46 @@
 	 */
 	class Arguments {
 		
-		private $workingDirectory;
-		private $templateDirectory;
+		private $projectsPath;
+		private $templatesPath;
+		private $projectJSONPath;
+		private $templateJSONPath;
 		
-		private $isRemoveComments;
-		private $isHelp;
+		private $isHelp = false;
+		private $isRemoveComments = false;
 		
-		public function __construct($workingDirectory, $isHelp = NULL) {
-			$this->workingDirectory = $workingDirectory;
-			$this->templateDirectory = null;
-			$this->isRemoveComments = false;
-			$this->isHelp = false;
-			if (!is_null($isHelp))
-				$this->isHelp = $isHelp;
+		// ======= Getters/Setters ======
+		
+		public function getProjectsPath() {
+			return $this->projectsPath;
 		}
 		
-		// ======= Getters/Setters ========
+		public function setProjectsPath($projectsPath) {
+			$this->projectsPath = $projectsPath;
+		} 
 		
-		public function getWorkingDirectory() {
-			return $this->workingDirectory;
+		public function getTemplatesPath() {
+			return $this->templatesPath;
 		}
 		
-		public function setWorkingDirectory($workingDirectory) {
-			$this->workingDirectory = $workingDirectory;
+		public function setTemplatesPath($templatesPath) {
+			$this->templatesPath = $templatesPath;
 		}
 		
-		public function getTemplateDirectory() {
-			return $this->templateDirectory;
+		public function getProjectJSONPath() {
+			return $this->projectJSONPath;
 		}
 		
-		public function setTemplateDirectory($templateDirectory) {
-			$this->templateDirectory = $templateDirectory;
+		public function setProjectJSONPath($projectJSONPath) {
+			$this->projectJSONPath = $projectJSONPath;
 		}
 		
-		public function getIsRemoveComments() {
-			return $this->isRemoveComments;
+		public function getTemplateJSONPath() {
+			return $this->templateJSONPath;
 		}
 		
-		public function setIsRemoveComments($isRemoveComments) {
-			$this->isRemoveComments = $isRemoveComments;
+		public function setTemplateJSONPath($templateJSONPath) {
+			$this->templateJSONPath = $templateJSONPath;
 		}
 		
 		public function getIsHelp() {
@@ -56,6 +57,14 @@
 			$this->isHelp = $isHelp;
 		}
 		
+		public function getIsRemoveComments() {
+			return $this->isRemoveComments;
+		}
+		
+		public function setIsRemoveComments($isRemoveComments) {
+			$this->isRemoveComments = $isRemoveComments;
+		}
+		 
 	}
 
 ?>
