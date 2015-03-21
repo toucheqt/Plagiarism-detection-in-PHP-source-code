@@ -54,6 +54,11 @@
 		return $arguments;
 	} 
 	
+	/**
+	 * 
+	 * Prepares enviroment entity for comparisons.
+	 * @param $arguments
+	 */
 	function prepareEnviroment($arguments) {
 
 		if ($arguments->getIsHelp()) {
@@ -64,7 +69,6 @@
 		$enviroment = new Enviroment();
 		
 		// get templates
-		$template = null;;
 		if (!is_null($arguments->getTemplateJSONPath())) {
 			try {
 				$enviroment->setTemplate(JsonUtils::getJsonFromFile($arguments->getTemplateJSONPath()));
@@ -77,7 +81,7 @@
 			Logger::info('Template JSON file was successfuly loaded.');
 		}
 		else if (!is_null($arguments->getTemplatesPath())) {
-			$template = DirectoryWorker::getSubDirectories($arguments->getTemplatesPath());
+			$enviroment->setTemplate(DirectoryWorker::getSubDirectories($arguments->getTemplatesPath()));
 			try {
 				JsonUtils::saveToJson(DEFAULT_PATH, 'template.json', $template);
 			}
@@ -88,7 +92,35 @@
 			
 			Logger::info('Template JSON file was successfuly created.');
 		}
-				
+		
+		// get projects
+		if (!is_null($arguments->getProjectJSONPath())) {
+			try {
+				$enviroment->setProject(JsonUtils::getJsonFromFile($arguments->getProjectJSONPath()));
+			}
+			catch (Exception $ex) {
+				Logger::errorFatal('Problem during loading JSON project.');
+				return null;
+			}
+			
+			Logger::info('Project JSON file was successfuly loaded.');
+		}
+		else if (!is_null($arguments->getProjectsPath())) {
+			$enviroment->setProject(DirectoryWorker::getSubDirectories($arguments->getProjectsPath()));
+			try {
+				JsonUtils::saveToJson(DEFAULT_PATH, 'projects.json', $enviroment->getProject());
+			}
+			catch (Exception $ex) {
+				Logger::errorFatal('Problem during saving JSON project.');
+				return null;
+			}
+			Logger::info('Project JSON file was successfuly created.');
+		}
+		else { // should not happen
+			Logger::errorFatal('No project path or file was specified.');
+			return null;
+		}
+		
 		return $enviroment;
 		
 	}
