@@ -30,7 +30,7 @@
 		
 		public function toJson() {
 			return array(
-					'tokens' => array($this->tokens),
+					'tokens' => $this->tokens,
 					'halsteadBlocks' => $this->halsteadBlock->toJson(),
 					'levenshteinBlocks' => $this->levenshteinBlocks,
 			);

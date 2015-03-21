@@ -13,6 +13,14 @@
 	define('DEFAULT_PATH', './../');
 	define('TEMPLATE_PATH', '/templates/');
 	define('PROJECT_PATH', '/projects/');
+	
+	// TODO 1. spravne rozdelovat halstead block a levensthein blocky
+	// 2. predelat nacitani parametru - DONE
+	// 3. ulozit template json do souboru - DONE
+	// 4. zpracovat template json parametr - DONE
+	// 5. to same udelat pro student projecty
+	// 6. predelat halsteada na funkce
+	// 7. zacit je porovnavat
 
 	
 	// ============= main workflow =============
@@ -24,8 +32,6 @@
 	if (is_null($enviroment))
 		exit();
 		
-	
-
 	
 	
 	// ======== controller functions =========
@@ -86,12 +92,5 @@
 		return $enviroment;
 		
 	}
-	
-	// TODO 1. spravne rozdelovat halstead block a levensthein blocky
-	// 2. predelat nacitani parametru - DONE
-	// 3. ulozit template json do souboru - DONE
-	// 4. zpracovat template json parametr - DONE
-	// 5. to same udelat pro student projecty
-	// 6. zacit je porovnavat
 	
 ?>

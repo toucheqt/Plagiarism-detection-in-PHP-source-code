@@ -37,8 +37,8 @@
 		 * @throws RuntimeException
 		 */
 		public static function getJsonFromFile($path) {
-			if (is_null($filename)) {
-				Logger::error('Filename can not be null.');
+			if (is_null($path)) {
+				Logger::error('Path can not be null.');
 				throw new InvalidArgumentException();
 			}
 			
