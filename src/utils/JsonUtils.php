@@ -20,35 +20,32 @@
 		public static function saveToJson($path, $filename, $data) {
 			if (is_null($filename)) {
 				Logger::error("Filename can not be null.");
-				return;
+				throw new InvalidArgumentException();
 			}
 			
 			if (!file_put_contents($path . $filename, @json_encode($data), FILE_USE_INCLUDE_PATH)) {
 				Logger::error('File ' . $filename . ' can not be created.');
-				return;
+				throw new RuntimeException();
 			}			
-			
-			Logger::info('Saved ' . $filename . '.');
 		}
 		
 		/**
 		 * 
 		 * Returns content of given json file
 		 * @param string $path
-		 * @param string $filename
 		 * @throws InvalidArgumentException
 		 * @throws RuntimeException
 		 */
-		public static function getJsonFromFile($path, $filename) {
+		public static function getJsonFromFile($path) {
 			if (is_null($filename)) {
 				Logger::error('Filename can not be null.');
-				return null;
+				throw new InvalidArgumentException();
 			}
 			
-			$content = file_get_contents($path . $filename);
+			$content = file_get_contents($path);
 			if (!$content) {
-				Logger::error('File ' . $path . $filename . ' can not be opened.');
-				return null;
+				Logger::error('File ' . $path . ' can not be opened.');
+				throw new RuntimeException();
 			}
 			
 			return json_decode($content);

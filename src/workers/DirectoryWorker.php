@@ -9,7 +9,7 @@
 	class DirectoryWorker {
 		
 		/**
-		 * Loads directories from given path
+		 * Loads directories from given path and proccess them into JSON serializable array
 		 * @param $path
 		 */
 		public static function getSubDirectories($path) {
@@ -29,7 +29,7 @@
 		}
 		
 		/**
-		 * Gets all files in selected directory
+		 * Gets all files in selected directory and proccess them into JSON serializable array
 		 */
 		private static function getFiles($path) {
 			$files = array();
@@ -40,7 +40,7 @@
 					$tokenBlock = new TokenBlock($tokensWorker->getTokens());
 					$item = array(
 						"filename" => $fileInfo->getFilename(),
-						"content" => $tokenBlock->to_json(),
+						"content" => $tokenBlock->toJson(),
 					);
 					$files[] = $item;
 				}

@@ -145,7 +145,7 @@
 			
 			// throw exception if any error occurred
 			if (!is_null($errorMessage)) {
-				$errorMessage .= "\nFor more informations start script with argument \'--help\'";
+				$errorMessage .= "\nFor more informations start script with argument '--help'";
 				Logger::errorFatal($errorMessage);
 				throw new InvalidArgumentException($errorMessage);
 			}
@@ -154,7 +154,7 @@
 		/**
 		 * Prints program help to stdin. 
 		 */
-		public function printHelp() {
+		public static function printHelp() {
 			$msg = "**************************************** HELP ****************************************\n";
 			$msg .= "Author: Ondrej Krpec, xkrpecqt@gmail.com\n";
 			$msg .= "Plagiarism detection tool for PHP written as bachelor thesis at FIT VUT Brno, 2015.\n";
