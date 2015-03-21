@@ -14,14 +14,13 @@
 	define('PROJECT_PATH', '/projects');
 
 	
-	// ====== parse arguments ==========
+	// get arguments
 	$argParser = new ArgParser($argc, $argv);
-	$arguments = null;
 	try {
 		$arguments = $argParser->parseArguments();
 	}
-	catch (InvalidArgumentException $ex) {
-		exit(1); // TODO refactor this + argparser
+	catch (InvalidArgumentException $iae) {
+		exit(-1);
 	}
 	
 	if ($arguments->getIsHelp()) {
@@ -30,11 +29,11 @@
 	}
 	
 	// ========= get template projects =============
-	$templateDirectories = DirectoryWorker::getSubDirectories($arguments->getTemplateDirectory());
-	Logger::info("Successfuly encoded templates.");
-	
-	// save templates
-	JsonUtils::saveToJson(DEFAULT_PATH, "template.json", $templateDirectories);
+//	$templateDirectories = DirectoryWorker::getSubDirectories($arguments->getTemplateDirectory());
+//	Logger::info("Successfuly encoded templates.");
+//	
+//	// save templates
+//	JsonUtils::saveToJson(DEFAULT_PATH, "template.json", $templateDirectories);
 	
 	
 	// TODO 1. spravne rozdelovat halstead block a levensthein blocky

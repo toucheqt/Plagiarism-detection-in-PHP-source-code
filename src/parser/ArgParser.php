@@ -32,17 +32,19 @@
 		
 		/**
 		 * Parse and validates arguments from command line into Arguments entity.
+		 * @throws InvalidArgumentException
 		 */
 		public function parseArguments() {
 			
 			$arguments = new Arguments();
 			
 			foreach ($this->argv as $arg) {
-				
+
 				// ignore scripts first parameter
-				if ($arg === $this->argv[0]) 
-					continue;
-				
+				if ($arg == $this->argv[0]) {
+					continue;					
+				}
+
 				if (strpos($arg, self::PROJECT_DIRECTORY) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setProjectsPath($tmpArray[1]);
@@ -72,9 +74,13 @@
 				}
 				
 				else {
-					Logger::warning('Script was started with unknown parameter.');
+					Logger::warning('Script was started with unknown parameter: ' . $arg);
 				}
 			}
+			
+			self::validateArguments($arguments);
+			
+			return $arguments;
 		}
 		
 		/**
@@ -111,28 +117,28 @@
 			}
 			
 			// validates templates path
-			if (!is_null($arguments->getTemplatePath()) && !is_null($arguments->getTemplateJSONPath())) {
+			if (!is_null($arguments->getTemplatesPath()) && !is_null($arguments->getTemplateJSONPath())) {
 				$errorMessage .= 'Expected only one template path. ';
 			}
 			
-			else if (!is_null($arguments->getTemplatePath()) && is_null($arguments->getTemplateJSONPath())) {
-				if (!is_dir($arguments->getTemplatePath())) {
+			else if (!is_null($arguments->getTemplatesPath()) && is_null($arguments->getTemplateJSONPath())) {
+				if (!is_dir($arguments->getTemplatesPath())) {
 					$errorMessage .= 'Specified templates path is not valid. ';
 				}
 			} 
 			
-			else if (is_null($arguments->getTemplatePath()) && !is_null($arguments->getTemplateJSONPath())) {
+			else if (is_null($arguments->getTemplatesPath()) && !is_null($arguments->getTemplateJSONPath())) {
 				if (!is_file($arguments->getTemplateJSONPath())) {
 					$errorMessage .= 'Specified template file is not valid. ';
 				}
 			}
 			
 			// validate isRemoveComments
-			if (!is_null($arguments->getProjectJSONPath()) && $arguments->isRemoveComments()) {
+			if (!is_null($arguments->getProjectJSONPath()) && $arguments->getIsRemoveComments()) {
 				$errorMessage .= 'Can not remove comments from projects JSON file. ';
 			}
 			
-			if (!is_null($arguments->getTemplateJSONPath()) && $arguments->isRemoveComments()) {
+			if (!is_null($arguments->getTemplateJSONPath()) && $arguments->getIsRemoveComments()) {
 				$errorMessage .= 'Can not remove comments from templates JSON file. ';
 			}
 			
