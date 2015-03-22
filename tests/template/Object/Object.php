@@ -1,3 +1,8 @@
 <?php
-echo "gg";
+	class Object {
+		public function test() {
+			echo "test";
+			return;
+		}
+	}
 ?>

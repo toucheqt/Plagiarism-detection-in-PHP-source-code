@@ -60,13 +60,13 @@
 					$function[] = $token;
 				}
 				
-				if (!is_array($token) && $token == '{') {
+				if (!is_array($token) && $token == '{' && $isSaveTokens) {
 					if (is_null($bracketCount))
 						$bracketCount = 1;
 					else 	
 						$bracketCount++;
 				}
-				else if (!is_array($token) && $token == '}')
+				else if (!is_array($token) && $token == '}' && $isSaveTokens)
 					$bracketCount--;
 					
 				// in case function ended
