@@ -58,8 +58,13 @@
 		 * Evaluates difficulty of given codeblock
 		 */
 		private static function evalDifficulty($block) {
-			$D = (count($block->getUniqueOperators())/2);
-			$D *= ($block->getOperands()/count($block->getUniqueOperands()));
+			$D = 0;
+			
+			if (count($block->getUniqueOperands()) != 0) {
+				$D = (count($block->getUniqueOperators())/2);
+				$D *= ($block->getOperands()/count($block->getUniqueOperands()));
+			}
+			
 			return $D;
 		}
 		

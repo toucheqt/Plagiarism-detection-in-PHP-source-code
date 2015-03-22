@@ -22,7 +22,14 @@
 		
 		public function __construct($tokens) {
 			$this->tokens = $tokens;
-			$this->halsteadBlock = Halstead::evalMetrics(new HalsteadBlock(), $this->tokens);
+			
+			// get halstead for every function
+			$functions = TokensWorker::getFunctions($tokens);
+			$this->halsteadBlock = array();
+			foreach ($functions as $function) {
+				$tmpBlock = Halstead::evalMetrics(new HalsteadBlock(), $function);
+				$this->halsteadBlock[] = $tmpBlock->toJson();
+			}
 			$this->levenshteinBlocks = Levenshtein::getAbstractBlocks($tokens);
 		}
 		
@@ -31,7 +38,7 @@
 		public function toJson() {
 			return array(
 					'tokens' => $this->tokens,
-					'halsteadBlocks' => $this->halsteadBlock->toJson(),
+					'halsteadBlocks' => $this->halsteadBlock,
 					'levenshteinBlocks' => $this->levenshteinBlocks,
 			);
 		}

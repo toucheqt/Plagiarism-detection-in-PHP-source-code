@@ -18,8 +18,9 @@
 	// 2. predelat nacitani parametru - DONE
 	// 3. ulozit template json do souboru - DONE
 	// 4. zpracovat template json parametr - DONE
-	// 5. to same udelat pro student projecty
+	// 5. to same udelat pro student projecty - DONE - TESTING
 	// 6. predelat halsteada na funkce
+	// x. zapracovat oddelavani komentaru v pripade prepinace -c
 	// 7. zacit je porovnavat
 
 	
@@ -83,13 +84,13 @@
 		else if (!is_null($arguments->getTemplatesPath())) {
 			$enviroment->setTemplate(DirectoryWorker::getSubDirectories($arguments->getTemplatesPath()));
 			try {
-				JsonUtils::saveToJson(DEFAULT_PATH, 'template.json', $template);
+				JsonUtils::saveToJson(DEFAULT_PATH, 'template.json', $enviroment->getTemplate());
 			}
 			catch (Exception $ex) {
 				Logger::errorFatal('Problem during saving JSON template.');
 				return null;
 			}
-			
+
 			Logger::info('Template JSON file was successfuly created.');
 		}
 		

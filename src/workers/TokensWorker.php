@@ -30,12 +30,55 @@
 			
 			$tmpArray = array();
 			foreach ($this->tokens as $token) {
-				if ($token[0] != T_COMMENT && $token[0] != T_DOC_COMMENT) {
+				if ($token[TokenBlock::TOKEN_TYPE] != T_COMMENT && $token[TokenBlock::TOKEN_TYPE] != T_DOC_COMMENT) {
 					array_push($tmpArray, $token);
 				}
 			}
 			
 			return $tmpArray;
+		}
+		
+		/**
+		 * 
+		 * Parse functions from tokens into array
+		 * @param unknown_type $tokens
+		 */
+		public static function getFunctions($tokens) {
+			$function = array();
+			$functionList = array();
+			$bracketCount = null;
+			$isSaveTokens = false;
+			
+			foreach ($tokens as $token) {
+				
+				if (is_array($token) && $token[TokenBlock::TOKEN_TYPE] == T_FUNCTION) {
+					$bracketCount = null;
+					$isSaveTokens = true;
+				}
+				
+				if ($isSaveTokens) {
+					$function[] = $token;
+				}
+				
+				if (!is_array($token) && $token == '{') {
+					if (is_null($bracketCount))
+						$bracketCount = 1;
+					else 	
+						$bracketCount++;
+				}
+				else if (!is_array($token) && $token == '}')
+					$bracketCount--;
+					
+				// in case function ended
+				if ($bracketCount === 0) {
+					$isSaveTokens = false;
+					$bracketCount = null;
+					$functionList[] = $function;
+					$function = array();
+				}
+			}
+			
+			return $functionList;
 		}
 		
 		/**
@@ -52,7 +95,7 @@
 			
 			$tmpTokens = array();
 			foreach ($this->tokens as $token) {
-				if ($token[0] != T_COMMENT && $token[0] != T_DOC_COMMENT) {
+				if ($token[TokenBlock::TOKEN_TYPE] != T_COMMENT && $token[TokenBlock::TOKEN_TYPE] != T_DOC_COMMENT) {
 					array_push($tmpTokens, $token);
 				}
 			}
