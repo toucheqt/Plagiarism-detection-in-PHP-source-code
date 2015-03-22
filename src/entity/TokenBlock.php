@@ -15,9 +15,9 @@
 		const TOKEN_VALUE = 1;
 		const TOKEN_LINE_NUMBER = 2;	
 		
-		public $tokens;
+		private $tokens;
 		
-		private $halsteadBlock;
+		private $halsteadBlocks;
 		private $levenshteinBlocks;
 		
 		public function __construct($tokens) {
@@ -25,10 +25,10 @@
 			
 			// get halstead for every function
 			$functions = TokensWorker::getFunctions($tokens);
-			$this->halsteadBlock = array();
+			$this->halsteadBlocks = array();
 			foreach ($functions as $function) {
 				$tmpBlock = Halstead::evalMetrics(new HalsteadBlock(), $function);
-				$this->halsteadBlock[] = $tmpBlock->toJson();
+				$this->halsteadBlocks[] = $tmpBlock->toJson();
 			}
 			$this->levenshteinBlocks = Levenshtein::getAbstractBlocks($tokens);
 		}
@@ -38,7 +38,7 @@
 		public function toJson() {
 			return array(
 					'tokens' => $this->tokens,
-					'halsteadBlocks' => $this->halsteadBlock,
+					'halsteadBlocks' => $this->halsteadBlocks,
 					'levenshteinBlocks' => $this->levenshteinBlocks,
 			);
 		}
@@ -52,6 +52,23 @@
 		public function setTokens($tokens) {
 			$this->tokens = $tokens;
 		}
+		
+		public function getHalsteadBlocks() {
+			return $this->halsteadBlocks;
+		}
+		
+		public function setHalsteadBlocks($halsteadBlocks) {
+			$this->halsteadBlocks = $halsteadBlocks;
+		}
+		
+		public function getLevenshteinBlocks() {
+			return $this->levenshteinBlocks;
+		}
+		
+		public function setLevenshteinBlocks($levenshteinBlocks) {
+			$this->levenshteinBlocks = $levenshteinBlocks;
+		}
+		
 	}
 
 ?>

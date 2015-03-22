@@ -18,8 +18,8 @@
 	// 2. predelat nacitani parametru - DONE
 	// 3. ulozit template json do souboru - DONE
 	// 4. zpracovat template json parametr - DONE
-	// 5. to same udelat pro student projecty - DONE - TESTING
-	// 6. predelat halsteada na funkce
+	// 5. to same udelat pro student projecty - DONE
+	// 6. predelat halsteada na funkce - DONE
 	// x. zapracovat oddelavani komentaru v pripade prepinace -c
 	// 7. zacit je porovnavat
 
@@ -82,7 +82,8 @@
 			Logger::info('Template JSON file was successfuly loaded.');
 		}
 		else if (!is_null($arguments->getTemplatesPath())) {
-			$enviroment->setTemplate(DirectoryWorker::getSubDirectories($arguments->getTemplatesPath()));
+			$enviroment->setTemplate(DirectoryWorker::getSubDirectories($arguments->getTemplatesPath(),
+					$arguments->getIsRemoveComments()));
 			try {
 				JsonUtils::saveToJson(DEFAULT_PATH, 'template.json', $enviroment->getTemplate());
 			}
@@ -107,7 +108,8 @@
 			Logger::info('Project JSON file was successfuly loaded.');
 		}
 		else if (!is_null($arguments->getProjectsPath())) {
-			$enviroment->setProject(DirectoryWorker::getSubDirectories($arguments->getProjectsPath()));
+			$enviroment->setProject(DirectoryWorker::getSubDirectories($arguments->getProjectsPath(),
+					$arguments->getIsRemoveComments()));
 			try {
 				JsonUtils::saveToJson(DEFAULT_PATH, 'projects.json', $enviroment->getProject());
 			}

@@ -19,27 +19,6 @@
 		
 		/**
 		 * 
-		 * Returns array of tokens without comments.
-		 */
-		public function getTokensWithoutComments() {
-			
-			if (is_null($this->tokens)) {
-				Logger::errorFatal("Input file is missing. Could not generate tokens.");
-				throw new InvalidArgumentException();
-			}
-			
-			$tmpArray = array();
-			foreach ($this->tokens as $token) {
-				if ($token[TokenBlock::TOKEN_TYPE] != T_COMMENT && $token[TokenBlock::TOKEN_TYPE] != T_DOC_COMMENT) {
-					array_push($tmpArray, $token);
-				}
-			}
-			
-			return $tmpArray;
-		}
-		
-		/**
-		 * 
 		 * Parse functions from tokens into array
 		 * @param unknown_type $tokens
 		 */
@@ -87,8 +66,8 @@
 		 * @param array $tokens
 		 * @throws InvalidArgumentException
 		 */
-		public static function removeCommentsFromTokens($tokens) {
-			if (is_null($tokens)) {
+		public function removeCommentsFromTokens() {
+			if (is_null($this->tokens)) {
 				Logger::error("Could not remove comments. There are no tokens.");
 				return;
 			}
@@ -100,7 +79,7 @@
 				}
 			}
 			
-			return $tmpTokens;
+			$this->tokens = $tmpTokens;
 		}
 		
 		/**
