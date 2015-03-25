@@ -1,5 +1,7 @@
 <?php
 
+	include_once './../constants/Constant.php';
+
 	/**
 	 * Entity for storing program arguments
 	 * @author Ondrej Krpec, xkrpecqt@gmail.com
@@ -7,63 +9,98 @@
 	 */
 	class Arguments {
 		
-		private $projectsPath;
-		private $templatesPath;
-		private $projectJSONPath;
-		private $templateJSONPath;
+		/** If set on true, script will proceed throught all five steps if mandatory arguments are correctly filled. */
+		private $isGlobalFlow = true;
 		
-		private $isHelp = false;
+		private $isStepOne = false;
+		private $isStepTwo = false;
+		private $isStepThree = false;
+		private $isStepFour = false;
+		private $isStepFive = false;
+		
+		/** If set on true, script will proceed throught step three, four and five. */
+		private $isEval = false;
+		
+		
+		// Step 1 variables
+		private $inputPath = Constant::DEFAULT_PATH;
+		private $outputPath = Constant::DEFAULT_PATH;
+		
+		private $jsonOutputFilename = Constant::DEFAULT_FILENAME;
+		
 		private $isRemoveComments = false;
 		
-		// ======= Getters/Setters ======
 		
-		public function getProjectsPath() {
-			return $this->projectsPath;
+		// ======= Constructors =======
+		public function __construct() {}
+		
+		// ====== Methods ======
+		
+		/**
+		 * 
+		 * Validates script workflow and fixes it, if its incorrect.
+		 */
+		private function validateSteps() {
+			if ($this->isStepOne || $this->isStepTwo || $this->isStepThree || $this->isStepFour || $this->isStepFive || $this->isEval)
+				$this->isGlobalFlow = false;
 		}
 		
-		public function setProjectsPath($projectsPath) {
-			$this->projectsPath = $projectsPath;
-		} 
 		
-		public function getTemplatesPath() {
-			return $this->templatesPath;
+		// ======= Getters/Setters =======
+		
+		public function getIsGlobalFlow() {
+			return $this->isGlobalFlow;
 		}
 		
-		public function setTemplatesPath($templatesPath) {
-			$this->templatesPath = $templatesPath;
+		public function setIsGlobalFlow($isGlobalFlow) {
+			$this->isGlobalFlow = $isGlobalFlow;
 		}
 		
-		public function getProjectJSONPath() {
-			return $this->projectJSONPath;
+		public function getIsStepOne() {
+			return $this->isStepOne;
 		}
 		
-		public function setProjectJSONPath($projectJSONPath) {
-			$this->projectJSONPath = $projectJSONPath;
+		public function setIsStepOne($isStepOne) {
+			$this->isStepOne = $isStepOne;
+			$this->validateSteps();
 		}
 		
-		public function getTemplateJSONPath() {
-			return $this->templateJSONPath;
+		public function getIsStepTwo() {
+			return $this->isStepTwo;
 		}
 		
-		public function setTemplateJSONPath($templateJSONPath) {
-			$this->templateJSONPath = $templateJSONPath;
+		public function setIsStepTwo($isStepTwo) {
+			$this->isStepTwo = $isStepTwo;
+			$this->validateSteps();
 		}
 		
-		public function getIsHelp() {
-			return $this->isHelp;
+		public function getIsStepThree() {
+			return $this->isStepThree;
 		}
 		
-		public function setIsHelp($isHelp) {
-			$this->isHelp = $isHelp;
+		public function setIsStepThree($isStepThree) {
+			$this->isStepThree = $isStepThree;
+			$this->validateSteps();
 		}
 		
-		public function getIsRemoveComments() {
-			return $this->isRemoveComments;
+		public function getIsStepFour() {
+			return $this->isStepFour;
 		}
 		
-		public function setIsRemoveComments($isRemoveComments) {
-			$this->isRemoveComments = $isRemoveComments;
+		public function setIsStepFour($isStepFour) {
+			$this->isStepFour = $isStepFour;
+			$this->validateSteps();
 		}
+		
+		public function getIsStepFive() {
+			return $this->isStepFive;
+		}
+		
+		public function setIsStepFive($isStepFive) {
+			$this->isStepFive = $isStepFive;
+			$this->validateSteps();
+		}
+			
 		 
 	}
 

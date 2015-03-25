@@ -7,31 +7,23 @@
 	include __DIR__ . '/../workers/TokensWorker.php';
 	include __DIR__ . '/../workers/DirectoryWorker.php';
 	include __DIR__ . '/../utils/JsonUtils.php';
-	include __DIR__ . '/../utils/Logger.php';
-	
-	// GLOBAL PROGRAM CONSTANTS
-	define('DEFAULT_PATH', './../');
-	define('TEMPLATE_PATH', '/templates/');
-	define('PROJECT_PATH', '/projects/');
-	
-	// TODO 1. spravne rozdelovat halstead block a levensthein blocky
-	// 2. predelat nacitani parametru - DONE
-	// 3. ulozit template json do souboru - DONE
-	// 4. zpracovat template json parametr - DONE
-	// 5. to same udelat pro student projecty - DONE
-	// 6. predelat halsteada na funkce - DONE
-	// x. zapracovat oddelavani komentaru v pripade prepinace -c
-	// 7. zacit je porovnavat
+	include __DIR__ . '/../utils/Logger.php';	
 
+	// phases
+	// phase 1 - vygenerovat json ze zadane slozky s projekty
+	// phase 2 - ze zadaneho json project & template souboru vygenerovat dvojice do csv souboru
+	// phase 3 - eval halstead
+	// phase 4 - eval levensthein
+	// phase 5 - eval winnowing
 	
 	// ============= main workflow =============
 	$arguments = getArguments($argc, $argv);
 	if (is_null($arguments)) 
 		exit();
 		
-	$enviroment = prepareEnviroment($arguments);
-	if (is_null($enviroment))
-		exit();
+//	$enviroment = prepareEnviroment($arguments);
+//	if (is_null($enviroment))
+//		exit();
 		
 	
 	
