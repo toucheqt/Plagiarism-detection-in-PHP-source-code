@@ -20,12 +20,17 @@
 	if (is_null($arguments)) 
 		exit();
 		
-//	$enviroment = prepareEnviroment($arguments);
-//	if (is_null($enviroment))
-//		exit();
+	// print help if needed
+	if ($arguments->getIsHelp()) {
+		ArgParser::printHelp();
+		exit();
+	}
+	
+	if ($arguments->getIsGlobalFlow() || $arguments->getIsGenerateFiles() || $arguments->getIsStepOne()) {
+		$enviroment = processFirstPhase();
+	}
 		
-	
-	
+
 	// ======== controller functions =========
 	
 	/**
@@ -47,72 +52,47 @@
 	} 
 	
 	/**
-	 * 
-	 * Prepares enviroment entity for comparisons.
-	 * @param $arguments
+	 * Generates JSON file from assignments.
+	 * @return Enviroment entity containing JSON file with projects and templates. 
 	 */
-	function prepareEnviroment($arguments) {
-
-		if ($arguments->getIsHelp()) {
-			ArgParser::printHelp();
-			return null;
-		}
+	function processFirstPhase($arguments) {
 		
 		$enviroment = new Enviroment();
 		
-		// get templates
-		if (!is_null($arguments->getTemplateJSONPath())) {
+		// set template JSON file if delivered
+		if (!is_null($arguments->getTemplateJSON())) {
 			try {
-				$enviroment->setTemplate(JsonUtils::getJsonFromFile($arguments->getTemplateJSONPath()));
+				$enviroment->setTemplate(JsonUtils::getJsonFromFile($arguments->getTemplateJSON()));
 			}
 			catch (Exception $ex) {
-				Logger::errorFatal('Problem during loading JSON template.');
-				return null;
-			} 
-			
-			Logger::info('Template JSON file was successfuly loaded.');
-		}
-		else if (!is_null($arguments->getTemplatesPath())) {
-			$enviroment->setTemplate(DirectoryWorker::getSubDirectories($arguments->getTemplatesPath(),
-					$arguments->getIsRemoveComments()));
-			try {
-				JsonUtils::saveToJson(DEFAULT_PATH, 'template.json', $enviroment->getTemplate());
-			}
-			catch (Exception $ex) {
-				Logger::errorFatal('Problem during saving JSON template.');
+				Logger::errorFatal('Error during loading template JSON file. ');
 				return null;
 			}
-
-			Logger::info('Template JSON file was successfuly created.');
 		}
 		
-		// get projects
-		if (!is_null($arguments->getProjectJSONPath())) {
+		// set input JSON file if delivered, otherwise creates it from input path
+		if (!is_null($arguments->getInputJSON())) {
 			try {
-				$enviroment->setProject(JsonUtils::getJsonFromFile($arguments->getProjectJSONPath()));
+				$enviroment->setProject(JsonUtils::getJsonFromFile($arguments->getInputJSON()));
 			}
 			catch (Exception $ex) {
-				Logger::errorFatal('Problem during loading JSON project.');
+				Logger::errorFatal('Error during loading input JSON file. ');
 				return null;
 			}
+		}
+		else {
+			$project = DirectoryWorker::getSubDirectories($arguments->getInputPath(), $arguments->getIsRemoveComments());
+			$enviroment->setProject($project);
 			
-			Logger::info('Project JSON file was successfuly loaded.');
-		}
-		else if (!is_null($arguments->getProjectsPath())) {
-			$enviroment->setProject(DirectoryWorker::getSubDirectories($arguments->getProjectsPath(),
-					$arguments->getIsRemoveComments()));
+			// save json
 			try {
-				JsonUtils::saveToJson(DEFAULT_PATH, 'projects.json', $enviroment->getProject());
+				JsonUtils::saveToJson($arguments->getOutputPath(), $arguments->getJsonOutputFilename() . Constant::JSON_FILE_EXTENSION,
+						$enviroment->getProject());
+				Logger::info('JSON file with assignments was successfuly created. ');
 			}
 			catch (Exception $ex) {
-				Logger::errorFatal('Problem during saving JSON project.');
-				return null;
+				Logger::error('Error during saving JSON file with assignments. ');
 			}
-			Logger::info('Project JSON file was successfuly created.');
-		}
-		else { // should not happen
-			Logger::errorFatal('No project path or file was specified.');
-			return null;
 		}
 		
 		return $enviroment;
