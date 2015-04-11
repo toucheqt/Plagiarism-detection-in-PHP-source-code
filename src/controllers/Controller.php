@@ -12,9 +12,8 @@
 	// phases
 	// phase 1 - vygenerovat json ze zadane slozky s projekty
 	// phase 2 - ze zadaneho json project & template souboru vygenerovat dvojice do csv souboru
-	// phase 3 - eval halstead
-	// phase 4 - eval levensthein
-	// phase 5 - eval winnowing
+	// phase 3 - eval halstead +eval levensthein
+	// phase 4 - eval winnowing
 	
 	// ============= main workflow =============
 	$arguments = getArguments($argc, $argv);

@@ -18,17 +18,24 @@
 		private $isStepFour = false;
 		private $isStepFive = false;
 		
-		/** If set on true, script will proceed throught step three, four and five. */
+		/** If set on true, script will proceed through step three, four and five. */
 		private $isEval = false;
 		
+		/** If set on true, script will proceed through step one and two. */
+		private $isGenerateFiles;
 		
-		// Step 1 variables
 		private $inputPath = Constant::DEFAULT_PATH;
 		private $outputPath = Constant::DEFAULT_PATH;
+		private $inputJSON = null;
+		private $templateJSON = null;
+		private $inputCSV = null;
 		
+		private $csvOutputFilename = Constant::DEFAULT_FILENAME;
 		private $jsonOutputFilename = Constant::DEFAULT_FILENAME;
 		
 		private $isRemoveComments = false;
+		
+		private $isHelp = false;
 		
 		
 		// ======= Constructors =======
@@ -41,7 +48,8 @@
 		 * Validates script workflow and fixes it, if its incorrect.
 		 */
 		private function validateSteps() {
-			if ($this->isStepOne || $this->isStepTwo || $this->isStepThree || $this->isStepFour || $this->isStepFive || $this->isEval)
+			if ($this->isStepOne || $this->isStepTwo || $this->isStepThree || $this->isStepFour || $this->isStepFive 
+					|| $this->isEval || $this->isGenerateFiles)
 				$this->isGlobalFlow = false;
 		}
 		
@@ -100,8 +108,95 @@
 			$this->isStepFive = $isStepFive;
 			$this->validateSteps();
 		}
-			
-		 
+		
+		public function getIsEval() {
+			return $this->isEval;
+		}
+		
+		public function setIsEval($isEval) {
+			$this->isEval = $isEval;
+		}
+		
+		public function getIsGenerateFiles() {
+			return $this->isGenerateFiles;
+		}
+		
+		public function setIsGenerateFiles($isGenerateFiles) {
+			$this->isGenerateFiles = $isGenerateFiles;
+		}
+		
+		public function getInputPath() {
+			return $this->inputPath;
+		}
+		
+		public function setInputPath($inputPath) {
+			$this->inputPath = $inputPath;
+		}
+		
+		public function getOutputPath() {
+			return $this->outputPath;
+		}
+		
+		public function setOutputPath($outputPath) {
+			$this->outputPath = $outputPath;
+		}
+		
+		public function getJsonOutputFilename() {
+			return $this->jsonOutputFilename;
+		}
+		
+		public function setJsonOutputFilename($filename) {
+			$this->jsonOutputFilename = $filename;
+		}
+		
+		public function getIsRemoveComments() {
+			return $this->isRemoveComments;
+		}
+		
+		public function setIsRemoveComments($isRemoveComments) {
+			$this->isRemoveComments = $isRemoveComments;
+		}
+		
+		public function getInputJSON() {
+			return $this->inputJSON;
+		}
+		
+		public function setInputJSON($inputJSON) {
+			$this->inputJSON = $inputJSON;
+		}
+		
+		public function getTemplateJSON() {
+			return $this->templateJSON;
+		}
+		
+		public function setTemplateJSON($templateJSON) {
+			$this->templateJSON = $templateJSON;
+		}
+		
+		public function getInputCSV() {
+			return $this->inputCSV;
+		}
+		
+		public function setInputCSV($inputCSV) {
+			$this->inputCSV = $inputCSV;
+		}
+		
+		public function getCsvOutputFilename() {
+			return $this->csvOutputFilename;
+		}
+		
+		public function setCsvOutputFilename($csvOutputFilename) {
+			$this->csvOutputFilename = $csvOutputFilename;
+		}
+		
+		public function getIsHelp() {
+			return $this->isHelp;
+		}
+		
+		public function setIsHelp($isHelp) {
+			$this->isHelp = $isHelp;
+		}
+		
 	}
 
 ?>

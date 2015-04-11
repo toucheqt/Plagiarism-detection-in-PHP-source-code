@@ -11,17 +11,8 @@
 	 */
 	class ArgParser {
 		
-		const PROJECT_DIRECTORY = '--projects=';
-		const PROJECT_JSON_DIRECTORY = '--projectJSON=';
-		const TEMPLATE_DIRECTORY = '--templates=';
-		const TEMPLATE_JSON_DIRECTORY = '--templateJSON=';
-		const HELP = '--help';
-		const REMOVE_COMMENTS = '-c';
-		
 		private $argc;
 		private $argv;
-		
-		private $isRemoveComments;
 		
 		public function __construct($argc, $argv) {
 			$this->argc = $argc;
@@ -39,47 +30,83 @@
 			$arguments = new Arguments();
 			
 			foreach ($this->argv as $arg) {
-
 				// ignore scripts first parameter
-				if ($arg == $this->argv[0]) {
-					continue;					
-				}
-
-				if (strpos($arg, self::PROJECT_DIRECTORY) !== false) {
-					$tmpArray = explode('=', $arg, 2);
-					$arguments->setProjectsPath($tmpArray[1]);
+				if ($arg == $this->argv[0])
+					continue;
+					
+				if (!strcmp($arg, Constant::ARG_FIRST_PHASE)) {
+					$arguments->setIsStepOne(true);
 				}
 				
-				else if (strpos($arg, self::PROJECT_JSON_DIRECTORY) !== false) {
-					$tmpArray = explode('=', $arg, 2);
-					$arguments->setProjectJSONPath($tmpArray[1]);
+				else if (!strcmp($arg, Constant::ARG_SECOND_PHASE)) {
+					$arguments->setIsStepTwo(true);
 				}
 				
-				else if (strpos($arg, self::TEMPLATE_DIRECTORY) !== false) {
-					$tmpArray = explode('=', $arg, 2);
-					$arguments->setTemplatesPath($tmpArray[1]);
+				else if (!strcmp($arg, Constant::ARG_THIRD_PHASE)) {
+					$arguments->setIsStepThree(true);
 				}
 				
-				else if (strpos($arg, self::TEMPLATE_JSON_DIRECTORY) !== false) {
-					$tmpArray = explode('=', $arg, 2);
-					$arguments->setTemplateJSONPath($tmpArray[1]);
+				else if (!strcmp($arg, Constant::ARG_FOURTH_PHASE)) {
+					$arguments->setIsStepFour(true);
 				}
 				
-				else if (!strcmp($arg, self::HELP)) {
+				else if (!strcmp($arg, Constant::ARG_EVAL_PHASE)) {
+					$arguments->setIsEval(true);
+				}
+				
+				else if (!strcmp($arg, Constant::ARG_GEN_PHASE)) {
+					$arguments->setIsGenerateFiles(true);
+				}
+				
+				else if (!strcmp($arg, Constant::ARG_COMMENTS)) {
+					$arguments->setIsRemoveComments(true);
+				}
+				
+				else if (!strcmp($arg, Constant::ARG_HELP) || !strcmp($arg, Constant::ARG_HELP_SHORT)) {
 					$arguments->setIsHelp(true);
 				}
 				
-				else if (!strcmp($arg, self::REMOVE_COMMENTS)) {
-					$arguments->setIsRemoveComments(true);
+				else if (strpos($arg, Constant::ARG_INPUT_PATH) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setInputPath($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_OUTPUT_PATH) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setOutputPath($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_INPUT_JSON) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setInputJSON($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_TEMPLATE_JSON) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setTemplateJSON($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_INPUT_CSV) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setInputCSV($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_JSON_NAME) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setJsonOutputFilename($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_CSV_NAME) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setCsvOutputFilename($tmpArray[1]);
 				}
 				
 				else {
 					Logger::warning('Script was started with unknown parameter: ' . $arg);
 				}
-			}
+			} // end foreach
 			
 			self::validateArguments($arguments);
-			
 			return $arguments;
 		}
 		
@@ -92,68 +119,77 @@
 			$errorMessage = null;
 			
 			if ($arguments->getIsHelp() && $this->argc != 2) {
-				$errorMessage .= 'Can not combine \'--help\' with other arguments. ';
+				$errorMessage .= 'Parameter --help can not be combined with other arguments. ';
 			}
 			
-			// validates project path
-			if (is_null($arguments->getProjectsPath()) && is_null($arguments->getProjectJSONPath())) {
-				$errorMessage .= 'Projects path was not specified. ';
+			// if specified, only one phase can be processed
+			else if ($arguments->getIsStepOne() && ($arguments->getIsStepTwo() || $arguments->getIsStepThree()
+					|| $arguments->getIsStepFour())) {
+				$errorMessage .= 'Invalid combination of the script phases. ';			
 			}
-
-			else if (!is_null($arguments->getProjectsPath()) && !is_null($arguments->getProjectJSONPath())) {
-				$errorMessage .= 'Expected only one project path. ';
+			else if ($arguments->getIsStepTwo() && ($arguments->getIsStepOne() || $arguments->getIsStepThree()
+					|| $arguments->getIsStepFour())) {
+				$errorMessage .= 'Invalid combination of the script phases. ';		
 			}
-			
-			else if (!is_null($arguments->getProjectsPath()) && is_null($arguments->getProjectJSONPath())) {
-				if (!is_dir($arguments->getProjectsPath())) {
-					$errorMessage .= 'Specified projects path is not valid. ';
-				}
+			else if ($arguments->getIsStepThree() && ($arguments->getIsStepOne() || $arguments->getIsStepTwo()
+					|| $arguments->getIsStepFour())) {
+				$errorMessage .= 'Invalid combination of the script phases. ';			
 			}
-			
-			else if (is_null($arguments->getProjectsPath()) && !is_null($arguments->getProjectJSONPath())) {
-				if (!is_file($arguments->getProjectJSONPath())) {
-					$errorMessage .= 'Specified project file is not valid. ';
-				}
+			else if ($arguments->getIsStepFour() && ($arguments->getIsStepOne() || $arguments->getIsStepTwo()
+					|| $arguments->getIsStepThree())) {
+				$errorMessage .= 'Invalid combination of the script phases. ';
 			}
-			
-			// validates templates path
-			if (!is_null($arguments->getTemplatesPath()) && !is_null($arguments->getTemplateJSONPath())) {
-				$errorMessage .= 'Expected only one template path. ';
+			else if (($arguments->getIsEval() || $arguments->getIsGenerateFiles()) && self::isSinglePhase($arguments)) {
+				$errorMessage .= 'Invalid combination of the script phases. ';
 			}
 			
-			else if (!is_null($arguments->getTemplatesPath()) && is_null($arguments->getTemplateJSONPath())) {
-				if (!is_dir($arguments->getTemplatesPath())) {
-					$errorMessage .= 'Specified templates path is not valid. ';
-				}
-			} 
-			
-			else if (is_null($arguments->getTemplatesPath()) && !is_null($arguments->getTemplateJSONPath())) {
-				if (!is_file($arguments->getTemplateJSONPath())) {
-					$errorMessage .= 'Specified template file is not valid. ';
-				}
+			// remove comments is possible only in first phase
+			else if ($arguments->getIsRemoveComments() && ($arguments->getIsStepTwo() || $arguments->getIsStepThree()
+					|| $arguments->getIsStepFour() || $arguments->getIsEval() || !is_null($arguments->getInputJSON()))) {
+				$errorMessage .= 'Comment can be removed only in first phase. ';			
 			}
 			
-			// validate isRemoveComments
-			if (!is_null($arguments->getProjectJSONPath()) && $arguments->getIsRemoveComments()) {
-				$errorMessage .= 'Can not remove comments from projects JSON file. ';
+			// validates if json or csv file is supplied in later phases	
+			else if ($arguments->getIsStepTwo() && is_null($arguments->getInputJSON())) {
+				$errorMessage .= 'Missing JSON file. ';
+			}
+			else if (($arguments->getIsStepThree() || $arguments->getIsStepFour() || $arguments->getIsEval()) 
+					&& (is_null($arguments->getInputJSON()) || is_null($arguments->getInputCSV()))) {
+				$errorMessage .= 'Missing JSON or CSV file.';			
 			}
 			
-			if (!is_null($arguments->getTemplateJSONPath()) && $arguments->getIsRemoveComments()) {
-				$errorMessage .= 'Can not remove comments from templates JSON file. ';
-			}
-			
+			// validates paths and files
+			if (!is_dir($arguments->getInputPath()))
+				$errorMessage .= 'Input path is not valid. ';
+			else if (!is_dir($arguments->getOutputPath()))
+				$errorMessage .= 'Output path is not valid. ';
+			else if (!is_null($arguments->getInputJSON()) && !is_file($arguments->getInputJSON())) 
+				$errorMessage .= 'Input JSON file is not valid. ';
+			else if (!is_null($arguments->getTemplateJSON()) && !is_file($arguments->getTemplateJSON()))
+				$errorMessage .= 'Template JSON file is not valid. ';
+			else if (!is_null($arguments->getInputCSV()) && !is_file($arguments->getInputCSV()))
+				$errorMessage .= 'Input CSV file is not valid. ';
+				
 			
 			// throw exception if any error occurred
 			if (!is_null($errorMessage)) {
-				$errorMessage .= "\nFor more informations start script with argument '--help'";
+				$errorMessage .= "\nFor more informations start scrit with parameters '--help' or '-h'";
 				Logger::errorFatal($errorMessage);
 				throw new InvalidArgumentException($errorMessage);
 			}
 		}
 		
 		/**
+		 * Returns boolean value whether one of the four phases is active
+		 */
+		private function isSinglePhase($arguments) {
+			return $arguments->getIsStepOne() || $arguments->getIsStepTwo() || $arguments->getIsStepThree() || $arguments->getIsStepFour();
+		}
+		
+		/**
 		 * Prints program help to stdin. 
 		 */
+		// TODO update
 		public static function printHelp() {
 			$msg = "**************************************** HELP ****************************************\n";
 			$msg .= "Author: Ondrej Krpec, xkrpecqt@gmail.com\n";
