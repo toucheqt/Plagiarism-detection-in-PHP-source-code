@@ -1,6 +1,6 @@
 <?php
 
-	include_once './../constants/Constant.php';
+	include __DIR__ . '/../constants/Constant.php';
 
 	/**
 	 * Entity for storing program arguments

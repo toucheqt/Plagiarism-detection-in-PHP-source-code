@@ -8,8 +8,12 @@
 	 */
 	class Enviroment {
 		
-		private $template;
-		private $project;
+		// JSON objects
+		private $template = null;
+		private $project = null;
+		
+		// CSV file
+		private $matchedPairs = null;
 		
 		public function getTemplate() {
 			return $this->template;
@@ -25,6 +29,14 @@
 		
 		public function setProject($project) {
 			$this->project = $project;
+		}
+		
+		public function getMatchedPairs() {
+			return $this->matchedPairs;
+		}
+		
+		public function setMatchedPairs($matchedPairs) {
+			$this->matchedPairs = $matchedPairs;
 		}
 		
 	}

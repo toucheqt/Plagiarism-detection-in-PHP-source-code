@@ -23,10 +23,11 @@
 		const ARG_HELP_SHORT = '-h';
 		
 		// arg paths
-		const ARG_INPUT_PATH = '--projects=';
+		// TODO pridal bych moznost, ze se da vygenerovat i template 
+		const ARG_INPUT_PATH = '--input=';
 		const ARG_OUTPUT_PATH = '--output=';
 		const ARG_INPUT_JSON = '--projectsJSON=';
-		const ARG_TEMPLATE_JSON = '--templateJSON=';
+		const ARG_TEMPLATE_JSON = '--templatesJSON=';
 		const ARG_INPUT_CSV = '--inputCSV=';
 		
 		const ARG_JSON_NAME = '--nameJSON=';

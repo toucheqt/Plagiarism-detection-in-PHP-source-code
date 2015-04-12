@@ -24,7 +24,7 @@
 						"files" => self::getFiles($fileInfo->getPath() . '/' . $fileInfo->getFilename(),
 								$isRemoveComments),
 					);
-					$subDirectories[] = $item;
+					$subDirectories[$fileInfo->getFilename()] = $item;
 				}
 			}
 			return $subDirectories;

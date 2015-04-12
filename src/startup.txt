@@ -1,0 +1,5 @@
+# GENERATE TEMPLATES #
+php ./controllers/Controller.php --output=./../ --projects=./../tests/template/ --nameJSON=templates --first
+
+# GENERATE CSV WITH ASSIGNMENTS AND TEMPLATES #
+php ./controllers/Controller.php --second --projectsJSON=./../projects.json --templatesJSON=./../templates.json --output=./../ --nameCSV="matched pairs"

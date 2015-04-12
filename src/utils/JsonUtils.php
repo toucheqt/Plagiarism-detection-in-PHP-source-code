@@ -51,6 +51,30 @@
 			return json_decode($content);
 		}
 		
+		/**
+		 * Converts giver array and saves it as a CSV file.
+		 * @throws InvalidArgumentException
+		 * @throws RuntimeException
+		 */
+		public static function saveToCSV($path, $filename, $matchedPairs) {
+			if (is_null($filename)) {
+				Logger::error('Can not save CSV file. Filename can not be null. ');
+				throw new InvalidArgumentException();
+			}
+			
+			$fd = fopen($path . $filename . Constant::CSV_FILE_EXTENSION, 'w');
+			if (!$fd) {
+				Logger::error('Can not save CSV file. File can not be created. ');
+				throw new RuntimeException();
+			}
+
+			foreach ($matchedPairs as $pair) {
+				fputcsv($fd, $pair);
+			}
+			// TODO refaktorovat jsonUtils na fileUtils
+			fclose($fd);
+		}
+		
 	}
 
 ?>
