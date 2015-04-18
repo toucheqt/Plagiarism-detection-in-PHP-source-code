@@ -38,13 +38,13 @@
 		 */
 		public static function getJsonFromFile($path) {
 			if (is_null($path)) {
-				Logger::error('Path can not be null.');
+				Logger::errorFatal('Path can not be null.');
 				throw new InvalidArgumentException();
 			}
 			
 			$content = file_get_contents($path);
 			if (!$content) {
-				Logger::error('File ' . $path . ' can not be opened.');
+				Logger::errorFatal('File ' . $path . ' can not be opened.');
 				throw new RuntimeException();
 			}
 			
@@ -73,6 +73,45 @@
 			}
 			// TODO refaktorovat jsonUtils na fileUtils
 			fclose($fd);
+		}
+		
+		/**
+		 * Returns specific page of matched pairs from given CSV file.
+		 * @throws InvalidArgumentException
+		 * @throws RuntimeException
+		 */
+		public static function getFromCSV($path, $startIndex, $count) {
+			if (is_null($path)) {
+				Logger::errorFatal('Path to CSV file can not be null. ');
+				throw new InvalidArgumentException();
+			}
+			
+			$fd = fopen($path, 'r');
+			if (!$fd) {
+				Logger::errorFatal('CSV file can not be opened. ');
+				throw new RuntimeException();
+			}
+			
+			// implements paging
+			$skippedFiles = $startIndex * $count;
+			try {
+				for ($i = 0; $i < $skippedFiles; $i++) {
+					fgetcsv($fd);
+				}
+			}
+			catch (Exception $ex) {
+				Logger::errorFatal('Error during creating matched pairs page. ');
+				throw new RuntimeException();
+			}
+			
+			$matchedPairs = array();
+			for ($i = 0; $i < $count; $i++) {
+				$matchedPairs[] = fgetcsv($fd);
+			}
+			
+			fclose($fd);
+			
+			return $matchedPairs;
 		}
 		
 	}

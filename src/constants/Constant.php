@@ -17,7 +17,7 @@
 		// arg parameters shortcuts
 		const ARG_EVAL_PHASE = '-e';
 		const ARG_GEN_PHASE = '-g';
-		const ARG_COMMENTS = '-c'; // continue HERE
+		const ARG_COMMENTS = '-c';
 		
 		const ARG_HELP = '--help';
 		const ARG_HELP_SHORT = '-h';
@@ -36,6 +36,7 @@
 		// paging
 		const ARG_START_INDEX = '--index=';
 		const ARG_COUNT = '--count=';
+		const ARG_FORCE = '-f';
 		
 		const START_INDEX = 0;
 		const COUNT = 20; // TODO find best count

@@ -40,6 +40,8 @@
 		private $startIndex = Constant::START_INDEX;
 		private $count = Constant::COUNT;
 		
+		private $force = false;
+		
 		
 		// ======= Constructors =======
 		public function __construct() {}
@@ -214,6 +216,14 @@
 		
 		public function setCount($count) {
 			$this->count = $count;
+		}
+		
+		public function getIsForce() {
+			return $this->force;
+		}
+		
+		public function setIsForce($force) {
+			$this->force = $force;
 		}
 	}
 

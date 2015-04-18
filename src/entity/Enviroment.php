@@ -15,6 +15,22 @@
 		// CSV file
 		private $matchedPairs = null;
 		
+		// ========= functions ================
+		
+		/**
+		 * Creates single page of matched pairs for comparison. This is due to comparison being time consuming and comparing all
+		 * assignments in a row would take very long time. 
+		 */
+		public function createPage($startIndex, $count) {
+			$page = array();
+			for ($i = $startIndex; $i < $startIndex * $count; $i++) {
+				$page[] = $this->matchedPairs[$i];
+			}
+			$this->matchedPairs = $page;
+		}
+		
+		// ======== getters/setters ============
+		
 		public function getTemplate() {
 			return $this->template;
 		}

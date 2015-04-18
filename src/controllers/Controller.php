@@ -41,6 +41,12 @@
 		if (is_null($enviroment))
 			exit();
 	}
+	
+	if ($arguments->getIsGlobalFlow() || $arguments->getIsEval() || $arguments->getIsStepThree()) {
+		$return = processThirdPhase($arguments, $enviroment); // TODO rename return
+		if (is_null($return))
+			exit();
+	}
 		
 
 	// ======== controller functions =========
@@ -158,6 +164,22 @@
 		}
 		// TODO refaktorovat vsechny JSON a CSV nazvy na velke
 		return $enviroment;
+	}
+	
+	/**
+	 * Compares given sets of assignments and evaluates results.
+	 */
+	function processThirdPhase($arguments, $enviroment) {
+		// TODO mit funkci na vypsani poctu matched pairs
+		if (is_null($enviroment->getMatchedPairs()))
+			$enviroment->setMatchedPairs(JsonUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
+		else if (!$arguments->getIsForce()) // is force is false, create page
+			$enviroment->createPage($arguments->getStartIndex(), $arguments->getCount());
+		
+		// TODO
+		// vytahnout projekty ze csv
+		// najit prislusne projekty v json a ulozit si oba do objektu
+		// porovnat je
 	}
 	
 ?>

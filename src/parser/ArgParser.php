@@ -66,6 +66,10 @@
 					$arguments->setIsHelp(true);
 				}
 				
+				else if (!strcmp($arg, Constant::ARG_FORCE)) {
+					$arguments->setIsForce(true);
+				}
+				
 				else if (strpos($arg, Constant::ARG_INPUT_PATH) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setInputPath($tmpArray[1]);
@@ -185,6 +189,8 @@
 				$errorMessage .= 'Start index must be greater than zero. ';
 			if ($arguments->getCount() < 0)
 				$errorMessage .= 'Max count per page must be greater than zero. ';
+			if ($arguments->getIsForce() && !$arguments->getIsGlobalFlow()) 
+				$errorMessage .= 'Can not force evaluating all assignments without executing all phases. ';
 			
 			// throw exception if any error occurred
 			if (!is_null($errorMessage)) {
