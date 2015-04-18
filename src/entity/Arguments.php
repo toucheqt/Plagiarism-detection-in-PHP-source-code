@@ -37,6 +37,9 @@
 		
 		private $isHelp = false;
 		
+		private $startIndex = Constant::START_INDEX;
+		private $count = Constant::COUNT;
+		
 		
 		// ======= Constructors =======
 		public function __construct() {}
@@ -197,6 +200,21 @@
 			$this->isHelp = $isHelp;
 		}
 		
+		public function getStartIndex() {
+			return $this->startIndex;
+		}
+		
+		public function setStartIndex($startIndex) {
+			$this->startIndex = $startIndex;
+		}
+		
+		public function getCount() {
+			return $this->count;
+		}
+		
+		public function setCount($count) {
+			$this->count = $count;
+		}
 	}
 
 ?>

@@ -33,6 +33,13 @@
 		const ARG_JSON_NAME = '--nameJSON=';
 		const ARG_CSV_NAME = '--nameCSV';
 		
+		// paging
+		const ARG_START_INDEX = '--index=';
+		const ARG_COUNT = '--count=';
+		
+		const START_INDEX = 0;
+		const COUNT = 20; // TODO find best count
+		
 		// file paths and file names
 		const DEFAULT_PATH = './';
 		const DEFAULT_FILENAME = 'generatedOutput';

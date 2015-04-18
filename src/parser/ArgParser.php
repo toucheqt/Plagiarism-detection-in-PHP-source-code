@@ -101,6 +101,16 @@
 					$arguments->setCsvOutputFilename($tmpArray[1]);
 				}
 				
+				else if (strpos($arg, Constant::ARG_START_INDEX) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setStartIndex($tmpArray[1]);
+				}
+				
+				else if (strpos($arg, Constant::ARG_COUNT) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setCount($tmpArray[1]);
+				}
+				
 				else {
 					Logger::warning('Script was started with unknown parameter: ' . $arg);
 				}
@@ -170,6 +180,11 @@
 			else if (!is_null($arguments->getInputCSV()) && !is_file($arguments->getInputCSV()))
 				$errorMessage .= 'Input CSV file is not valid. ';
 				
+			// validates paging
+			if ($arguments->getStartIndex() < 0)
+				$errorMessage .= 'Start index must be greater than zero. ';
+			if ($arguments->getCount() < 0)
+				$errorMessage .= 'Max count per page must be greater than zero. ';
 			
 			// throw exception if any error occurred
 			if (!is_null($errorMessage)) {
