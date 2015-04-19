@@ -119,7 +119,7 @@
 					Logger::warning('Script was started with unknown parameter: ' . $arg);
 				}
 			} // end foreach
-			
+		
 			self::validateArguments($arguments);
 			return $arguments;
 		}
@@ -130,6 +130,7 @@
 		 * @throws InvalidArgumentException
 		 */
 		private function validateArguments($arguments) {
+			$arguments->validateSteps();
 			$errorMessage = null;
 			
 			if ($arguments->getIsHelp() && $this->argc != 2) {

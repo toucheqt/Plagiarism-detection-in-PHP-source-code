@@ -176,6 +176,7 @@
 		else if (!$arguments->getIsForce()) // is force is false, create page
 			$enviroment->createPage($arguments->getStartIndex(), $arguments->getCount());
 		
+		print_r($enviroment->getMatchedPairs());
 		// TODO
 		// vytahnout projekty ze csv
 		// najit prislusne projekty v json a ulozit si oba do objektu

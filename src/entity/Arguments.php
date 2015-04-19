@@ -16,13 +16,13 @@
 		private $isStepTwo = false;
 		private $isStepThree = false;
 		private $isStepFour = false;
-		private $isStepFive = false;
+		private $isStepFive = false; // TODO remove step five
 		
 		/** If set on true, script will proceed through step three, four and five. */
 		private $isEval = false;
 		
 		/** If set on true, script will proceed through step one and two. */
-		private $isGenerateFiles;
+		private $isGenerateFiles = false;
 		
 		private $inputPath = Constant::DEFAULT_PATH;
 		private $outputPath = Constant::DEFAULT_PATH;
@@ -52,7 +52,7 @@
 		 * 
 		 * Validates script workflow and fixes it, if its incorrect.
 		 */
-		private function validateSteps() {
+		public function validateSteps() {
 			if ($this->isStepOne || $this->isStepTwo || $this->isStepThree || $this->isStepFour || $this->isStepFive 
 					|| $this->isEval || $this->isGenerateFiles)
 				$this->isGlobalFlow = false;
