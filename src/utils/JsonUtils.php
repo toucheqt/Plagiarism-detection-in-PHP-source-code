@@ -110,7 +110,6 @@
 			}
 			
 			fclose($fd);
-			
 			return $matchedPairs;
 		}
 		

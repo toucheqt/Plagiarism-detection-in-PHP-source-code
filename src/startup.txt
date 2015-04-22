@@ -3,3 +3,6 @@ php ./controllers/Controller.php --output=./../ --projects=./../tests/template/ 
 
 # GENERATE CSV WITH ASSIGNMENTS AND TEMPLATES #
 php ./controllers/Controller.php --second --projectsJSON=./../projects.json --templatesJSON=./../templates.json --output=./../ --nameCSV="matched pairs"
+
+# EVALUATE (phase 3-4) #
+php ./controllers/Controller.php -e --projectsJSON=./../templates.json --templatesJSON=./../projects.json --inputCSV=./../generatedOutput.csv

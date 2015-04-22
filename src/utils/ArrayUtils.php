@@ -1,5 +1,7 @@
 <?php
 
+	include __DIR__ . '/../entity/Pair.php';
+
 	/**
 	 * Util class containing methods for easy manipulation with arrays.
 	 * @author Ondrej Krpec, xkrpecqt@gmail.com
@@ -46,6 +48,39 @@
 				}
 			}
 			return $matchedPairs;
+		}
+		
+		/**
+		 * Returns JSON objects of given assignments.
+		 * @throws UnexpectedValueException
+		 */
+		public static function findAssignmentsByName($firstAssignment, $secondAssignment, $enviroment) {
+			$projects = $enviroment->getProject();
+			$templates = $enviroment->getTemplate();
+			
+			$pair = new Pair();
+			
+			// get first assignment
+			if (strpos($firstAssignment, '-template') !== false) {
+				$tmpArray = explode('-template', $firstAssignment, 2);
+				$pair->setFirstAssignment($templates->{$tmpArray[0]});
+			} else {
+				$pair->setFirstAssignment($projects->{$firstAssignment});
+			}
+			
+			// get second assignment
+			if (strpos($secondAssignment, '-template') !== false) {
+				$tmpArray = explode('-template', $secondAssignment, 2);
+				$pair->setSecondAssignment($templates->{$tmpArray[0]});
+			} else { // TODO refaktorovat i vsechny ostatni IFy
+				$pair->setSecondAssignment($projects->{$secondAssignment});
+			}
+			
+			if (is_null($pair->getFirstAssignment()) || is_null($pair->getSecondAssignment()))
+				throw new UnexpectedValueException();
+				
+			return $pair;
+			
 		}
 		
 	}

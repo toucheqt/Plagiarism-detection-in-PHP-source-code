@@ -9,6 +9,7 @@
 	include __DIR__ . '/../utils/JsonUtils.php';
 	include __DIR__ . '/../utils/ArrayUtils.php';
 	include __DIR__ . '/../utils/Logger.php';	
+	include __DIR__ . '/../utils/WorkerUtils.php';
 
 	// phases
 	// phase 1 - DONE
@@ -20,7 +21,7 @@
 	$arguments = getArguments($argc, $argv);
 	if (is_null($arguments)) 
 		exit();
-		
+		// TODO add gitignore file
 	// print help if needed
 	if ($arguments->getIsHelp()) {
 		ArgParser::printHelp();
@@ -122,35 +123,7 @@
 	 */
 	function processSecondPhase($arguments, $enviroment) {
 		
-		// load input JSON file if first phase was not done
-		if (is_null($enviroment->getProject())) {
-			if (is_null($arguments->getInputJSON())) { // should not happen
-				Logger::errorFatal('No input files were delivered. ');
-				return null;
-			}
-			
-			try {
-				$enviroment->setProject(JsonUtils::getJsonFromFile($arguments->getInputJSON()));
-				Logger::info('JSON file with assignments was successfuly loaded. ');
-			}
-			catch (Exception $ex) {
-				Logger::errorFatal('Error during loading input JSON file. ');
-				return null;
-			}
-		}
-		
-		// load template JSON file if first phase was not done
-		if (is_null($enviroment->getTemplate()) && !is_null($arguments->getTemplateJSON())) {
-			try {
-				$enviroment->setTemplate(JsonUtils::getJsonFromFile($arguments->getTemplateJSON()));
-				Logger::info('JSON file with templates was successfuly loaded. ');
-			}
-			catch (Exception $ex) {
-				Logger::errorFatal('Error during loading template JSON file. ');
-				return null;
-			} // TODO ukladat log do souboru ?? + pridat k nemu timestamp
-		}
-		
+		$enviroment = WorkerUtils::getJSONByArguments($arguments, $enviroment);
 		$matchedPairs = ArrayUtils::getUniquePairs($enviroment->getProject(), $enviroment->getTemplate());
 		$enviroment->setMatchedPairs($matchedPairs);
 		
@@ -170,16 +143,25 @@
 	 * Compares given sets of assignments and evaluates results.
 	 */
 	function processThirdPhase($arguments, $enviroment) {
-		// TODO mit funkci na vypsani poctu matched pairs
+		
+		$enviroment = WorkerUtils::getJSONByArguments($arguments, $enviroment);
+
 		if (is_null($enviroment->getMatchedPairs()))
 			$enviroment->setMatchedPairs(JsonUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
 		else if (!$arguments->getIsForce()) // is force is false, create page
 			$enviroment->createPage($arguments->getStartIndex(), $arguments->getCount());
+			
+		var_dump($enviroment->getMatchedPairs());
+		foreach ($enviroment->getMatchedPairs() as $matchedPair) {
+			$pair = ArrayUtils::findAssignmentsByName($matchedPair[0], $matchedPair[1], $enviroment);
+			print_r($pair->getFirstAssignment());
+			echo "\n\n -------------------------------------------------- \n\n";
+			print_r($pair->getSecondAssignment());
+		}// TODO co se stane, kdyz spustim skript s global flow a JSON templaty??
 		
-		print_r($enviroment->getMatchedPairs());
 		// TODO
-		// vytahnout projekty ze csv
-		// najit prislusne projekty v json a ulozit si oba do objektu
+		// vytahnout projekty ze csv - DONE
+		// najit prislusne projekty v json a ulozit si oba do objektu - DONE
 		// porovnat je
 	}
 	

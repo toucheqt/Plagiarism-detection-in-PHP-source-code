@@ -9,7 +9,7 @@
 	class Enviroment {
 		
 		// JSON objects
-		private $template = null;
+		private $template = null; // TODO refaktorovat nazev bud na projects nebo projectJSON
 		private $project = null;
 		
 		// CSV file
