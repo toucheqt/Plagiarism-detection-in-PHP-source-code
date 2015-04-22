@@ -22,8 +22,7 @@
 			foreach ($block as $token) {
 				if (Halstead::isOperator($token[TokenBlock::TOKEN_TYPE])) {
 					$halsteadBlock->addUniqueOperator($token);
-				}
-				else {
+				} else {
 					$halsteadBlock->addUniqueOperand($token);
 				}
 			}

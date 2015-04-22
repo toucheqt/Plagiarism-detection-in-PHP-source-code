@@ -45,7 +45,7 @@
 					$tokenBlock = new TokenBlock($tokensWorker->getTokens());
 					$item = array(
 						"filename" => $fileInfo->getFilename(),
-						"content" => $tokenBlock->toJson(),
+						"content" => $tokenBlock->toJSON(),
 					);
 					$files[] = $item;
 				}

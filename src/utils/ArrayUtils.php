@@ -55,8 +55,8 @@
 		 * @throws UnexpectedValueException
 		 */
 		public static function findAssignmentsByName($firstAssignment, $secondAssignment, $enviroment) {
-			$projects = $enviroment->getProject();
-			$templates = $enviroment->getTemplate();
+			$projects = $enviroment->getProjects();
+			$templates = $enviroment->getTemplates();
 			
 			$pair = new Pair();
 			
@@ -72,7 +72,7 @@
 			if (strpos($secondAssignment, '-template') !== false) {
 				$tmpArray = explode('-template', $secondAssignment, 2);
 				$pair->setSecondAssignment($templates->{$tmpArray[0]});
-			} else { // TODO refaktorovat i vsechny ostatni IFy
+			} else { 
 				$pair->setSecondAssignment($projects->{$secondAssignment});
 			}
 			

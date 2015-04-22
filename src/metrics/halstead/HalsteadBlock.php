@@ -29,7 +29,7 @@
 			$this->difficulty = 0;
 		}
 		
-		public function toJson() {
+		public function toJSON() {
 			return array(
 					'operators' => $this->operators,
 					'operands' => $this->operands,
@@ -88,8 +88,7 @@
 						return false;			
 					}
 				}
-			}
-			else {
+			} else {
 				foreach ($this->uniqueOperands as $usedOperand) {
 					if ($usedOperand == $operand) {
 						return false;

@@ -9,8 +9,8 @@
 	class Enviroment {
 		
 		// JSON objects
-		private $template = null; // TODO refaktorovat nazev bud na projects nebo projectJSON
-		private $project = null;
+		private $templates = null;
+		private $projects = null;
 		
 		// CSV file
 		private $matchedPairs = null;
@@ -31,20 +31,20 @@
 		
 		// ======== getters/setters ============
 		
-		public function getTemplate() {
-			return $this->template;
+		public function getTemplates() {
+			return $this->templates;
 		}
 		
-		public function setTemplate($template) {
-			$this->template = $template;
+		public function setTemplates($templates) {
+			$this->templates = $templates;
 		}
 		
-		public function getProject() {
-			return $this->project;
+		public function getProjects() {
+			return $this->projects;
 		}
 		
-		public function setProject($project) {
-			$this->project = $project;
+		public function setProjects($projects) {
+			$this->projects = $projects;
 		}
 		
 		public function getMatchedPairs() {

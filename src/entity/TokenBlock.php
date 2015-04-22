@@ -28,14 +28,14 @@
 			$this->halsteadBlocks = array();
 			foreach ($functions as $function) {
 				$tmpBlock = Halstead::evalMetrics(new HalsteadBlock(), $function);
-				$this->halsteadBlocks[] = $tmpBlock->toJson();
+				$this->halsteadBlocks[] = $tmpBlock->toJSON();
 			}
 			$this->levenshteinBlocks = Levenshtein::getAbstractBlocks($tokens);
 		}
 		
 		// ===== Methods =======
 		
-		public function toJson() {
+		public function toJSON() {
 			return array(
 					'tokens' => $this->tokens,
 					'halsteadBlocks' => $this->halsteadBlocks,

@@ -6,14 +6,14 @@
 	include __DIR__ . '/../metrics/halstead/Halstead.php';
 	include __DIR__ . '/../workers/TokensWorker.php';
 	include __DIR__ . '/../workers/DirectoryWorker.php';
-	include __DIR__ . '/../utils/JsonUtils.php';
+	include __DIR__ . '/../utils/FileUtils.php';
 	include __DIR__ . '/../utils/ArrayUtils.php';
 	include __DIR__ . '/../utils/Logger.php';	
 	include __DIR__ . '/../utils/WorkerUtils.php';
 
 	// phases
 	// phase 1 - DONE
-	// phase 2 - ze zadaneho json project & template souboru vygenerovat dvojice do csv souboru
+	// phase 2 - ze zadaneho JSON project & template souboru vygenerovat dvojice do CSV souboru
 	// phase 3 - eval halstead + eval levensthein
 	// phase 4 - eval winnowing
 	
@@ -21,7 +21,7 @@
 	$arguments = getArguments($argc, $argv);
 	if (is_null($arguments)) 
 		exit();
-		// TODO add gitignore file
+		
 	// print help if needed
 	if ($arguments->getIsHelp()) {
 		ArgParser::printHelp();
@@ -44,7 +44,7 @@
 	}
 	
 	if ($arguments->getIsGlobalFlow() || $arguments->getIsEval() || $arguments->getIsStepThree()) {
-		$return = processThirdPhase($arguments, $enviroment); // TODO rename return
+		$enviroment = processThirdPhase($arguments, $enviroment);
 		if (is_null($return))
 			exit();
 	}
@@ -62,8 +62,7 @@
 		$argParser = new ArgParser($argc, $argv);
 		try {
 			$arguments = $argParser->parseArguments();
-		}
-		catch (InvalidArgumentException $iae) {
+		} catch (InvalidArgumentException $iae) {
 			return null;
 		}
 		
@@ -81,35 +80,31 @@
 		// set template JSON file if delivered
 		if (!is_null($arguments->getTemplateJSON())) {
 			try {
-				$enviroment->setTemplate(JsonUtils::getJsonFromFile($arguments->getTemplateJSON()));
-			}
-			catch (Exception $ex) {
+				$enviroment->setTemplates(FileUtils::getJSONFromFile($arguments->getTemplateJSON()));
+			} catch (Exception $ex) {
 				Logger::errorFatal('Error during loading template JSON file. ');
 				return null;
 			}
-		} // TODO toto by se snad dalo vyskrtnout ne?
+		} // TODO predelat, prvni faze a JSON nejdou dohromady
 		
 		// set input JSON file if delivered, otherwise creates it from input path
 		if (!is_null($arguments->getInputJSON())) {
 			try {
-				$enviroment->setProject(JsonUtils::getJsonFromFile($arguments->getInputJSON()));
-			}
-			catch (Exception $ex) {
+				$enviroment->setProjects(FileUtils::getJSONFromFile($arguments->getInputJSON()));
+			} catch (Exception $ex) {
 				Logger::errorFatal('Error during loading input JSON file. ');
 				return null;
 			}
-		}
-		else {
-			$project = DirectoryWorker::getSubDirectories($arguments->getInputPath(), $arguments->getIsRemoveComments());
-			$enviroment->setProject($project);
+		} else {
+			$projects = DirectoryWorker::getSubDirectories($arguments->getInputPath(), $arguments->getIsRemoveComments());
+			$enviroment->setProjects($projects);
 			
-			// save json
+			// save JSON
 			try {
-				JsonUtils::saveToJson($arguments->getOutputPath(), $arguments->getJsonOutputFilename() . Constant::JSON_FILE_EXTENSION,
-						$enviroment->getProject());
+				FileUtils::saveToJSON($arguments->getOutputPath(), $arguments->getJSONOutputFilename() . Constant::JSON_FILE_EXTENSION,
+						$enviroment->getProjects());
 				Logger::info('JSON file with assignments was successfuly created. ');
-			}
-			catch (Exception $ex) {
+			} catch (Exception $ex) {
 				Logger::error('Error during saving JSON file with assignments. ');
 			}
 		}
@@ -124,18 +119,17 @@
 	function processSecondPhase($arguments, $enviroment) {
 		
 		$enviroment = WorkerUtils::getJSONByArguments($arguments, $enviroment);
-		$matchedPairs = ArrayUtils::getUniquePairs($enviroment->getProject(), $enviroment->getTemplate());
+		$matchedPairs = ArrayUtils::getUniquePairs($enviroment->getProjects(), $enviroment->getTemplates());
 		$enviroment->setMatchedPairs($matchedPairs);
 		
-		// export csv
+		// export CSV
 		try {
-			JsonUtils::saveToCSV($arguments->getOutputPath(), $arguments->getCsvOutputFilename(), $matchedPairs);
+			FileUtils::saveToCSV($arguments->getOutputPath(), $arguments->getCSVOutputFilename(), $matchedPairs);
 			Logger::info('CSV file with unique pairs was successfuly created. ');
-		}
-		catch (Exception $ex) {
+		} catch (Exception $ex) {
 			Logger::error('Error during saving CSV file. ');
 		}
-		// TODO refaktorovat vsechny JSON a CSV nazvy na velke
+
 		return $enviroment;
 	}
 	
@@ -147,7 +141,7 @@
 		$enviroment = WorkerUtils::getJSONByArguments($arguments, $enviroment);
 
 		if (is_null($enviroment->getMatchedPairs()))
-			$enviroment->setMatchedPairs(JsonUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
+			$enviroment->setMatchedPairs(FileUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
 		else if (!$arguments->getIsForce()) // is force is false, create page
 			$enviroment->createPage($arguments->getStartIndex(), $arguments->getCount());
 			
@@ -157,11 +151,11 @@
 			print_r($pair->getFirstAssignment());
 			echo "\n\n -------------------------------------------------- \n\n";
 			print_r($pair->getSecondAssignment());
-		}// TODO co se stane, kdyz spustim skript s global flow a JSON templaty??
+		}
 		
-		// TODO
-		// vytahnout projekty ze csv - DONE
-		// najit prislusne projekty v json a ulozit si oba do objektu - DONE
+		// FIXME
+		// vytahnout projekty ze CSV - DONE
+		// najit prislusne projekty v JSON a ulozit si oba do objektu - DONE
 		// porovnat je
 	}
 	

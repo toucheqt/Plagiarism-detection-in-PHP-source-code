@@ -44,8 +44,7 @@
 						$bracketCount = 1;
 					else 	
 						$bracketCount++;
-				}
-				else if (!is_array($token) && $token == '}' && $isSaveTokens)
+				} else if (!is_array($token) && $token == '}' && $isSaveTokens)
 					$bracketCount--;
 					
 				// in case function ended

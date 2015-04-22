@@ -73,8 +73,7 @@
 				if (!is_null($abstractToken)) {
 					if (strlen($singleResource) + strlen($abstractToken) <= Levenshtein::MAX_STRING_SIZE) {
 						$singleResource .= $abstractToken;
-					}
-					else {
+					} else {
 						$resourceArray[] = $singleResource;
 						$singleResource = $abstractToken;
 					}

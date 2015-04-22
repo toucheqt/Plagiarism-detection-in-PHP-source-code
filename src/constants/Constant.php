@@ -39,7 +39,7 @@
 		const ARG_FORCE = '-f';
 		
 		const START_INDEX = 0;
-		const COUNT = 20; // TODO find best count
+		const COUNT = 20; // FIXME By experimenting find the best count
 		
 		// file paths and file names
 		const DEFAULT_PATH = './';

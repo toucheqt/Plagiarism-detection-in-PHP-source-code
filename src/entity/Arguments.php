@@ -16,7 +16,6 @@
 		private $isStepTwo = false;
 		private $isStepThree = false;
 		private $isStepFour = false;
-		private $isStepFive = false; // TODO remove step five
 		
 		/** If set on true, script will proceed through step three, four and five. */
 		private $isEval = false;
@@ -30,8 +29,8 @@
 		private $templateJSON = null;
 		private $inputCSV = null;
 		
-		private $csvOutputFilename = Constant::DEFAULT_FILENAME;
-		private $jsonOutputFilename = Constant::DEFAULT_FILENAME;
+		private $CSVOutputFilename = Constant::DEFAULT_FILENAME;
+		private $JSONOutputFilename = Constant::DEFAULT_FILENAME;
 		
 		private $isRemoveComments = false;
 		
@@ -105,15 +104,6 @@
 			$this->validateSteps();
 		}
 		
-		public function getIsStepFive() {
-			return $this->isStepFive;
-		}
-		
-		public function setIsStepFive($isStepFive) {
-			$this->isStepFive = $isStepFive;
-			$this->validateSteps();
-		}
-		
 		public function getIsEval() {
 			return $this->isEval;
 		}
@@ -146,12 +136,12 @@
 			$this->outputPath = $outputPath;
 		}
 		
-		public function getJsonOutputFilename() {
-			return $this->jsonOutputFilename;
+		public function getJSONOutputFilename() {
+			return $this->JSONOutputFilename;
 		}
 		
-		public function setJsonOutputFilename($filename) {
-			$this->jsonOutputFilename = $filename;
+		public function setJSONOutputFilename($filename) {
+			$this->JSONOutputFilename = $filename;
 		}
 		
 		public function getIsRemoveComments() {
@@ -186,12 +176,12 @@
 			$this->inputCSV = $inputCSV;
 		}
 		
-		public function getCsvOutputFilename() {
-			return $this->csvOutputFilename;
+		public function getCSVOutputFilename() {
+			return $this->CSVOutputFilename;
 		}
 		
-		public function setCsvOutputFilename($csvOutputFilename) {
-			$this->csvOutputFilename = $csvOutputFilename;
+		public function setCSVOutputFilename($CSVOutputFilename) {
+			$this->CSVOutputFilename = $CSVOutputFilename;
 		}
 		
 		public function getIsHelp() {

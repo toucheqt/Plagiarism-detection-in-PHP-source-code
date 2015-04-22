@@ -6,18 +6,18 @@
 	 * @author Ondrej Krpec, xkrpecqt@gmail.com
 	 *
 	 */
-	class JsonUtils {
+	class FileUtils {
 		
 		/**
 		 * 
-		 * Converts given array to json and saves it into file.
+		 * Converts given array to JSON and saves it into file.
 		 * @param string $path
 		 * @param string $filename
 		 * @param array $data
 		 * @throws InvalidArgumentException
 		 * @throws RuntimeException
 		 */
-		public static function saveToJson($path, $filename, $data) {
+		public static function saveToJSON($path, $filename, $data) {
 			if (is_null($filename)) {
 				Logger::error("Filename can not be null.");
 				throw new InvalidArgumentException();
@@ -31,12 +31,12 @@
 		
 		/**
 		 * 
-		 * Returns content of given json file
+		 * Returns content of given JSON file
 		 * @param string $path
 		 * @throws InvalidArgumentException
 		 * @throws RuntimeException
 		 */
-		public static function getJsonFromFile($path) {
+		public static function getJSONFromFile($path) {
 			if (is_null($path)) {
 				Logger::errorFatal('Path can not be null.');
 				throw new InvalidArgumentException();
@@ -71,7 +71,7 @@
 			foreach ($matchedPairs as $pair) {
 				fputcsv($fd, $pair);
 			}
-			// TODO refaktorovat jsonUtils na fileUtils
+			
 			fclose($fd);
 		}
 		
@@ -98,8 +98,7 @@
 				for ($i = 0; $i < $skippedFiles; $i++) {
 					fgetcsv($fd);
 				}
-			}
-			catch (Exception $ex) {
+			} catch (Exception $ex) {
 				Logger::errorFatal('Error during creating matched pairs page. ');
 				throw new RuntimeException();
 			}

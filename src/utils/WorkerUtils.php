@@ -16,32 +16,30 @@
 		 */
 		public static function getJSONByArguments($arguments, $enviroment) {
 			// load input JSON file if first phase was not done
-			if (is_null($enviroment->getProject())) {
+			if (is_null($enviroment->getProjects())) {
 				if (is_null($arguments->getInputJSON())) { // should not happen
 					Logger::errorFatal('No input files were delivered. ');
 					return null;
 				}
 				
 				try {
-					$enviroment->setProject(JsonUtils::getJsonFromFile($arguments->getInputJSON()));
+					$enviroment->setProjects(FileUtils::getJSONFromFile($arguments->getInputJSON()));
 					Logger::info('JSON file with assignments was successfuly loaded. ');
-				}
-				catch (Exception $ex) {
+				} catch (Exception $ex) {
 					Logger::errorFatal('Error during loading input JSON file. ');
 					return null;
 				}
 			}
 			
 			// load template JSON file if first phase was not done
-			if (is_null($enviroment->getTemplate()) && !is_null($arguments->getTemplateJSON())) {
+			if (is_null($enviroment->getTemplates()) && !is_null($arguments->getTemplateJSON())) {
 				try {
-					$enviroment->setTemplate(JsonUtils::getJsonFromFile($arguments->getTemplateJSON()));
+					$enviroment->setTemplates(FileUtils::getJSONFromFile($arguments->getTemplateJSON()));
 					Logger::info('JSON file with templates was successfuly loaded. ');
-				}
-				catch (Exception $ex) {
+				} catch (Exception $ex) {
 					Logger::errorFatal('Error during loading template JSON file. ');
 					return null;
-				} // TODO ukladat log do souboru ?? + pridat k nemu timestamp
+				} // TODO Save log into file and add timestamp
 			}
 			
 			return $enviroment;

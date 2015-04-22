@@ -36,86 +36,50 @@
 					
 				if (!strcmp($arg, Constant::ARG_FIRST_PHASE)) {
 					$arguments->setIsStepOne(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_SECOND_PHASE)) {
+				} else if (!strcmp($arg, Constant::ARG_SECOND_PHASE)) {
 					$arguments->setIsStepTwo(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_THIRD_PHASE)) {
+				} else if (!strcmp($arg, Constant::ARG_THIRD_PHASE)) {
 					$arguments->setIsStepThree(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_FOURTH_PHASE)) {
+				} else if (!strcmp($arg, Constant::ARG_FOURTH_PHASE)) {
 					$arguments->setIsStepFour(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_EVAL_PHASE)) {
+				} else if (!strcmp($arg, Constant::ARG_EVAL_PHASE)) {
 					$arguments->setIsEval(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_GEN_PHASE)) {
+				} else if (!strcmp($arg, Constant::ARG_GEN_PHASE)) {
 					$arguments->setIsGenerateFiles(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_COMMENTS)) {
+				} else if (!strcmp($arg, Constant::ARG_COMMENTS)) {
 					$arguments->setIsRemoveComments(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_HELP) || !strcmp($arg, Constant::ARG_HELP_SHORT)) {
+				} else if (!strcmp($arg, Constant::ARG_HELP) || !strcmp($arg, Constant::ARG_HELP_SHORT)) {
 					$arguments->setIsHelp(true);
-				}
-				
-				else if (!strcmp($arg, Constant::ARG_FORCE)) {
+				} else if (!strcmp($arg, Constant::ARG_FORCE)) {
 					$arguments->setIsForce(true);
-				}
-				
-				else if (strpos($arg, Constant::ARG_INPUT_PATH) !== false) {
+				} else if (strpos($arg, Constant::ARG_INPUT_PATH) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setInputPath($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_OUTPUT_PATH) !== false) {
+				} else if (strpos($arg, Constant::ARG_OUTPUT_PATH) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setOutputPath($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_INPUT_JSON) !== false) {
+				} else if (strpos($arg, Constant::ARG_INPUT_JSON) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setInputJSON($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_TEMPLATE_JSON) !== false) {
+				} else if (strpos($arg, Constant::ARG_TEMPLATE_JSON) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setTemplateJSON($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_INPUT_CSV) !== false) {
+				} else if (strpos($arg, Constant::ARG_INPUT_CSV) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setInputCSV($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_JSON_NAME) !== false) {
+				} else if (strpos($arg, Constant::ARG_JSON_NAME) !== false) {
 					$tmpArray = explode('=', $arg, 2);
-					$arguments->setJsonOutputFilename($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_CSV_NAME) !== false) {
+					$arguments->setJSONOutputFilename($tmpArray[1]);
+				} else if (strpos($arg, Constant::ARG_CSV_NAME) !== false) {
 					$tmpArray = explode('=', $arg, 2);
-					$arguments->setCsvOutputFilename($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_START_INDEX) !== false) {
+					$arguments->setCSVOutputFilename($tmpArray[1]);
+				} else if (strpos($arg, Constant::ARG_START_INDEX) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setStartIndex($tmpArray[1]);
-				}
-				
-				else if (strpos($arg, Constant::ARG_COUNT) !== false) {
+				} else if (strpos($arg, Constant::ARG_COUNT) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setCount($tmpArray[1]);
-				}
-				
-				else {
+				} else {
 					Logger::warning('Script was started with unknown parameter: ' . $arg);
 				}
 			} // end foreach
@@ -141,20 +105,16 @@
 			else if ($arguments->getIsStepOne() && ($arguments->getIsStepTwo() || $arguments->getIsStepThree()
 					|| $arguments->getIsStepFour())) {
 				$errorMessage .= 'Invalid combination of the script phases. ';			
-			}
-			else if ($arguments->getIsStepTwo() && ($arguments->getIsStepOne() || $arguments->getIsStepThree()
+			} else if ($arguments->getIsStepTwo() && ($arguments->getIsStepOne() || $arguments->getIsStepThree()
 					|| $arguments->getIsStepFour())) {
 				$errorMessage .= 'Invalid combination of the script phases. ';		
-			}
-			else if ($arguments->getIsStepThree() && ($arguments->getIsStepOne() || $arguments->getIsStepTwo()
+			} else if ($arguments->getIsStepThree() && ($arguments->getIsStepOne() || $arguments->getIsStepTwo()
 					|| $arguments->getIsStepFour())) {
 				$errorMessage .= 'Invalid combination of the script phases. ';			
-			}
-			else if ($arguments->getIsStepFour() && ($arguments->getIsStepOne() || $arguments->getIsStepTwo()
+			} else if ($arguments->getIsStepFour() && ($arguments->getIsStepOne() || $arguments->getIsStepTwo()
 					|| $arguments->getIsStepThree())) {
 				$errorMessage .= 'Invalid combination of the script phases. ';
-			}
-			else if (($arguments->getIsEval() || $arguments->getIsGenerateFiles()) && self::isSinglePhase($arguments)) {
+			} else if (($arguments->getIsEval() || $arguments->getIsGenerateFiles()) && self::isSinglePhase($arguments)) {
 				$errorMessage .= 'Invalid combination of the script phases. ';
 			}
 			
@@ -164,11 +124,10 @@
 				$errorMessage .= 'Comment can be removed only in first phase. ';			
 			}
 			
-			// validates if json or csv file is supplied in later phases	
+			// validates if JSON or CSV file is supplied in later phases	
 			else if ($arguments->getIsStepTwo() && is_null($arguments->getInputJSON())) {
 				$errorMessage .= 'Missing JSON file. ';
-			}
-			else if (($arguments->getIsStepThree() || $arguments->getIsStepFour() || $arguments->getIsEval()) 
+			} else if (($arguments->getIsStepThree() || $arguments->getIsStepFour() || $arguments->getIsEval()) 
 					&& (is_null($arguments->getInputJSON()) || is_null($arguments->getInputCSV()))) {
 				$errorMessage .= 'Missing JSON or CSV file.';			
 			}
@@ -211,7 +170,7 @@
 		/**
 		 * Prints program help to stdin. 
 		 */
-		// TODO update
+		// TODO Update --help
 		public static function printHelp() {
 			$msg = "**************************************** HELP ****************************************\n";
 			$msg .= "Author: Ondrej Krpec, xkrpecqt@gmail.com\n";
