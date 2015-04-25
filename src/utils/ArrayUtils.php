@@ -63,17 +63,17 @@
 			// get first assignment
 			if (strpos($firstAssignment, '-template') !== false) {
 				$tmpArray = explode('-template', $firstAssignment, 2);
-				$pair->setFirstAssignment($templates->{$tmpArray[0]});
+				@$pair->setFirstAssignment($templates->{$tmpArray[0]});
 			} else {
-				$pair->setFirstAssignment($projects->{$firstAssignment});
+				@$pair->setFirstAssignment($projects->{$firstAssignment});
 			}
 			
 			// get second assignment
 			if (strpos($secondAssignment, '-template') !== false) {
 				$tmpArray = explode('-template', $secondAssignment, 2);
-				$pair->setSecondAssignment($templates->{$tmpArray[0]});
+				@$pair->setSecondAssignment($templates->{$tmpArray[0]});
 			} else { 
-				$pair->setSecondAssignment($projects->{$secondAssignment});
+				@$pair->setSecondAssignment($projects->{$secondAssignment});
 			}
 			
 			if (is_null($pair->getFirstAssignment()) || is_null($pair->getSecondAssignment()))

@@ -41,6 +41,17 @@
 			);
 		}
 		
+		public function fromJSON($JSON) {
+			$this->operators = $JSON->{'operators'};
+			$this->operands = $JSON->{'operands'};
+			$this->uniqueOperators = $JSON->{'uniqueOperators'};
+			$this->uniqueOperands = $JSON->{'uniqueOperands'};
+			$this->programLength = $JSON->{'programLength'};
+			$this->volume = $JSON->{'volume'};
+			$this->difficulty = $JSON->{'difficulty'};
+			return $this;
+		}
+		
 		/**
 		 * Adds operator to the unique operator class variable.
 		 * Returns success of operation.

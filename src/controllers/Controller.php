@@ -6,6 +6,7 @@
 	include __DIR__ . '/../metrics/halstead/Halstead.php';
 	include __DIR__ . '/../workers/TokensWorker.php';
 	include __DIR__ . '/../workers/DirectoryWorker.php';
+	include __DIR__ . '/../workers/Matching.php';
 	include __DIR__ . '/../utils/FileUtils.php';
 	include __DIR__ . '/../utils/ArrayUtils.php';
 	include __DIR__ . '/../utils/Logger.php';	
@@ -45,7 +46,7 @@
 	
 	if ($arguments->getIsGlobalFlow() || $arguments->getIsEval() || $arguments->getIsStepThree()) {
 		$enviroment = processThirdPhase($arguments, $enviroment);
-		if (is_null($return))
+		if (is_null($enviroment))
 			exit();
 	}
 		
@@ -85,7 +86,7 @@
 				Logger::errorFatal('Error during loading template JSON file. ');
 				return null;
 			}
-		} // TODO predelat, prvni faze a JSON nejdou dohromady
+		} // FIXME predelat, prvni faze a JSON nejdou dohromady
 		
 		// set input JSON file if delivered, otherwise creates it from input path
 		if (!is_null($arguments->getInputJSON())) {
@@ -139,21 +140,26 @@
 	function processThirdPhase($arguments, $enviroment) {
 		
 		$enviroment = WorkerUtils::getJSONByArguments($arguments, $enviroment);
+		$matching = new Matching();
 
 		if (is_null($enviroment->getMatchedPairs()))
 			$enviroment->setMatchedPairs(FileUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
 		else if (!$arguments->getIsForce()) // is force is false, create page
 			$enviroment->createPage($arguments->getStartIndex(), $arguments->getCount());
 			
-		var_dump($enviroment->getMatchedPairs());
 		foreach ($enviroment->getMatchedPairs() as $matchedPair) {
-			$pair = ArrayUtils::findAssignmentsByName($matchedPair[0], $matchedPair[1], $enviroment);
-			print_r($pair->getFirstAssignment());
-			echo "\n\n -------------------------------------------------- \n\n";
-			print_r($pair->getSecondAssignment());
+			try {
+				$pair = ArrayUtils::findAssignmentsByName($matchedPair[0], $matchedPair[1], $enviroment);
+			} catch (UnexpectedValueException $ex) {
+				Logger::error('Could not find projects: ' . $matchedPair[0] . ', ' . $matchedPair[1]);
+				continue;
+			}
+			echo $matchedPair[0] . " - " . $matchedPair[1] . "\n";
+			$matching->evaluateHalstead($pair->getFirstHalstead(), $pair->getSecondHalstead());
+			echo "length: " . $matching->getResultProgramLength() . "\nvolume : " . $matching->getResultVolume() . "\ndiff: " . $matching->getResultDifficulty() . "\n\n";
 		}
 		
-		// FIXME
+		// TODO Continue
 		// vytahnout projekty ze CSV - DONE
 		// najit prislusne projekty v JSON a ulozit si oba do objektu - DONE
 		// porovnat je

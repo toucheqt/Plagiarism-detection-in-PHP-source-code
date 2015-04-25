@@ -52,8 +52,7 @@
 		 * Validates script workflow and fixes it, if its incorrect.
 		 */
 		public function validateSteps() {
-			if ($this->isStepOne || $this->isStepTwo || $this->isStepThree || $this->isStepFour || $this->isStepFive 
-					|| $this->isEval || $this->isGenerateFiles)
+			if ($this->isStepOne || $this->isStepTwo || $this->isStepThree || $this->isStepFour || $this->isEval || $this->isGenerateFiles)
 				$this->isGlobalFlow = false;
 		}
 		
