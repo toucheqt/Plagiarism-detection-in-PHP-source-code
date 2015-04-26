@@ -109,6 +109,7 @@
 			}
 			
 			fclose($fd);
+			Logger::info('CSV file was successfuly loaded. ');
 			return $matchedPairs;
 		}
 		

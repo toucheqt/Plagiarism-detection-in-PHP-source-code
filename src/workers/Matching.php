@@ -5,10 +5,13 @@
 		const AVG_RANGE = 1; // 100%
 		const SETUP_RANGE = 0.1; // 20% TODO this could be setup by parameter
 		const HUNDRED_PERCENT = 100;
+		const MAX_LEVENSHTEIN = 255;
 		
 		private $resultProgramLength;
 		private $resultVolume;
 		private $resultDifficulty;
+		
+		private $resultDistance;
 		
 		public function __construct() {
 			$this->resultProgramLength = 0;
@@ -23,10 +26,6 @@
 		 * @param unknown_type $copied
 		 */
 		public function evaluateHalstead($original, $copied) {
-			
-			$programLengthIter = 0;
-			$volumeIter = 0;
-			$difficultyIter = 0;
 			
 			foreach ($original as $originalBlock) {
 				
@@ -111,6 +110,37 @@
 			} // end outer foreach
 		}
 		
+		public function evaluateLevenshtein($original, $copied, $a, $b) {
+			foreach ($original as $originalBlock) {
+				
+				$distance = null;
+				foreach ($copied as $copiedBlock) {
+					
+					$tmpDistance = null;
+					
+					if (!is_null($distance) && $distance == 0)
+						break;
+						
+					$tmpDistance = levenshtein($originalBlock, $copiedBlock);
+					if (is_null($distance))
+						$distance = $tmpDistance;
+					else if ($distance > $tmpDistance)
+						$distance = $tmpDistance;
+				}
+				if ($distance <= 30) {
+					echo $a . " " . $b . "\n";
+				}
+
+				if (!is_null($distance))
+					$this->resultDistance = ($this->resultDistance + self::recalculateDistance($distance)) / 2;
+				
+			}
+		}
+		
+		private function recalculateDistance($distance) {
+			return self::HUNDRED_PERCENT - (($distance * self::HUNDRED_PERCENT) / self::MAX_LEVENSHTEIN);
+		}
+		
 		public function getResultProgramLength() {
 			return $this->resultProgramLength;
 		}
@@ -133,6 +163,14 @@
 		
 		public function setResultDifficulty($resultDifficulty) {
 			$this->resultDifficulty = $resultDifficulty;
+		}
+		
+		public function getResultDistance() {
+			return $this->resultDistance;
+		}
+		
+		public function setResultDistance($resultDistance) {
+			$this->resultDistance = $resultDistance;
 		}
 		
 	}

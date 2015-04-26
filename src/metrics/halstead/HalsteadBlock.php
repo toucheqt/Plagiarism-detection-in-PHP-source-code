@@ -42,6 +42,7 @@
 		}
 		
 		public function fromJSON($JSON) {
+			$JSON = (object) $JSON;
 			$this->operators = $JSON->{'operators'};
 			$this->operands = $JSON->{'operands'};
 			$this->uniqueOperators = $JSON->{'uniqueOperators'};

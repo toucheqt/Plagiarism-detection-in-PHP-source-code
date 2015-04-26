@@ -58,6 +58,9 @@
 				} else if (strpos($arg, Constant::ARG_OUTPUT_PATH) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setOutputPath($tmpArray[1]);
+				} else if (strpos($arg, Constant::ARG_INPUT_TEMPLATE_PATH) !== false) {
+					$tmpArray = explode('=', $arg, 2);
+					$arguments->setInputTemplatePath($tmpArray[1]);
 				} else if (strpos($arg, Constant::ARG_INPUT_JSON) !== false) {
 					$tmpArray = explode('=', $arg, 2);
 					$arguments->setInputJSON($tmpArray[1]);

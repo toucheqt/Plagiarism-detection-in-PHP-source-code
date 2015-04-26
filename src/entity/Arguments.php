@@ -25,6 +25,7 @@
 		
 		private $inputPath = Constant::DEFAULT_PATH;
 		private $outputPath = Constant::DEFAULT_PATH;
+		private $inputTemplatePath = null;
 		private $inputJSON = null;
 		private $templateJSON = null;
 		private $inputCSV = null;
@@ -213,6 +214,14 @@
 		
 		public function setIsForce($force) {
 			$this->force = $force;
+		}
+		
+		public function getInputTemplatePath() {
+			return $this->inputTemplatePath;
+		}
+		
+		public function setInputTemplatePath($inputTemplatePath) {
+			$this->inputTemplatePath = $inputTemplatePath;
 		}
 	}
 

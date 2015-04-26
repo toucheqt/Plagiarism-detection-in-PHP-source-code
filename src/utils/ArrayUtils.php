@@ -55,9 +55,9 @@
 		 * @throws UnexpectedValueException
 		 */
 		public static function findAssignmentsByName($firstAssignment, $secondAssignment, $enviroment) {
-			$projects = $enviroment->getProjects();
-			$templates = $enviroment->getTemplates();
-			
+			$projects = (object) $enviroment->getProjects();
+			$templates = (object) $enviroment->getTemplates();
+
 			$pair = new Pair();
 			
 			// get first assignment

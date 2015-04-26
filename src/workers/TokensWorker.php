@@ -97,7 +97,7 @@
 				Logger::errorFatal('File ' . $this->filename . ' can not be opened.');
 				throw new InvalidArgumentException();
 			}
-			$tmpArray = token_get_all($fileContent);
+			@$tmpArray = token_get_all($fileContent);
 			
 			// remove whitespaces
 			foreach ($tmpArray as $token) {

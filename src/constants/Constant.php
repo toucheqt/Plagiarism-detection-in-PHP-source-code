@@ -26,6 +26,7 @@
 		// FIXME pridal bych moznost, ze se da vygenerovat i template 
 		const ARG_INPUT_PATH = '--input=';
 		const ARG_OUTPUT_PATH = '--output=';
+		const ARG_INPUT_TEMPLATE_PATH = '--inputTemplate=';
 		const ARG_INPUT_JSON = '--projectsJSON=';
 		const ARG_TEMPLATE_JSON = '--templatesJSON=';
 		const ARG_INPUT_CSV = '--inputCSV=';

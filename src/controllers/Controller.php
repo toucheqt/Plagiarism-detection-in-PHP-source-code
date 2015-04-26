@@ -141,6 +141,7 @@
 		
 		$enviroment = WorkerUtils::getJSONByArguments($arguments, $enviroment);
 		$matching = new Matching();
+		$iterator = 0;
 
 		if (is_null($enviroment->getMatchedPairs()))
 			$enviroment->setMatchedPairs(FileUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
@@ -148,15 +149,25 @@
 			$enviroment->createPage($arguments->getStartIndex(), $arguments->getCount());
 			
 		foreach ($enviroment->getMatchedPairs() as $matchedPair) {
+			
+			if ($iterator > 0 && $iterator % 50 == 0) 
+				Logger::info('Evaluated ' . $iterator . ' project pairs. ');
+			$iterator++;
+			
 			try {
 				$pair = ArrayUtils::findAssignmentsByName($matchedPair[0], $matchedPair[1], $enviroment);
 			} catch (UnexpectedValueException $ex) {
 				Logger::error('Could not find projects: ' . $matchedPair[0] . ', ' . $matchedPair[1]);
 				continue;
-			}
-			echo $matchedPair[0] . " - " . $matchedPair[1] . "\n";
+			}	
 			$matching->evaluateHalstead($pair->getFirstHalstead(), $pair->getSecondHalstead());
-			echo "length: " . $matching->getResultProgramLength() . "\nvolume : " . $matching->getResultVolume() . "\ndiff: " . $matching->getResultDifficulty() . "\n\n";
+			$matching->evaluateLevenshtein($pair->getFirstLevenshtein(), $pair->getSecondLevenshtein(), $matchedPair[0], $matchedPair[1]);
+			
+			if ($matching->getResultDistance() > 70 && $matching->getResultVolume() > 0 && $matching->getResultDifficulty() > 0) {
+				echo $matchedPair[0] . " - " . $matchedPair[1] . "\n";
+				echo "length: " . $matching->getResultProgramLength() . "\nvolume : " . $matching->getResultVolume() . "\ndiff: " . $matching->getResultDifficulty();
+				echo "\nlevenshtein: " . $matching->getResultDistance() . "\n\n";
+			}
 		}
 		
 		// TODO Continue
