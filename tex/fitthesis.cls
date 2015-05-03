@@ -215,7 +215,7 @@ Práce je chránìna autorským zákonem a její u¾ití bez udìlení oprávnìní autorem j
 
 \vfill
 
-\mkuctxt{18}{\@title} %Nazev prace v jazyce v jakem je napsana
+\mkuctxt{16}{\@title} %Nazev prace v jazyce v jakem je napsana
 
 \vfill
 
@@ -325,7 +325,7 @@ Práce je chránìna autorským zákonem a její u¾ití bez udìlení oprávnìní autorem j
 
 \vfill
 
-\mkuctxt{18}{\@title@CS}
+\mkuctxt{16}{\@title@CS}
 \mkuctxt{10}{\@title@EN}
 
 \vfill
