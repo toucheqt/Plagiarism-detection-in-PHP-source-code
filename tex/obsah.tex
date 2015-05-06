@@ -67,7 +67,7 @@ Poslední zmínìný program je schopen porovnání zdrojových kódù v~nepøeberném mno¾
 CodeMatch \cite{CodeMatch} na urèení podobnosti mezi dvìma programy vyu¾ívá hned nìkolik algoritmù napø. porovnání komentáøù, sekvencí instrukcí nebo identifikátorù. Z~ka¾dé fáze jsou poté získány mezivýsledky a~ty poté interpretovány na~stupnici 0 -- 100, kdy vìt¹í skóre znamená, ¾e je více pravdìpodobné, ¾e jedna ze~zkoumaných prací bude plagiát.
 Nicménì velkou nevýhodou je, ¾e tento nástroj není distribuován pod ¾ádnou volnì dostupnou licencí, nýbr¾ je placený.
 
-\section{Pøehled stávajících metod na detekci plagiátorství}
+\section{Pøehled stávajících metod na detekci plagiátorství}\label{plagiarism}
 Jak ji¾ bylo naznaèeno v~úvodu, plagiát zdrojového kódu mù¾eme definovat jako program, který byl vytvoøen z~jiného programu s~urèitým poètem transformací tak, aby na~první pohled nebylo mo¾né poznat plagiát od originálu. Z~tohoto pøedpokladu vyplývá velmi dùle¾itý po¾adavek na~vlastnost výsledného programu a~metod, které vyu¾ívá.
 V~této oblasti ji¾ bylo provedeno mnoho výzkumù \cite{Clough}, které zpracovávají pøehled pou¾itelných metod pro~detekci plagiátù pro~pøirozené i~programovací jazyky \cite{ZeidmanBook}. V~této kapitole nás ov¹em budou zajímat pouze metody, které se zamìøují na~nalezení plagiátù ve~zdrojových kódech.
 
@@ -124,7 +124,7 @@ Z~tabulky \ref{Tokens} také vyplývá, ¾e díky zaji¹tìní urèité míry abstrakce nad
 
 Samozøejmì proces tokenizace není ¾ádná technika k~pøímému odhalení plagiátorství, nicménì je velmi vhodný pro pøípravu zdrojových textù, ke zpracování dal¹ími, ní¾e uvedenými metodami.
 
-\subsection{Halsteadova metrika}
+\subsection{Halsteadova metrika}\label{HalsteadSubSection}
 Celým názvem Halsteadova metrika velikosti programu je softwarová metrika, kterou v~roce 1977 pøedstavil M. H. Halstead \cite{Halstead}. Je zalo¾ena na~pøedpokladu, ¾e v¹echny zdrojové texty se skládají z~koneèného poètu programových jednotek, tzv. tokenù \ref{TokensLabel}, které jsou rozeznatelné pøekladaèem. Jak ji¾ bylo zmínìno, tak poèítaèový program poté mù¾e být brán jako posloupnost tokenù, které mohou být klasifikovány jako operátory nebo operandy. Cílem této metriky je identifikovat takové vlastnosti programù, které by byly snadno vyèíslitelné, a~které by mezi sebou mìly urèité souvislosti. Proto Halstead definoval ètyøi základní promìnné, ze~kterých lze poté vypoèítat konkrétní metriky programu. Tyto promìnné jsou následující:
 
 \begin{itemize}
@@ -254,9 +254,205 @@ Cílem pøi~porovnávání zdrojových kódu pomocí AST je nalezení maximálního mo¾ného
 
 Syntaxe je u~AST abstraktní v~tom smyslu, ¾e nereprezentuje ka¾dý detail, který se v~reálné syntaxi vyskytuje. Napøíklad na~obrázku \ref{ASTImage} vidíme, ¾e se zde nevyskytuje støedník oznamující konec pøíkazu. Pøípadnì takové seskupující závorky jsou ve~stromové struktuøe implicitní a~syntaktické konstrukce jako \textit{if -- podmínka -- then} mohou být vyznaèeny pouze jediným uzlem se dvìma vìtvemi. To èiní abstraktní syntaktické stromy odli¹né od stromù konkrétních a~umo¾òuje je efektivnì vyu¾ívat pro~detekci plagiátorství, nebo» je v~nich automaticky obsa¾ena jistá úroveò abstrakce zdrojového kódu.
 
-\chapter{Návrh øe¹ení}
+\chapter{Návrh øe¹ení}\label{navrh}
+Po~analýze problémù, které mohou nastat pøi~detekci plagiátù se budeme vìnovat návrhu aplikace, která bude schopná efektivnì odhalit plagiátorství ve~studentských prací za~pomoci nìkterých metod zmínìných v~kapitole \ref{plagiarism}.
+
+Jedním z~po¾adavkù na~výslednou aplikaci bylo její rozèlenìní do~samostatnì fungujících èástí, které bude mo¾no vyu¾ít jak jednotlivì, tak v~celku. Z~tohoto dùvodu bylo navr¾eno, aby celý systém fungoval v~nìkolika fázích viz. obrázek \ref{phases}, které si detailnìji popí¹eme v~následujících kapitolách.
+
+\begin{figure}[!hbt]
+	\centering
+	\includegraphics[scale=1.4]{phases.pdf}
+	\caption{Návrh struktury nástroje na~odhalení plagiátorství v~jazyce PHP}
+	\label{phases}
+\end{figure}
+
+Aplikace byla navrhována tak, aby byla snadno udr¾ovatelná a~roz¹iøitelná, tøeba v~navazující diplomové práci. Z~tohoto dùvodu, byly v¹echny fáze kromì první navr¾eny tak, aby byly jazykovì nezávislé a~tak v~pøípadì potøeby kontroly plagiátù i~v~jiném jazyce ne¾ PHP je nutné pøidat pouze syntaktický analyzátor zdrojového jazyka. Ve~finálním návrhu aplikace se vyu¾ívá ètyø fází, které jsou sice schopné pracovat i~samostatnì, ale navazují na~sebe a~tvoøí tak jeden fungující celek.
+
+\section{Zpracování vstupních dat}\label{zpracovaniDat}
+Pro~první fázi programu bylo potøeba navrhnout systém, který by pøipravil vstupní zdrojové texty pro~dal¹í fáze tak, aby mohly být snadno a~efektivnì porovnávány. Jeliko¾ je v~pøípadì na¹í aplikace nutné, aby provádìla analýzu zdrojového textu, bylo nutné vymyslet strukturu, do~které by se data o~zdrojových textech ukládala. Jako vhodné øe¹ení se jevilo vyu¾ít nìkterého ze~serializaèních formátù. Vzhledem k~objemu dat, které se budou pøi~analýze kódù ukládat, byl nejlep¹í mo¾ností serializaèní formát JSON\footnote{Více o~formátu JSON na http://tools.ietf.org/html/rfc7159}. Dùvodù pro~zvolení právì tohoto formátu pro~uchování dat bylo hned nìkolik. Za~prvé je tento formát velice kompaktní a~k~samotným datùm nepøidává mnoho øídících a~kontrolních dat navíc a~za~druhé je velmi snadno èitelný i~pro èlovìka.
+
+Serializaèní formát bylo nutné zvolit právì z~dùvodu rozèlenìní na¹í aplikace do~jednotlivých fází. Tedy v~první fázi je mo¾né zpracovat a~analyzovat vstupní data, ulo¾it je do~struktury a~tuto strukturu následnì ulo¾it do~souboru a~uchovat ji tak pro pozdìj¹í pou¾ití. Tento pøístup umo¾ní u¾ivateli vytvoøit si ¹ablony zdrojových kódù, které pak lze pou¾ít pro~srovnání s~dal¹ími, novìj¹ími zdrojovými kódy bez toho, ani¾ by bylo potøeba analyzovat i~zdrojové kódy textù, které jsou ulo¾ené ve~vytvoøené ¹ablonì. 
+
+Vý¹e zmínìný pøístup umo¾òuje pøi~vyu¾ití ¹ablon u¹etøit podstatnou èást strojového èasu potøebnou na~naètení v¹ech zdrojových dat, pøípadnì pokud je aplikaci ji¾ dodána ¹ablona se zpracovanými zdrojovými texty, lze tuto fázi programu úplnì pøeskoèit a~spustit a¾~druhou fázi na¹í aplikace.
+
+\section{Stránkování}
+Odhalování plagiátorství spotøebuje spoustu strojového èasu, pøi~velkém mno¾ství èasu i~nìkolik hodin. Z~tohoto dùvodu by bylo velice nepøíjemné zjistit, ¾e se aplikace neplánovanì ukonèila, co¾ se klidnì mù¾e stát, pokud je aplikace spu¹tìna na~serveru s~omezeným procesorovým èasem.
+
+Jako zpùsob pøekonání tohoto problému bylo navr¾eno vyu¾ít metody stránkování. Jedná se o~systém, kdy je porovnán pouze u¾ivatelem specifikovaný poèet párù. Poèet tìchto párù tvoøí z~celkového poètu párù jednu stránku. Pokud by bylo potøeba vyhodnotit následující páry projektù staèilo by tak pouze pomocí vstupních parametrù výsledného programu zadat poèet párù urèených ke~zpracování a~nadcházející èíslo stránky.
+
+Av¹ak u¾ivatel nemusí být schopen pøedpokládat, kolik dvojic stihne výsledná aplikace vyhodnotit pøed tím, ne¾ vypr¹í jí pøidìlený èas. Proto jsem se rozhodl, po vytvoøení aplikace provést sadu experimentù \ref{experiments}, které následnì definují ideální výchozí hodnotu pro~velikost jedné stránky.
+
+\section{Vytvoøení dvojic}
+Za~pøedpokladu, ¾e ji¾ máme zpracována vstupní data je potøeba vytvoøit dvojice zdrojových kódu, které se budou urèené k~porovnání v~dal¹ích fázích. Proto, jak lze názornì vidìt i~na~obrázku \ref{phases}, vstupem do~druhé fáze projektu bude JSON objekt uchovávající analyzovaná data a~informace o~projektech.
+
+Cílem této fáze je vytvoøit unikátní dvojice mezi v¹emi projekty, které jsou urèeny ke~kontrole plagiátù. Stejnì jako v~pøípadì první fáze bylo tøeba navrhnout i~tuto fázi tak, aby ji bylo mo¾né spustit samostatnì pøi~dodání validního vstupního souboru. Jako výstup druhé fáze byl poté zvolen formát CSV\footnote{Více o formátu CSV na http://tools.ietf.org/html/rfc4180}, jeliko¾ v~nìm lze snadno uchovat názvy dvojic, které jsou urèené k~porovnání. 
+
+\begin{lstlisting}[caption=Ukázka èásti CSV souboru s~vytvoøenými páry urèenými k~porovnání pro~zdrojové kódy souborù xlogin00\, xlgoin01 a~¹ablony xlogin99., label=CSV]
+		xlogin00,xlogin01
+		xlogin00,xlogin99-template
+		xlogin01,xlogin99-template
+\end{lstlisting}
+
+Jak ji¾ bylo zmínìno v~sekci \ref{zpracovaniDat}, aplikace byla navrhnuta tak, aby bylo mo¾né vytvoøit ¹ablony zdrojových kódù, které poté bude mo¾né porovnávat s~ostatními projekty. Ov¹em pøi vytváøení unikátních párù urèených k~porovnání by nedávalo smysl porovnávat zdrojové texty v~¹ablonách mezi sebou. Z~tohoto dùvodu jsou ve¹keré zdrojové texty ze~vstupní ¹ablony oznaèeny pøíponou \textit{-template} viz. obrázek \ref{CSV}, co¾ nám poté v~implementaci umo¾ní nevytváøet dvojice právì mezi tìmito zdrojovými texty.
+
+Velmi dùle¾itou èásti návrhu je fakt, ¾e takto realizovaná druhá fáze a~samozøejmì v¹echny následující jsou zcela nezávislé na~vstupním jazyku a~v~pøípadì dodání vstupního JSON objektu lze porovnat zdrojové texty v~jakémkoliv jazyce.
+
+\section{Povrchové vyhledávání plagiátù}
+Tato sekce popisuje tøetí fázi projektu, která slou¾í k~redukci poètu dvojic, které se porovnávají. Redukce je zde navrhnuta tak, ¾e dvojice zdrojových textù naètené z~CSV souboru budou nejprve nalezeny ve~vstupním JSON objektu a~poté následnì porovnány za~vyu¾ití Halsteadových metrik \ref{HalsteadSubSection} a~Levenshteinova algoritmu \ref{Levenshtein}. Obì metody jsou uzpùsobeny k~tomu, aby jejich výsledek bylo mo¾né vyjádøit jako procentuální podobnost zdrojových textù, které jsou aktuálnì porovnávány. K~seskupení jednotlivých dílèích výsledkù z~jednotlivých metod a~získání jedné výsledné hodnoty v~øádech procent je v~aplikaci vyu¾íváno vá¾eného aritmetického prùmìru\footnote{Více o~vá¾eném aritmetickém prùmìru na~http://www.naseskola.net/aktual/08-09/vazeny\_prumer.pdf}.
+
+Jeliko¾ se jedná o~samostatnou fázi této aplikace, je nutné výsledky této fáze zase ukládat do~pøipraveného souboru. Jako ideální se jeví vyu¾ít vstupního CSV souboru a~ke~ka¾dé dvojici pøidat míru její podobnosti, jak lze vidìt napøíklad na~obrázku \ref{CSV2}.
+
+\begin{lstlisting}[caption=Ukázka vyhodnocení povrchového vyhledání plagiátù pro~zdrojové texty z~pøíkladu \ref{CSV}., label=CSV2]
+		xlogin00,xlogin01,54%,1
+		xlogin00,xlogin99-template,61%,8
+		xlogin01,xlogin99-template, 83%,6
+\end{lstlisting}
+
+Dvojice zdrojových textù, které pøekraèují urèitou experimentálnì zji¹tìnou mez podobnosti viz. \ref{experiments} by poté mìly být urèeny k~dùkladnìj¹ímu prohledání ve~ètvrté fázi aplikace. Nicménì tato hranice není jediným mìøítkem, zda by bylo vhodné pár, který je aktuálnì porovnáván prozkoumat dùkladnìji. Z~dùvodu pøesnìj¹í detekce, je do~výstupního souboru z~této fáze pøidán i~poèet Levenshteinových blokù, které si byly mezi zdrojovými texty velmi podobné\footnote{Hodnota urèující pøíli¹nou podobnost mezi dvìma bloky byla urèena experimentálnì viz. kapitola \ref{experiments}.}. 
+
+\section{Hloubkové vyhledávání plagiátù}
+Tøetí fáze byla navr¾ena tak, aby dokázala vyfiltrovat dvojice zdrojových kódù, které neobsahují ¾ádné známky o~tom, ¾e by se mohlo jednat o~plagiát. Takovéto øe¹ení umo¾ní více se vìnovat dvojicím, které vykazují urèité podezøení. Pro dùkladnìj¹í kontrolu takovýchto dvojic byl vybrán algoritmus Winnowing \cite{Winnowing} implementující techniku tvorby otiskù dokumentu.
+
+Ètvrtá fáze tedy pracuje s~ohodnoceným CSV souborem, který byl v~pøedchozí fázi vytvoøen, pøípadnì pøímo dodán na~vstup této fáze. S~pøihlédnutím k~faktu, ¾e algoritmus pou¾íváný v~této fázi aplikace je vyu¾íván MOSS \ref{MOSSLabel}, jedním z~nejpopulárnìj¹ích nástrojù pro~odhalování plagiátorství v~akademickém prostøedí, rozhodl jsem se toho vyu¾ít a~pro~nastavení algoritmu pou¾ít hodnoty, které byly zji¹tìny jako nejvhodnìj¹í v~prùbìhu pou¾ívání právì tohoto nástroje.
+
+Samotné porovnání ji¾ probíhá obdobnì jako ve~tøetí fázi, kdy jsou zdrojové texty porovnávány pomocí Levenshteinovy vzdálenosti. Výsledky této metody je takté¾ vhodné za~vyu¾ití vá¾eného aritmetického prùmìru vyhodnotit jako finální hodnotu podobnosti páru zdrojových textù. Tyto výsledky je poté vhodné podobnì jako na~konci tøetí fáze ulo¾it do~souboru ve~formátu CSV, aby bylo dohledatelné, které dvojice zdrojových kódù vykazují vysokou míru podobnosti a~bylo mo¾né je tak manuálnì prohlédnout a~rozhodnout zda je podezøení oprávnìné nebo nikoliv.
 
 \chapter{Implementace a testování}
+Tato kapitola popisuje implementaci nástroje na~odhalení plagiátorství navr¾eného vý¹e \ref{navrh}, jeho testování a~provedéné experimenty. Celý nástroj je implementován v~jazyce PHP verze pìt. Tento jazyk byl pro~implementaci vybrán z~dùvodu velmi efektivnì implementovaných vestavìných funkcí na~práci se soubory, tvorbì JSON objektù a~funkcí urèených pro~syntaktickou analýzu zdrojových textù v~jazyce PHP, na který se tento nástroj zamìøuje. 
+
+Nástroj byl implementován s~vyu¾itím objektovì orientovaného paradigmatu a~ze~samotného nástroje jde následnì vidìt, ¾e pøi~jeho tvorbì byla vyu¾ita jistá inspirace návrhovým vzorem \textit{model--view--controller} \cite{MVC}, kdy ve¹kerá kontrolní logika je implementována v~balíèku \textit{controllers} a~ve¹keré objekty uchovávající data v~balíèku \textit{entity}.
+
+\section{Zpracování vstupních dat}
+Pro~samotné zpracování dat je nejprve nutné naèíst v¹echny zdrojové texty, o~co¾ se velmi rychle postará vestavìná funkce \textit{file\_get\_contents}. Tyto zdrojové texty jsou následnì pøevedeny na~posloupnost tokenù pomocí dal¹í vestavìné funkce \textit{token\_get\_all}. Vyu¾ívání tìchto funkcí vede k~velice rychlému zpracování stovek zdrojových textù v~øádech desítek sekund.
+
+V~momentì, kdy jsou v¹echny zdrojové kódy naèteny do~pamìti a~pøevedeny na~posloupnost tokenù, jsou z~nich odstranìny ve¹keré bílé znaky a~pokud byl pøi~startu aplikace zadán i~parametr \textit{--c}\footnote{Více o~nastavitelných parametrech programu lze najít v~pøíloze.}, tak jsou ze~zdrojových textù odstranìny i~ve¹keré komentáøe.
+
+Tímto jsou v¹echny zdrojové kódy pøipraveny ke~zpracování. Byla implementována struktura JSON objektu, její¾ ukázku lze vidìt na~obrázku \ref{JSONStruct}. V¹echny zdrojové kódy, které byly pøevedeny na~posloupnost tokenù jsou zpracovány a~ulo¾eny do~této struktury. Jak lze vidìt z~ukázky ní¾e, ka¾dý zdrojový kód obsahuje informace o~tokenech, ze~kterých se skládá, vypoètené hodnoty Halsteadovy metriky pro~jednotlivé funkce a~metody, které byly ve~zdrojovém kódu nalezeny a~také sadu Levenshteinových blokù o~maximální délce 255 znakù. Tato délka byla vybrána proto, ¾e pøi porovnávání del¹ích øetìzcù pomocí Levenshteinova algoritmu se velmi výraznì zvy¹uje doba potøebná k~porovnání dvou blokù.
+
+Jeliko¾ je JSON objekt v~aplikaci reprezentován jako tøída odvozená od~tøídy \textit{std::Object} je nutné ji pøi ukládání do~souboru transformovat do~tradièního JSON objektu pomocí vestavìné funkce \textit{json\_encode}. Ukládání se provádí ihned po~zpracování zdrojových textù do~zmínìného objektu a~umo¾òuje tak vyu¾ít zpracované zdrojové texty i~pozdìji. V~pøípadì potøeby tak lze zpracovaná data zase ze~souboru naèíst a~pøevést pomocí vestavìné funkce \textit{json\_decode}.
+Vytvoøením a~ulo¾ením JSON objektu konèí první fáze a~program pomalu postupuje do~dal¹ích.
+
+\begin{lstlisting}[caption=JSON objekt obsahujicí zpracované informace o~zdrojových textech., label=JSONStruct]
+{
+	"Název projektu": {
+		"path" : "Cesta k souboru",
+		"dir" : "Název projektu",
+		"files" : [
+			{
+				"filename" : "Název souboru",
+				"content" : {
+					"tokens" : [
+						[Typ tokenu, hodnota tokenu, pozice v kódu]				
+					],
+					"halsteadBlocks" : [
+						{
+							"operators" : Poèet operátorù ve funkci,
+							"operands" : Poèet operandù ve funkci,
+							"uniqueOperators" : [
+								Výèet unikátních operátorù ve funkci							
+							],
+							"uniqueOperands" : [
+								Výèet unikátních operandù ve funkci							
+							],
+							"programLength" : Odhadnutá délka funkce,
+							"volume" : Objem funkce,
+							"difficulty" : Programová nároènost funkce
+						}					
+					],
+					"levenshteinBlocks" : [
+						[TYP_TOKENUTYP_TOKENUTYP_TOKENU]					
+					]
+				}			
+			}		
+		]
+	}
+}
+\end{lstlisting}
+
+\section{Generování unikátních dvojic}
+Ve~druhé fázi se vyu¾ije JSON objekt pøedaný parametrem nebo vytvoøený v~první fázi. Pomocí metody \textit{getUniquePairs(\$assignments, \$templates = NULL)}, která implementuje vytvoøení unikátních dvojic zdrojových souborù jako kombinace vstupní soubory -- vstupní soubory, pøípadnì i~vstupní soubory -- ¹ablony. V~pøípadì, ¾e se v~prùbìhu generování dvojic narazí na~soubory se stejným názvem jsou tyto v~pøípadì, ¾e oba pocházejí ze~vstupního JSON objektu pøeskoèeny.
+
+Následnì jsou vygenerované dvojice ulo¾eny pomocí metod na~práci se soubory implementovaných ve~tøídì \textit{FileUtils.php}. Ukázku vygenerovaného souboru lze vidìt na~pøíkladu \ref{CSV}. Tímto fáze dvì konèí a~v~pøípadì, ¾e vstupními parametry nebylo specifikováno jinak, pokraèuje aplikace k~ji¾ samotnému porovnávání zdrojových kódù.
+
+\section{Implementace vyhledávání plagiátu}
+V~návrhu je vyhledávání plagiátù rozdìleno do~dvou fází, co¾ se odrá¾í i~na~implementaci samotného programu, nicménì implementace tìchto fází se li¹í pouze v~pøísnosti kontroly vyhledávání a~pou¾itých algoritmech, proto je v~ní vìnována souhrnnì tato kapitola.
+
+Nejprve je ov¹em nutné v¾dy pøed samotným porovnáním vyhledat dvojici naètenou z~CSV souboru. K~tomu slou¾í v~nástroji \textit{ArrayUtils.php} implementovaná metoda \textit{getAssignmentByName(\$firstAssignment, \$secondAssignment, \$enviroment)}, která je schopná v~prostøedí \textit{\$enviroment}, jen¾ obsahuje objekt se zdrojovými kódy vyhledávat právì zdrojové slo¾ky urèené ke~kontrole. Pøi~vyhledávání se také vyu¾ije pøípona \textit{-template}, která je pøidána ke~v¹em kódùm, které pocházejí ze~¹ablony. Ta nám zajistí, ¾e se soubory s~touto pøíponou budou vyhledávat pouze v~¹ablonách a~naopak soubory bez této pøípony se budou vyhledávat pouze ve~vstupním JSON objektu. 
+
+\subsection{Hodnocení kódù pomocí metrik a Levenshteinova algoritmu}
+Pokud byly dané soubory nalezeny, je mo¾né je zaèít porovnávat. Nejprve jsou zdrojové kódy hodnoceny podle Halsteadových metrik, kdy je pro~ka¾dou metriku jednoho zdrojového textu spoèítána procentuální podobnost se stejnou metrikou druhého zdrojového textu. Výsledky metrik z~jednotlivých funkcí zdrojového kódu jsou sèítány a~prùmìrovány tak, abychom ve~výsledku dostali jednu hodnotu v~procentech, znaèící do~jaké míry jsou si soubory podle dané metriky podobné.
+
+Výpoèet podobnosti pro~Levenshteinùv algoritmus funguje na~podobném principu. Levenshteinova vzdálenost je nejprve spoèítána v¾dy pro~dvojici blokù kódu, které lze vidìt v~pøíkladu \ref{JSONStruct}. Jak ji¾ bylo zmínìno døíve, limit pro~délku jednoho bloku je nastaven na~255 znakù. To znamená, ¾e maximální vzdálenost mezi dvìma øetìzci je 255 a~minimální je 0. Pokud známe rozsah, lze z~nìj vypoèítat procentuální podobnost mezi dvìma bloky. Výsledky z~porovnání dvou blokù jsou poté sèítány a~prùmìrovány podobnì jako v~pøípadì Halsteadových metrik, co¾ umo¾òuje získat jediný výsledek hodnotící podobnost dvou zdrojových kódu podle Levenshteinova algoritmu. Kromì získání podobnosti jsou takté¾ uchovávány statistiky o~výsledku porovnání jednotlivých blokù v~pøípadì, ¾e pøekroèí 90\% mez podobnosti. Pokud jsou mezi dvìma zdrojovými soubory nalezeny více ne¾ tøi takto podobné bloky jsou tyto automaticky oznaèeny jako potenciální plagiáty.
+
+Samotnou implementaci algoritmu pro~výpoèet Levenshteinovy vzdálenosti jsem se rozhodl pøenechat na~vestavìné funkci \textit{levenshtein(\$stringA, \$stringB)}. Je to za~prvé z~dùvodu, ¾e vestavìná funkce ji¾ nabízí ve¹keré optimalizace, které mù¾e jazyk PHP nabídnout a~za~druhé ji¾ sama omezuje maximální délku øetìzce, který je mo¾né porovnávat. Navíc tato funkce mù¾e být pøetí¾ena a~je zde tak mo¾né nastavit váhy jednotlivých operací pøidání znaku, odebrání znaku nebo substituce.
+
+\subsection{Filtrování výsledkù tøetí fáze}
+Po~porovnání v¹ech párù jsou výsledky zpracovány a~vyfiltrovány. Bìhem zpracování výsledkù je tøeba brát v~potaz, ¾e vìt¹ina zdrojových kódù se nejèastìji skládá z~tokenù jako jsou napøíklad promìnné nebo~textové øetìzce. Navíc v~pøípadì vyu¾ití tohoto nástroje na~¹kolních projektech se podobnost mezi zdrojovými kódy je¹tì zvy¹uje napøíklad kvùli zpracovávání stejných vstupních parametrù programu nebo pou¾ívání stejných regulárních výrazù, které odpovídají zadaní studentské práce.
+Z~tohoto dùvodu byl práh, která rozhoduje o~tom, zda bude daný soubor dále prozkoumáván nastaven na~70\% v~pøípadì výsledkù Levenshteinova algoritmu a~na~80\% alespoò ve~dvou metrikách Halsteadova algoritmu. Toto se samozøejmì netýká prací, které obsahují tøí a~více blokù kódu, u~kterých byla pomoci Levenshteinova algoritmu nalezena více ne¾ 90\% podobnost. Tyto kombinace zdrojových kódu postupují do~ètvrté fáze programu automaticky.
+
+Ke~sní¾ení spotøeby strojového èasu ve~ètvrté fázi tohoto nástroje se u¾ nebudou porovnávat zdrojové kódy ka¾dý s~ka¾dým, ale pouze páry, které èelí podezøení z~plagiátorství ji¾ z~výsledné tøetí fáze programu.
+
+\subsection{Detailní vyhledávání pomocí algoritmu Winnowing}
+Ètvrtá fáze programu je implementována velmi obdobnì jako pøedchozí. Nejprve se vyhledají páry zdrojových kódù k~porovnání a~následnì je z~celé posloupnosti tokenù vytvoøen otisk zdrojového kódu programu pomocí algoritmu Winnowing, jeho¾ implementaci lze vidìt na~pøíkladu \ref{WinnowingImpl}.
+
+\begin{lstlisting}[caption=Implementace algoritmu Winnowin v~jazyce PHP., label=WinnowingImpl]
+	public function Winnowing($w) {
+		$window = array_fill(0, $w, NULL);
+		for ($i = 0; $i < $w; ++$i) $window[$i] = self::INT_MAX;
+		$windowRightEnd = 0;
+		$minHashIndex = 0;
+		// At the end of each iteration, min holds the position
+		// of the rightmost minimal has in the current window.
+		while(true) {
+			// shift the window by one
+			$windowRightEnd = ($windowRightEnd + 1) % $w;
+			$window[$windowRightEnd] = getNextHash();
+			if ($window[$windowRightEnd] == -1) 
+				break;
+			if ($minHashIndex == $windowRightEnd) {
+				// The previous minimum is no longer in this window.
+				// Scan window leftward starting from window right end for
+				// the rightmost minimal hash.
+				for ($i = ($windowRightEnd - 1) % $w; $i != $windowRightEnd; 
+						$i = ($i - 1 + $w) % $w)
+					if ($window[$i] < $window[$minHashIndex] 
+						$minHashIndex = $i;
+				record($window[$minHashIndex],
+						 global_pos($minHashIndex, $windowRightEnd, $w);
+			} else {
+				// Otherwise, the previous minimum is still in this window.
+				// Compare againts the new value and update min if necessary.
+				if ($window[$windowRightEnd] <= $window[$minHashIndex] {
+					$minHashIndex = $windowRightEnd;
+					record($window($minHashIndex],
+							 global_pos($minHashIndex, $windowRightEnd, $w);
+				}
+			}
+		}
+	}
+\end{lstlisting}
+
+Tato implementace algoritmu vytvoøí unikátní otisky obou zdrojových kódù z~páru a~umo¾ní je následnì mezi sebou porovnat. Jako ha¹ovací funkce, která byla potøebná k~vytvoøení otiskù byla pou¾ita vestavìná funkce \textit{md5}, která jak je vidìt podle jejího názvu vyu¾ívá k~ha¹ování algoritmus MD5\footnote{Více o algoritmu na~http://tools.ietf.org/html/rfc1321}. 
+
+Na rozdíl od~implementace porovnávání ve~tøetí fázi se zde výsledky nijak netransformují do~výsledných procent znaèících úroveò podobnosti mezi dvìma zdrojovými texty. Pouze se v¾dy v~páru vyhledávají stejné hodnoty ha¹ù a~poèet stejných ha¹ù se ukládá do~pamìti. V~pøípadì, ¾e v~kódech byly zaznamenány alespoò tøi ha¹e sdílené mezi obìma zdrojovými kódy jsou tyto oznaèeny jako mo¾ný plagiát.
+
+Kromì toho, ¾e vyhledávání plagiátù pomocí otiskù je více dùkladnìj¹í ne¾ stejné vyhledávání pomocí metod pou¾itých ve~tøetí fázi, je nesmírnou výhodou tohoto pøístupu fakt, ¾e v~rámci algoritmu Winnowing lze velice snadno u~otiskù uchovávat i~jejich pøibli¾nou polohu ve~zdrojovém kódu a~v~pøípadì podezøení z~plagiátorství u¾ivateli oznaèit øádky, které se zdají být podobné.
+
+Po prozkoumání ve¹kerých zdrojových textù jsou výsledky z~této fáze ulo¾eny do~souboru opìt ve~formátu CSV, tentokrát s~roz¹íøenými informacemi ohlednì podezøelých dvojic zdrojových kódù. Na~pøíkladu ní¾e \ref{CSVfinal} lze vidìt ukázku nìkolika øádkù ve~výsledném CSV souboru. Jeden øádek ve~výstupním CSV souboru odpovídá páru, u~kterého vzniklo podezøení na~plagiátorství. Tento øádek je poté ulo¾en ve~formátu, kdy první dvì hodnoty odpovídají názvùm kontrolovaných souborù, následuje jejich procentuální podobnost a~poté pøípadnì hrubá pozice kódu v~souboru, který je spoleèný pro~oba zdrojové soubory.
+
+\begin{lstlisting}[caption=Ukázka výstupního souboru s~podezøelými dvojicemi zdrojových kódù., label=CSVfinal]
+	xlogin00,xlogin01,81%,[301][503],[312][514]
+	xlogin02,xlogin07,68%,[12][703],[17][708],[23][714],[30][721]
+	xlogin03,xlogin05,83%,[231][107],[320][541]
+	xlogin31,xlogin17,54%,[456][123],[426][135],[432][325],[12][758]
+\end{lstlisting}
+
+Výsledky byly ukládány tak, aby byly snadno èitelné i~pro èlovìka a~zároveò je bylo mo¾né snadno exportovat do~dal¹ích formátù pøípadnì do~dal¹ích externích programù.
+
+
+\section{Testování a experimenty}\label{experiments}
+
+\section{Roz¹íøení do budoucnosti}
 
 \chapter{Závìr}
 

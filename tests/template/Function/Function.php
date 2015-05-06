@@ -1,9 +1,9 @@
 <?php
 
-	function helloWorld($msg) {
+	function my_print($msg) {
 		echo $msg . "\n";
 	}
 	
-	helloWorld("Hello world!");
+	my_print("Ahoj světe!");
 
 ?>
