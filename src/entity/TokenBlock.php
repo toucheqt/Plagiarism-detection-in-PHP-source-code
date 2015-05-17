@@ -4,13 +4,14 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Entity that contains processed data from source code.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class TokenBlock {
 		
-		// ======= Constants =======
+		############################  VARIABLES AND CONSTANT  ###########################
+		
 		const TOKEN_TYPE = 0;
 		const TOKEN_VALUE = 1;
 		const TOKEN_LINE_NUMBER = 2;	
@@ -20,6 +21,14 @@
 		private $halsteadBlocks;
 		private $levenshteinBlocks;
 		
+		#################################  CONSTRUCTORS  ################################
+		
+		/**
+		 * 
+		 * Construct for creating entity with processed source code. As input serves stream
+		 * of tokens that is parsed into this entity.
+		 * @param $tokens Stream of tokens from input source code.
+		 */
 		public function __construct($tokens) {
 			$this->tokens = $tokens;
 			
@@ -33,8 +42,13 @@
 			$this->levenshteinBlocks = Levenshtein::getAbstractBlocks($tokens);
 		}
 		
-		// ===== Methods =======
+		####################################  METHODS  ##################################
 		
+		/**
+		 * 
+		 * Converts this entity into JSON array.
+		 * @return array JSON array version of this entity.
+		 */
 		public function toJSON() {
 			return array(
 					'tokens' => $this->tokens,
@@ -43,7 +57,7 @@
 			);
 		}
 		
-		// ===== Getters/Setters =======
+		##############################  GETTERS AND SETTERS  ############################
 		
 		public function getTokens() {
 			return $this->tokens;

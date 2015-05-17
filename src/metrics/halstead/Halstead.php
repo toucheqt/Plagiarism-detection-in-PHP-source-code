@@ -4,18 +4,23 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Class implementing computations for Halstead metrics.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class Halstead {
 		
+		#################################  CONSTRUCTORS  ################################
+		
 		private function __construct() {}
+		
+		####################################  METHODS  ##################################
 		
 		/**
 		 * Evaluates halstead metrics for code block
-		 * @param $halsteadBlock
-		 * @param $block
+		 * @param $halsteadBlock Halstead block containing input data for evaluating Halstead metrics.
+		 * @param $block Block of tokens.
+		 * @return $halsteadBlock Halstead block containing evaluated input data and tokens.
 		 */
 		public static function evalMetrics($halsteadBlock, $block) {
 			
@@ -36,7 +41,9 @@
 		}
 		
 		/**
-		 * Evaluates program length of given codeblock
+		 * Evaluates program length of given codeblock.
+		 * @param $block Block of code has to be evaluated.
+		 * @return $N Program length of the input code block.
 		 */
 		private static function evalProgramLength($block) {
 			$N = count($block->getUniqueOperators()) * log(count($block->getUniqueOperators()), 2);
@@ -45,7 +52,9 @@
 		}
 		
 		/**
-		 * Evaluates volume of given codeblock
+		 * Evaluates volume of given codeblock.
+		 * @param $block Block of code has to be evaluated.
+		 * @return $V Volume metric of the input code block.
 		 */
 		private static function evalVolume($block) {
 			$N = $block->getOperators() + $block->getOperands();
@@ -54,7 +63,9 @@
 		}
 		
 		/**
-		 * Evaluates difficulty of given codeblock
+		 * Evaluates difficulty of given codeblock.
+		 * @param $block Block of code has to be evaluated.
+		 * @return $D Difficulty metric of the input code block.
 		 */
 		private static function evalDifficulty($block) {
 			$D = 0;
@@ -67,6 +78,12 @@
 			return $D;
 		}
 		
+		/**
+		 * 
+		 * Method to determine whether the input token is operator in PHP5 language or not.
+		 * @param $tokenType Type of token that will be examined.
+		 * @return boolean Returns true if the input token is operator in PHP5 language. Otherwise returns false.
+		 */
 		private static function isOperator($tokenType) {
 			switch ($tokenType) {
 				

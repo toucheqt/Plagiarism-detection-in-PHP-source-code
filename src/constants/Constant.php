@@ -3,10 +3,12 @@
 	/**
 	 * 
 	 * Class containing all script constants, allowing a simple modification if needed.
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class Constant {
+		
+		############################  VARIABLES AND CONSTANT  ###########################
 		
 		// arg parameters
 		const ARG_FIRST_PHASE = '--first';
@@ -23,7 +25,6 @@
 		const ARG_HELP_SHORT = '-h';
 		
 		// arg paths
-		// FIXME pridal bych moznost, ze se da vygenerovat i template 
 		const ARG_INPUT_PATH = '--input=';
 		const ARG_OUTPUT_PATH = '--output=';
 		const ARG_INPUT_TEMPLATE_PATH = '--inputTemplate=';
@@ -39,8 +40,8 @@
 		const ARG_COUNT = '--count=';
 		const ARG_FORCE = '-f';
 		
-		const START_INDEX = 0;
-		const COUNT = 20; // FIXME By experimenting find the best count
+		const START_INDEX = 1;
+		const COUNT = 2000;
 		
 		// file paths and file names
 		const DEFAULT_PATH = './';
@@ -49,6 +50,29 @@
 		// file extensions
 		const JSON_FILE_EXTENSION = '.json';
 		const CSV_FILE_EXTENSION = '.csv';
+		
+		// array patterns
+		const PATTERN_FILES = 'files';
+		const PATTERN_CONTENT = 'content';
+		const PATTERN_OPERATORS = 'operators';
+		const PATTERN_OPERANDS = 'operands';
+		const PATTERN_UNIQUE_OPERATORS = 'uniqueOperators';
+		const PATTERN_UNIQUE_OPERANDS = 'uniqueOperands';
+		const PATTERN_PROGRAM_LENGTH = 'programLength';
+		const PATTERN_VOLUME = 'volume';
+		const PATTERN_DIFFICULTY = 'difficulty';
+		const PATTERN_DIR = 'dir';
+		const PATTERN_TEMPLATE = '-template';
+		const PATTERN_PATH = 'path';
+		const PATTERN_FILENAME = 'filename';
+		
+		// matching constants
+		const HUNDRED_PERCENT = 100;
+		const MAX_LEVENSHTEIN = 255; // maximum size of a levenshtein block
+		const LEVENSHTEIN_THRESHOLD = 15; // equals 95% similarity in levenshtein block
+		const LEVENSHTEIN_MAX_BLOCKS = 3; // more than 3 blocks with 95% similarity will be considered as plagiarism
+		
+		#################################  CONSTRUCTORS  ################################
 		
 		private function __construct() {}
 		

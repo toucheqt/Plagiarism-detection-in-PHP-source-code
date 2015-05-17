@@ -1,12 +1,14 @@
 <?php
 
 	/**
-	 * Entity container for encapsulation two token blocks objects - two assignments
 	 * 
-	 * @author xkrpecqt@gmail.com
+	 * Entity container for encapsulation two token blocks objects - two assignments
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class Pair {
+		
+		############################  VARIABLES AND CONSTANT  ###########################
 		
 		const ORDER_FIRST = 1;
 		const ORDER_SECOND = 2;
@@ -20,14 +22,24 @@
 		private $firstLevenshtein = array();
 		private $secondLevenshtein = array();
 		
+		#################################  CONSTRUCTORS  ################################
+		
 		public function Pair() {}
 		
+		####################################  METHODS  ##################################
+		
+		/**
+		 * 
+		 * Method parses Halstead data from the assignment and stores them into this entity.
+		 * @param $assignment Entity with preprocessed assignment containing informations about Halstead metrics.
+		 * @param $order Parameter to specify order of the assignment in the pair.
+		 */
 		private function parseHalstead($assignment, $order) {
 			$assignment = (object) $assignment;
-			$files = (object) $assignment->{'files'}; // TODO refaktorovat tohle na konstanty
+			$files = (object) $assignment->{Constant::PATTERN_FILES};
 			foreach ($files as $file) {
 				$file = (object) $file;
-				$content = (object) $file->{'content'};
+				$content = (object) $file->{Constant::PATTERN_CONTENT};
 				$halsteadBlocks = $content->{'halsteadBlocks'};
 				foreach ($halsteadBlocks as $block) {
 					if ($order == self::ORDER_FIRST) {
@@ -41,12 +53,18 @@
 			}
 		}
 		
+		/**
+		 * 
+		 * Method parses Levenshtein data from the assignment and stores them into this entity.
+		 * @param $assignment Entity with preprocessed assignment containing informations about Halstead metrics.
+		 * @param $order Parameter to specify order of the assignment in the pair.
+		 */
 		private function parseLevenshtein($assignment, $order) {
 			$assignment = (object) $assignment;
-			$files = (object) $assignment->{'files'};
+			$files = (object) $assignment->{Constant::PATTERN_FILES};
 			foreach ($files as $file) {
 				$file = (object) $file;
-				$content = (object) $file->{'content'};
+				$content = (object) $file->{Constant::PATTERN_CONTENT};
 				$levenshteinBlocks = $content->{'levenshteinBlocks'};
 				foreach ($levenshteinBlocks as $block) {
 					if ($order == self::ORDER_FIRST)
@@ -57,7 +75,7 @@
 			}
 		}
 		
-		// ============= Getters/Setters =====================
+		##############################  GETTERS AND SETTERS  ############################
 		
 		public function getFirstAssignment() {
 			return $this->firstAssignment;

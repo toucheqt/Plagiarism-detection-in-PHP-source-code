@@ -1,5 +1,43 @@
 %\chapter{Obsah CD}
-%\chapter{Manual}
+\chapter{Manuálová stránka programu}
+\subsubsection{Název}
+Rozpoznání plagiátù zdrojového kódu v~jazyce PHP
+\subsubsection{Pou¾ití}
+php Controller.php [mo¾nosti]
+\subsubsection{Popis}
+Skript analyzuje zdrojové kódy napsané v~jazyce PHP v~aktuální slo¾ce. Výstupem skriptu je soubor \textbf{generatedOutput.json}, který obsahuje analyzované zdrojové texty a~dále soubor \textbf{generatedOutput.csv}, který obsahuje dvojice zdrojových kódù, které jsou podezøelé z~plagiátorství. Skript je nutné v¾dy pøi~interpretaci spou¹tìt s~parametrem \textit{-d memory\_limit=256M}, který upraví skriptu pøidìlenou velikost pamìti v~souboru \textit{php.ini}. V~pøípadì nevhodnì nastaveného \textit{php.ini} souboru je nutné pøi spou¹tìní interpretu pøidat je¹tì parametr \textit{-d open\_basedir=NULL}.
+\subsubsection{Mo¾nosti}
+\begin{description}
+\item[--input=]\textit{adresáø} \\ Vstupní adresáø se~zdrojovými kódy.
+\item[--output=]\textit{adresáø} \\ Výstupní adresáø, do~kterého se ulo¾í výsledné soubory.
+\item[--inputTemplate=]\textit{adresáø} \\ Vstupní adresáø se ¹ablonami zdrojových kódù.
+\item[--projectsJSON=]\textit{soubor} \\ Zpracovaný JSON soubor obsahující analyzované zdrojové kódy.
+\item[--templatesJSON=]\textit{soubor} \\ Zpracovaný JSON soubor obsahující analyzované ¹ablony zdrojových kódù.
+\item[--inputCSV=]\textit{soubor} \\ CSV soubor obsahující unikátní dvojice zdrojových textù.
+\item[--first, --second, --third, --fourth] \hfill \\ Parametr upøesòující, která fáze má být spu¹tìna. Fáze nelze kombinovat a~je v¾dy zapotøebí dodat pøíslu¹né vstupní soubory.
+\item[-e] \hfill \\ Parametr, který spustí pouze fáze pro~vyhledávání plagiátù. Fáze nelze kombinovat a~je zapotøebí dodat pøíslu¹né vstupní soubory.
+\item[-g] \hfill \\ Parametr, který spustí pouze fáze pro~generování JSON a~CSV souboru. Fáze nelze kombinovat.
+\item[-c] \hfill \\ Zpùsobí ignorování komentáøù pøi~analýze zdrojových kódù.
+\item[-h, --help] \hfill \\ Vypí¹e nápovìdu.
+\item[--nameJSON=]\textit{název} \\ Nastaví jméno vygenerovanému JSON souboru.
+\item[--nameCSV=]\textit{název} \\ Nastaví jméno vygenerovanému CSV souboru.
+\item[--index=]\textit{èíslo} \\ Èíslo stránky, která má být vyhodnocena. Jako výchozí stránka se bere nultá strana.
+\item[--count=]\textit{èíslo} \\ Poèet párù, které mají být na~jedné stránce. Jako výchozí se bere 750 párù na~stránku.
+\item[-f] \hfill \\ Vyhodnotí v¹echny páry zdrojových textù nehledì na~velikost stránky.
+\end{description}
+\subsubsection{Pøíklady pou¾ití}
+php -d memory\_limit=256M Controller.php --help \\
+\hfill \\
+php -d memory\_limit=256M Controller.php --input=./ --inputTemplate=./templates \\
+\hfill \\
+php -d memory\_limit=256M Controller.php --input=./ --nameJSON=projects --first \\
+\hfill \\
+php -d memory\_limit=256M Controller.php --projectsJSON=./generatedOutput.json -e \\
+
+\subsubsection{Autor}
+Ondøej Krpec, xkrpec01@stud.fit.vutbr.cz
+
+
 %\chapter{Konfigraèní soubor}
 %\chapter{RelaxNG Schéma konfiguraèního soboru}
 %\chapter{Plakat}

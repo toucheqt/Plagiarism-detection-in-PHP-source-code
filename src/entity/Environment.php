@@ -2,11 +2,13 @@
 	
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Entity that saves script's workflow data.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
-	class Enviroment {
+	class Environment {
+		
+		############################  VARIABLES AND CONSTANT  ###########################
 		
 		// JSON objects
 		private $templates = null;
@@ -15,21 +17,27 @@
 		// CSV file
 		private $matchedPairs = null;
 		
-		// ========= functions ================
+		// CSV file after third phase
+		private $shallowOutput = null;
+		
+		####################################  METHODS  ##################################
 		
 		/**
 		 * Creates single page of matched pairs for comparison. This is due to comparison being time consuming and comparing all
 		 * assignments in a row would take very long time. 
+		 * @param $startIndex Number of page to start with.
+		 * @param $count Number of pairs per page.
 		 */
 		public function createPage($startIndex, $count) {
 			$page = array();
-			for ($i = $startIndex; $i < $startIndex * $count; $i++) {
+			(count($this->matchedPairs) < $count) ? $finalCount = count($this->matchedPairs) : $finalCount = $count;
+			for ($i = $startIndex; $i < $startIndex * $finalCount; $i++) {
 				$page[] = $this->matchedPairs[$i];
 			}
 			$this->matchedPairs = $page;
 		}
 		
-		// ======== getters/setters ============
+		##############################  GETTERS AND SETTERS  ############################
 		
 		public function getTemplates() {
 			return $this->templates;
@@ -53,6 +61,14 @@
 		
 		public function setMatchedPairs($matchedPairs) {
 			$this->matchedPairs = $matchedPairs;
+		}
+		
+		public function getShallowOutput() {
+			return $this->shallowOutput;
+		}
+		
+		public function setShallowOutput($shallowOutput) {
+			$this->shallowOutput = $shallowOutput;
 		}
 		
 	}

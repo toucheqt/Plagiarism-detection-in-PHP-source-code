@@ -2,16 +2,18 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Utility class for searching items in an array.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class SearchUtils {
 		
 		/**
-		 * Returns true if array contains given needle.
-		 * @param unknown_type $needle
-		 * @param unknown_type $array
+		 * 
+		 * Searches for the needle in the array. 
+		 * @param $needle Needle to search for.
+		 * @param $array Array in which the search will begin.
+		 * @return boolean Returns true if the needle is in the array, false otherwise
 		 */
 		public static function inArray($needle, $array) {
 			foreach ($array as $item) {

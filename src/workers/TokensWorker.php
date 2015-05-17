@@ -2,14 +2,18 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Worker for processing tokens from the input source code.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class TokensWorker {
 		
+		############################  VARIABLES AND CONSTANT  ###########################
+		
 		private $tokens;
 		private $filename;
+		
+		#################################  CONSTRUCTORS  ################################
 		
 		public function __construct($filename) {
 			$this->filename = $filename;
@@ -17,10 +21,13 @@
 			$this->loadTokens();
 		}
 		
+		####################################  METHODS  ##################################
+		
 		/**
 		 * 
-		 * Parse functions from tokens into array
-		 * @param unknown_type $tokens
+		 * Method parses all functions from the input source code and saves them into an array.
+		 * @param $tokens Tokens from the input source code
+		 * @return Returns list of the functions that were found in the source code.
 		 */
 		public static function getFunctions($tokens) {
 			$function = array();
@@ -61,9 +68,8 @@
 		
 		/**
 		 * 
-		 * Removes comments from array of tokens.
-		 * @param array $tokens
-		 * @throws InvalidArgumentException
+		 * Removes all comments from the input source code / tokens.
+		 * @param $tokens Array of tokens representing the input source code.
 		 */
 		public function removeCommentsFromTokens() {
 			if (is_null($this->tokens)) {
@@ -83,9 +89,10 @@
 		
 		/**
 		 * 
-		 * Gets tokens from input file.
-		 * @throws InvalidArgumentException
-		 */
+		 * Loads the input source code from the file. Removes whitespaces and convert
+		 * source code into a stream of tokens.
+		 * @throws InvalidArgumentException Throws an exception if filename was not specified.
+		 */		
 		private function loadTokens() {
 			
 			if (is_null($this->filename)) {
@@ -107,7 +114,7 @@
 			}	
 		}
 		
-		// ===== Getters/Setters =====
+		##############################  GETTERS AND SETTERS  ############################
 		
 		public function getTokens() {
 			return $this->tokens;

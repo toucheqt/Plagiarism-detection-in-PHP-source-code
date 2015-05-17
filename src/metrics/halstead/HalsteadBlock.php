@@ -4,11 +4,13 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Entity for representing inner structure of Halstead metrics.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class HalsteadBlock {
+		
+		############################  VARIABLES AND CONSTANT  ###########################
 		
 		private $operators;
 		private $operands;
@@ -18,6 +20,8 @@
 		private $programLength = 0;
 		private $volume;
 		private $difficulty;
+		
+		#################################  CONSTRUCTORS  ################################
 		
 		public function __construct() {
 			$this->uniqueOperators = array();
@@ -29,6 +33,13 @@
 			$this->difficulty = 0;
 		}
 		
+		####################################  METHODS  ##################################
+		
+		/**
+		 * 
+		 * Converts this entity into JSON array.
+		 * @return array JSON array version of this entity.
+		 */
 		public function toJSON() {
 			return array(
 					'operators' => $this->operators,
@@ -41,21 +52,29 @@
 			);
 		}
 		
+		/**
+		 * 
+		 * Convert Halstead block in JSON format into this entity.
+		 * @param $JSON Halstead block in JSON format
+		 * @return $halsteadBlock Returns this entity with data from input JSON.
+		 */
 		public function fromJSON($JSON) {
 			$JSON = (object) $JSON;
-			$this->operators = $JSON->{'operators'};
-			$this->operands = $JSON->{'operands'};
-			$this->uniqueOperators = $JSON->{'uniqueOperators'};
-			$this->uniqueOperands = $JSON->{'uniqueOperands'};
-			$this->programLength = $JSON->{'programLength'};
-			$this->volume = $JSON->{'volume'};
-			$this->difficulty = $JSON->{'difficulty'};
+			$this->operators = $JSON->{Constant::PATTERN_OPERATORS};
+			$this->operands = $JSON->{Constant::PATTERN_OPERANDS};
+			$this->uniqueOperators = $JSON->{Constant::PATTERN_UNIQUE_OPERATORS};
+			$this->uniqueOperands = $JSON->{Constant::PATTERN_UNIQUE_OPERANDS};
+			$this->programLength = $JSON->{Constant::PATTERN_PROGRAM_LENGTH};
+			$this->volume = $JSON->{Constant::PATTERN_VOLUME};
+			$this->difficulty = $JSON->{Constant::PATTERN_DIFFICULTY};
 			return $this;
 		}
 		
 		/**
+		 * 
 		 * Adds operator to the unique operator class variable.
-		 * Returns success of operation.
+		 * @param $operator Operator that might be added into unique operators array.
+		 * @return boolean Returns success of operation.
 		 */
 		public function addUniqueOperator($operator) {
 			$this->operators++; // increment even if it might not be unique
@@ -69,8 +88,10 @@
 		}
 		
 		/**
+		 * 
 		 * Adds operand to the unique operand class variable.
-		 * Returns success of operation.
+		 * @param $operand Operand that might be added into unique operands array.
+		 * @return boolean Returns success of operation.
 		 */
 		public function addUniqueOperand($operand) {
 			$this->operands++; // increment even if it might not be unique
@@ -83,6 +104,12 @@
 			return false;
 		}
 		
+		/**
+		 * 
+		 * Method to determine whether input operator is unique among the class array of unique operators.
+		 * @param $operator Operator to consider as an unique operator.
+		 * @return boolean Returns true if operator is unique among the class array of unique operators. Otherwise returns false.
+		 */
 		private function isUniqueOperator($operator) {
 			foreach ($this->uniqueOperators as $usedOperator) {
 				if ($operator[TokenBlock::TOKEN_TYPE] == $usedOperator[TokenBlock::TOKEN_TYPE]) {
@@ -92,6 +119,12 @@
 			return true;
 		}
 		
+		/**
+		 * 
+		 * Method to determine whether input operand is unique among the class array of unique operand.
+		 * @param $operand Operand to consider as an unique operand.
+		 * @return boolean Returns true if operand is unique among the class array of unique operands. Otherwise returns false.
+		 */
 		private function isUniqueOperand($operand) {
 			if (is_array($operand)) {
 				foreach ($this->uniqueOperands as $usedOperand) {
@@ -111,7 +144,8 @@
 			return true;
 		}
 		
-		// ====== Getters/Setters ======
+		##############################  GETTERS AND SETTERS  ############################
+		
 		public function getOperators() {
 			return $this->operators;
 		}

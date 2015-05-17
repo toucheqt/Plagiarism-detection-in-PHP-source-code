@@ -2,8 +2,8 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Class for easy manipulation with JSON and CSV files.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class FileUtils {
@@ -11,11 +11,11 @@
 		/**
 		 * 
 		 * Converts given array to JSON and saves it into file.
-		 * @param string $path
-		 * @param string $filename
-		 * @param array $data
-		 * @throws InvalidArgumentException
-		 * @throws RuntimeException
+		 * @param $path Path specifying where the file should be saved.
+		 * @param $filename String specifying the file name.
+		 * @param $data JSON structure that should be saved into file.
+		 * @throws InvalidArgumentException Throws an exception if filename was not specified.
+		 * @throws RuntimeException Throws an exception if an error occurred during saving.
 		 */
 		public static function saveToJSON($path, $filename, $data) {
 			if (is_null($filename)) {
@@ -23,7 +23,7 @@
 				throw new InvalidArgumentException();
 			}
 			
-			if (!file_put_contents($path . $filename, @json_encode($data), FILE_USE_INCLUDE_PATH)) {
+			if (!file_put_contents($path . $filename . Constant::JSON_FILE_EXTENSION, @json_encode($data), FILE_USE_INCLUDE_PATH)) {
 				Logger::error('File ' . $filename . ' can not be created.');
 				throw new RuntimeException();
 			}			
@@ -32,9 +32,10 @@
 		/**
 		 * 
 		 * Returns content of given JSON file
-		 * @param string $path
-		 * @throws InvalidArgumentException
-		 * @throws RuntimeException
+		 * @param $path Path with the name of the file that should be opened.
+		 * @throws InvalidArgumentException Throws an exception if the path is not provided.
+		 * @throws RuntimeException Throws an exception if an error occurred during opening the file.
+		 * @return Returns decoded JSON structure from the input file.
 		 */
 		public static function getJSONFromFile($path) {
 			if (is_null($path)) {
@@ -52,9 +53,13 @@
 		}
 		
 		/**
-		 * Converts giver array and saves it as a CSV file.
-		 * @throws InvalidArgumentException
-		 * @throws RuntimeException
+		 * 
+		 * Converts given array and saves it as a CSV file.
+		 * @param $path Path specifying where the file should be saved.
+		 * @param $filename String specifying the file name.
+		 * @param $matchedPairs Data that should be saved into CSV file.
+		 * @throws InvalidArgumentException Throws an exception if filename was not specified.
+		 * @throws RuntimeException Throws an exception if an error occurred during saving the file.
 		 */
 		public static function saveToCSV($path, $filename, $matchedPairs) {
 			if (is_null($filename)) {
@@ -76,9 +81,14 @@
 		}
 		
 		/**
+		 * 
 		 * Returns specific page of matched pairs from given CSV file.
-		 * @throws InvalidArgumentException
-		 * @throws RuntimeException
+		 * @param $path Path to the CSV file. Can not be null.
+		 * @param $startIndex Number of the page that should be read.
+		 * @param $count Number of the pairs per page.
+		 * @throws InvalidArgumentException Throws an exception if path is not provided.
+		 * @throws RuntimeException Throws an exception if an error occured during opening the file.
+		 * @return Return specific page with matched pairs.
 		 */
 		public static function getFromCSV($path, $startIndex, $count) {
 			if (is_null($path)) {

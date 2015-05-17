@@ -2,16 +2,19 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Class for proccessing blocks of tokens into formatted blocks that can be compared by Levenshtein algorithm.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class Levenshtein {
 		
-		const MAX_STRING_SIZE = 255;
+		####################################  METHODS  ##################################
 		
 		/**
-		 * Returns abstract block of tokens created from original tokens.
+		 *
+		 * Creates abstract blocks of tokens from input tokens.
+		 * @param $block Input tokens.
+		 * @return Array of abstract blocks.
 		 */
 		public static function getAbstractBlocks($block) {
 			$resourceArray = array();
@@ -27,7 +30,11 @@
 						$abstractToken = 'T_COMMENT';
 						break;
 						
-					case T_CONSTANT_ENCAPSED_STRING: // string "foo"
+					// String e.g. "foo"
+					case T_CONSTANT_ENCAPSED_STRING: 
+						$abstractToken = 'T_VAR_STRING';
+						break;
+						
 					case T_DNUMBER:
 					case T_LNUMBER:
 					case T_NUM_STRING:
@@ -36,7 +43,8 @@
 						$abstractToken = 'T_VAR';
 						break;
 						
-					case T_ENCAPSED_AND_WHITESPACE: // promenna ve stringu "$foo "
+					// variable in String e.g. "$foo"
+					case T_ENCAPSED_AND_WHITESPACE:
 					case T_GLOBAL:
 						break;
 						
@@ -71,7 +79,7 @@
 				} // end switch
 				
 				if (!is_null($abstractToken)) {
-					if (strlen($singleResource) + strlen($abstractToken) <= Levenshtein::MAX_STRING_SIZE) {
+					if (strlen($singleResource) + strlen($abstractToken) <= Constant::MAX_LEVENSHTEIN) {
 						$singleResource .= $abstractToken;
 					} else {
 						$resourceArray[] = $singleResource;

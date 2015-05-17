@@ -4,10 +4,12 @@
 
 	/**
 	 * Entity for storing program arguments
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class Arguments {
+		
+		############################  VARIABLES AND CONSTANT  ###########################
 		
 		/** If set on true, script will proceed throught all five steps if mandatory arguments are correctly filled. */
 		private $isGlobalFlow = true;
@@ -42,11 +44,11 @@
 		
 		private $force = false;
 		
+		#################################  CONSTRUCTORS  ################################
 		
-		// ======= Constructors =======
 		public function __construct() {}
 		
-		// ====== Methods ======
+		####################################  METHODS  ##################################
 		
 		/**
 		 * 
@@ -58,7 +60,7 @@
 		}
 		
 		
-		// ======= Getters/Setters =======
+		##############################  GETTERS AND SETTERS  ############################
 		
 		public function getIsGlobalFlow() {
 			return $this->isGlobalFlow;

@@ -5,25 +5,30 @@
 
 	/**
 	 * 
-	 * Enter description here ...
-	 * @author Ondrej Krpec, xkrpecqt@gmail.com
+	 * Class for parsing arguments from command line.
+	 * @author Ondrej Krpec, xkrpec01@stud.fit.vutbr.cz
 	 *
 	 */
 	class ArgParser {
 		
+		############################  VARIABLES AND CONSTANT  ###########################
+		
 		private $argc;
 		private $argv;
+		
+		#################################  CONSTRUCTORS  ################################
 		
 		public function __construct($argc, $argv) {
 			$this->argc = $argc;
 			$this->argv = $argv;
 		}
 		
-		// ======== Methods ============
+		####################################  METHODS  ##################################
 		
 		/**
-		 * Parse and validates arguments from command line into Arguments entity.
-		 * @throws InvalidArgumentException
+		 * 
+		 * Parses and validates arguments from command line. Parsed arguments are saved in Arguments entity.
+		 * @return $arguments Returns Argument entity that contains parsed arguments from command line.
 		 */
 		public function parseArguments() {
 			
@@ -92,9 +97,10 @@
 		}
 		
 		/**
-		 * Validates arguments
-		 * @param unknown_type $arguments
-		 * @throws InvalidArgumentException
+		 * 
+		 * Validates given arguments and their combinations.
+		 * @param $arguments Input arguments for validation.
+		 * @throws InvalidArgumentException Throws an exception in case that any argument is not valid.
 		 */
 		private function validateArguments($arguments) {
 			$arguments->validateSteps();
@@ -164,26 +170,44 @@
 		}
 		
 		/**
-		 * Returns boolean value whether one of the four phases is active
+		 * 
+		 * Determines whether one of the four phases is active.
+		 * @param $arguments Entity that contains input arguments.
+		 * @return boolean Return true if one of the four phases is active, false otherwise.
 		 */
 		private function isSinglePhase($arguments) {
 			return $arguments->getIsStepOne() || $arguments->getIsStepTwo() || $arguments->getIsStepThree() || $arguments->getIsStepFour();
 		}
 		
 		/**
+		 * 
 		 * Prints program help to stdin. 
 		 */
-		// TODO Update --help
 		public static function printHelp() {
 			$msg = "**************************************** HELP ****************************************\n";
 			$msg .= "Author: Ondrej Krpec, xkrpecqt@gmail.com\n";
 			$msg .= "Plagiarism detection tool for PHP written as bachelor thesis at FIT VUT Brno, 2015.\n";
-			$msg .= "--projects={path} > Path to directory with current projects. Can not be combined with parameter --projectJSON={path}\n";
-			$msg .= "--projectJSON={path} > Path to file with current projects in JSON format. Can not be combined with parameter --projects={path}\n";
-			$msg .= "--templates={path} > Path to directory with templates projects. Can not be combined with parameter --templateJSON={path}\n";
-			$msg .= "--templateJSON={path} > Path to file with template projects in JSON format. Can not be combined with parameter --templates={path}\n";
-			$msg .= "--help > Prints out help. Can not be combined with other arguments.\n";
-			$msg .= "-c > Force remove comments from projects. Can not be combined with paramters --projectJSON={path} and --templateJSON={path}\n"; 
+			$msg .= "Parameters: \n";
+			$msg .= "--input=[directory]\tPath to directory with input source codes.\n";
+			$msg .= "--output=[directory]\tPath to output directory.\n";
+			$msg .= "--inputTemplate=[directory]\tPath to directory with input template source codes.\n";
+			$msg .= "--projectsJSON=[file]\tPath to JSON file with preprocessed input source codes.\n";
+			$msg .= "--templatesJSON=[file]\tPath to JSON file with preprocessed template source codes.\n";
+			$msg .= "--inputCSV=[file]\tPath to CSV file with matched pairs.\n";
+			$msg .= "--first\tStarts up only processing input files. Can not be combined with other phases.\n";
+			$msg .= "--second\tStarts up only generating unique pairs from the assignments. Can not be combined with other phases.\n";
+			$msg .= "--third\tStarts up only shallow analysis of the assignments. Can not be combined with other phases.\n";
+			$msg .= "--fourth\tStarts up only depth analysis of the assignments. Can not be combined with other phases.\n";
+			$msg .= "-e\tStarts up only analysis of the assignments. Can not be combined with other phases.\n";
+			$msg .= "-g\tStarts up only processing input files and generating unique pairs from the assignments.";
+			$msg .= " Can not be combined with other phases.\n";
+			$msg .= "-c\tIgnores comments when processing input files.\n";
+			$msg .= "-h, --help\tPrints out help message.\n";
+			$msg .= "--nameJSON=[name]\tSets up name of the output JSON files.\n";
+			$msg .= "--nameCSV=[name]\tSets up name of the output CSV files.\n";
+			$msg .= "--index=[number]\tImplements paging and sets up number of page that will be processed. Default value is 1.\n";
+			$msg .= "--count=[number]\tImplements paging and sets up number of pairs per page. Default value is 2000\n";
+			$msg .= "-f\tTries to evaluate all pairs. Do not use if its possible to exceed CPU time limit or run out of memory.\n";
 			
 			echo $msg;
 		}
