@@ -103,10 +103,18 @@
 			}
 			
 			// implements paging
-			$skippedFiles = $startIndex * $count;
+			$skippedFiles = ($startIndex - 1) * $count;
 			try {
+				$tmpPairs = array();
 				for ($i = 0; $i < $skippedFiles; $i++) {
-					fgetcsv($fd);
+					$tmp = fgetcsv($fd);
+					if (!is_array($tmp)) {
+						fclose($fd);
+						Logger::info('CSV file was successfuly loaded. ');
+						return $tmpPairs;
+					} else {
+						$tmpPairs[] = $tmp;
+					}
 				}
 			} catch (Exception $ex) {
 				Logger::errorFatal('Error during creating matched pairs page. ');
@@ -121,6 +129,36 @@
 			fclose($fd);
 			Logger::info('CSV file was successfuly loaded. ');
 			return $matchedPairs;
+		}
+		
+		/**
+		 * 
+		 * Returns all evaluated pairs.
+		 * @param $path Path to the CSV file. Can not be null.
+		 * @throws InvalidArgumentException Throws an exception if path is not provided.
+		 * @throws RuntimeException Throws an exception if an error occured during opening the file.
+		 * @return Return all evaluated pairs.
+		 */
+		public static function getResultsFromCSV($path) {
+			if (is_null($path)) {
+				Logger::errorFatal('Path to CSV file can not be null. ');
+				throw new InvalidArgumentException();
+			}
+			
+			$fd = fopen($path, 'r');
+			if (!$fd) {
+				Logger::errorFatal('CSV file can not be opened. ');
+				throw new RuntimeException();
+			}
+			
+			$evaluatedPairs = array();
+			while (($line = fgetcsv($fd)) !== false) {
+				$evaluatedPairs[] = $line;
+			}
+			
+			fclose($fd);
+			Logger::info('CSV file was successfuly loaded. ');
+			return $evaluatedPairs;
 		}
 		
 	}

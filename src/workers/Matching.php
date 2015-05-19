@@ -1,5 +1,7 @@
 <?php
 
+	define('PHP_INT_MIN', ~PHP_INT_MAX);
+
 	/**
 	 * 
 	 * Worker class for jobs regarding similarity detection.
@@ -17,6 +19,10 @@
 		private $resultDistance;
 		private $similarBlocks;
 		
+		private $resultHashesFirst;
+		private $resultHashesSecond;
+		private $similarityHashes;
+		
 		#################################  CONSTRUCTORS  ################################
 		
 		public function __construct() {
@@ -25,6 +31,9 @@
 			$this->resultDifficulty = 0;
 			$this->resultDistance = 0;
 			$this->similarBlocks = 0;
+			$this->resultHashesFirst = array();
+			$this->resultHashesSecond = array();
+			$this->similarityHashes = array();
 		}
 		
 		####################################  METHODS  ##################################
@@ -158,12 +167,143 @@
 		
 		/**
 		 * 
+		 * Compares two assignment using winnowing methods. Creates k-grams and hashes from them. Then uses private method
+		 * that implements winnowing algorithm for selecting subsequence of hashes. Aftewards hashes are compared and result are returned
+		 * in an array.
+		 * @param $original First assignment for comparison by winnowing method.
+		 * @param $copied Second assignment for comparison by winnowing method.
+		 * @return Array with comparison results.
+		 */
+		public function evaluateWinnowing($original, $copied) {			
+			$originalKGrams = self::createKGrams($original);
+			$copiedKGrams = self::createKGrams($copied);
+			
+			self::winnowing($originalKGrams, 1);
+			self::winnowing($copiedKGrams, 2);
+
+			$lastOccurrenceLeft = null;
+			$lastOccurrenceRight = null;
+			foreach($this->resultHashesFirst as $kGram) {
+				foreach($this->resultHashesSecond as $kGramSec) {
+					if ($kGram[0] == $kGramSec[0]) {
+						if (is_null($lastOccurrenceLeft || is_null($lastOccurrenceRight))) {
+							$this->similarityHashes[] = '[' . $kGram[1] . '] - ' . $kGram[2] . ' [' . $kGramSec[1] . '] - ' . $kGramSec[2]; 
+							$lastOccurrenceLeft = $kGram[1];
+							$lastOccurrenceRight = $kGramSec[1];
+						} else {
+							$distanceLeft = 0;
+							$distanceRight = 0;
+							if ($lastOccurrenceLeft > $kGram[1])
+								$distanceLeft = $lastOccurrenceLeft - $kGram[1];
+							else 
+								$distanceLeft = $kGram[1] - $lastOccurrenceLeft;
+							if ($lastOccurrenceRight > $kGramSec[1])
+								$distanceRight = $lastOccurrenceRight - $kGramSec[1];
+							else 
+								$distanceRight = $kGramSec[1] - $lastOccurrenceRight;
+							
+							if ($distanceLeft >= Constant::WINNOW_DISTANCE && $distanceRight >= Constant::WINNOW_DISTANCE) {
+								$this->similarityHashes[] = '[' . $kGram[1] . '] - ' . $kGram[2] . ' [' . $kGramSec[1] . '] - ' . $kGramSec[2]; 
+								$lastOccurrenceLeft = $kGram[1];
+								$lastOccurrenceRight = $kGramSec[1];
+							}
+						}
+					}
+				}
+			}
+
+		}
+		
+		/**
+		 * 
+		 * Method creates an array of k-grams from input assignment.
+		 * @param $assignment Assignment containing stream of tokens.
+		 * @return Array of k-grams.
+		 */
+		private function createKGrams($assignment) {
+			$assignment = (object) $assignment;
+			$files = (object) $assignment->{Constant::PATTERN_FILES};
+			$kGrams = array();
+			
+			foreach ($files as $file) {
+				$file = (object) $file;
+				$content = (object) $file->{Constant::PATTERN_CONTENT};
+				$tokens = $content->{Constant::PATTERN_TOKENS};
+				
+				$tmpGram = "";
+				$position = 0;
+				foreach ($tokens as $token) {
+					if (is_array($token)) {
+						$tmpGram .= $token[0];
+						$position = $token[2];
+					} else {
+						$tmpGram .= $token;
+					}
+					
+					if (strlen($tmpGram) >= Constant::WINNOW_K_GRAM_SIZE) {
+						$kGram = array();
+						$kGram[] = hexdec(substr(md5($tmpGram), 0, 15));
+						$kGram[] = $position;
+						$kGram[] = $file->{Constant::PATTERN_FILENAME};
+						$kGrams[] = $kGram;
+						$tmpGram = "";
+					}
+				}
+			}
+			
+			return $kGrams;
+		}
+		
+		/**
+		 * 
 		 * Private method for recalculating Levenshtein distance into percentage similarity between the examined pair.
 		 * @param $distance Levenshtein distance in range 0 - 255 that will be converted into percentage similarity.
 		 * @return Percentage similarity of the input Levenshtein distance.
 		 */
 		private function recalculateDistance($distance) {
 			return Constant::HUNDRED_PERCENT - (($distance * Constant::HUNDRED_PERCENT) / Constant::MAX_LEVENSHTEIN);
+		}
+		
+		/**
+		 * 
+		 * Method implementing algorithm winnowing.
+		 * @param $kGrams Generated k-grams.
+		 * @param $position Position of an assignment
+		 */
+		private function winnowing($kGrams, $position) {
+			$window = array_fill(0, Constant::WINNOW_WINDOW_SIZE, null);
+			for ($i = 0; $i < Constant::WINNOW_WINDOW_SIZE; ++$i)
+				$window[$i] = PHP_INT_MIN;
+			$windowRightEnd = 0;
+			$minHashIndex = 0;
+			foreach ($kGrams as $kGram) {
+				$windowRightEnd = ($windowRightEnd + 1) % Constant::WINNOW_WINDOW_SIZE;
+				$window[$windowRightEnd] = $kGram[0];
+				if ($window[$windowRightEnd] == -1)
+					break;
+					
+				if ($minHashIndex == $windowRightEnd) {
+					for ($i = ($windowRightEnd - 1) % Constant::WINNOW_WINDOW_SIZE; 
+							$i != $windowRightEnd; $i = ($i - 1 + Constant::WINNOW_WINDOW_SIZE) % Constant::WINNOW_WINDOW_SIZE) {
+						if ($i > 0 && $window[$i] < $window[$minHashIndex])
+							$minHashIndex = $i;
+					}
+					if ($position == 1) {
+						$this->resultHashesFirst[] = SearchUtils::findKGramByHash($window[$minHashIndex], $kGrams); 
+					} else if ($position == 2) {
+						$this->resultHashesSecond[] = SearchUtils::findKGramByHash($window[$minHashIndex], $kGrams);
+					}
+				} else {
+					if ($window[$windowRightEnd] <= $window[$minHashIndex]) {
+						$minHashIndex = $windowRightEnd;
+						if ($position == 1) {
+							$this->resultHashesFirst[] = SearchUtils::findKGramByHash($window[$minHashIndex], $kGrams);
+						} else if ($position == 2) {
+							$this->resultHashesSecond[] = SearchUtils::findKGramByHash($window[$minHashIndex], $kGrams);
+						}
+					}
+				}
+			}
 		}
 		
 		##############################  GETTERS AND SETTERS  ############################
@@ -206,6 +346,30 @@
 		
 		public function setSimilarBlocks($similarBlocks) {
 			$this->similarBlocks = $similarBlocks;
+		}
+		
+		public function getResultHashesFirst($resultHashesFirst) {
+			return $this->resultHashesFirst;
+		}
+		
+		public function setResultHashesFirst($resultHashesFirst) {
+			$this->resultHashesFirst = $resultHashesFirst;
+		}
+		
+		public function getResultHashesSecond($resultHashesSecond) {
+			return $this->resultHashesSecond;
+		}
+		
+		public function setResultHashesSecond($resultHashesSecond) {
+			$this->resultHashesSecond = $resultHashesSecond;
+		}
+		
+		public function getSimilarityHashes() {
+			return $this->similarityHashes;
+		}
+		
+		public function setSimilarityHashes($similarityHashes) {
+			$this->similarityHashes = $similarityHashes;
 		}
 		
 	}

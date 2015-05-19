@@ -206,7 +206,7 @@
 			$msg .= "--nameJSON=[name]\tSets up name of the output JSON files.\n";
 			$msg .= "--nameCSV=[name]\tSets up name of the output CSV files.\n";
 			$msg .= "--index=[number]\tImplements paging and sets up number of page that will be processed. Default value is 1.\n";
-			$msg .= "--count=[number]\tImplements paging and sets up number of pairs per page. Default value is 2000\n";
+			$msg .= "--count=[number]\tImplements paging and sets up number of pairs per page. Default value is " . Constant::COUNT . ".\n";
 			$msg .= "-f\tTries to evaluate all pairs. Do not use if its possible to exceed CPU time limit or run out of memory.\n";
 			
 			echo $msg;

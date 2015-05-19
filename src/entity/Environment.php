@@ -20,6 +20,9 @@
 		// CSV file after third phase
 		private $shallowOutput = null;
 		
+		// Pairs for deeper analysis
+		private $depthAnalysisPairs = null;
+		
 		####################################  METHODS  ##################################
 		
 		/**
@@ -31,7 +34,7 @@
 		public function createPage($startIndex, $count) {
 			$page = array();
 			(count($this->matchedPairs) < $count) ? $finalCount = count($this->matchedPairs) : $finalCount = $count;
-			for ($i = $startIndex; $i < $startIndex * $finalCount; $i++) {
+			for ($i = $startIndex - 1; $i < $startIndex * $finalCount; $i++) {
 				$page[] = $this->matchedPairs[$i];
 			}
 			$this->matchedPairs = $page;
@@ -69,6 +72,14 @@
 		
 		public function setShallowOutput($shallowOutput) {
 			$this->shallowOutput = $shallowOutput;
+		}
+		
+		public function getDepthAnalysisPairs() {
+			return $this->depthAnalysisPairs;
+		}
+		
+		public function setDepthAnalysisPairs($depthAnalysisPairs) {
+			$this->depthAnalysisPairs = $depthAnalysisPairs;
 		}
 		
 	}

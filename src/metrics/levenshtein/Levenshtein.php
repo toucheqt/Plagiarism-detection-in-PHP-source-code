@@ -30,11 +30,8 @@
 						$abstractToken = 'T_COMMENT';
 						break;
 						
-					// String e.g. "foo"
+					// String constant e.g. "foo"
 					case T_CONSTANT_ENCAPSED_STRING: 
-						$abstractToken = 'T_VAR_STRING';
-						break;
-						
 					case T_DNUMBER:
 					case T_LNUMBER:
 					case T_NUM_STRING:
@@ -43,8 +40,8 @@
 						$abstractToken = 'T_VAR';
 						break;
 						
-					// variable in String e.g. "$foo"
-					case T_ENCAPSED_AND_WHITESPACE:
+					// Variable in string e.g. "$foo"
+					case T_ENCAPSED_AND_WHITESPACE: 
 					case T_GLOBAL:
 						break;
 						

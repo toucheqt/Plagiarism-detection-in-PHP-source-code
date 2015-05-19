@@ -23,6 +23,22 @@
 			return false;
 		}
 		
+		/**
+		 * 
+		 * Searches for k-gram in the array with specified hash value.
+		 * @param $hash Hash value to search for.
+		 * @param $kGrams Array with k-grams.
+		 * @return $kGram Returns whole k-gram with specified hash.
+		 */
+		public static function findKGramByHash($hash, $kGrams) {
+			foreach ($kGrams as $kGram) {
+				if ($kGram[0] == $hash) {
+					return $kGram;
+				}
+			}
+			return null;
+		}
+		
 	}	
 
 ?>

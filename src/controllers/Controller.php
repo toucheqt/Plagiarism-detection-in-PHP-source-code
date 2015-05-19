@@ -48,6 +48,12 @@
 		if (is_null($environment))
 			exit();
 	}
+	
+	if ($arguments->getIsGlobalFlow() || $arguments->getIsEval() || $arguments->getIsStepFour()) {
+		$environment = processFourthPhase($arguments, $environment);
+		if (is_null($environment))
+			exit();
+	}
 		
 
 	#######################################  FUNCTIONS  #################################
@@ -160,19 +166,19 @@
 	 */
 	function processThirdPhase($arguments, $environment) {
 		
-		// load assignemnts if previous phases were not done
+		// load assignments if previous phases were not done
 		$environment = WorkerUtils::getJSONByArguments($arguments, $environment);
 		$matching = new Matching();
 		$output = array();
 	
 		if (is_null($environment->getMatchedPairs())) {
 			$environment->setMatchedPairs(FileUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
-		}
-		else if (!$arguments->getIsForce()) { // is force is false, create page 
+		} else if (!$arguments->getIsForce()) { // is force is false, create page 
 			$environment->createPage($arguments->getStartIndex(), $arguments->getCount());
 		}
 
 		// compare all pairs in page
+		$iterator = 0;
 		foreach ($environment->getMatchedPairs() as $matchedPair) {
 			try {
 				$pair = ArrayUtils::findAssignmentsByName($matchedPair[0], $matchedPair[1], $environment);
@@ -191,10 +197,19 @@
 			$tmpArray[] = $matching->getSimilarBlocks();
 			
 			$output[] = $tmpArray;
+			$iterator++;
+			if ($iterator % 100 == 0) {
+				Logger::info('Evaluated ' . $iterator . ' pairs of assignments. ');
+			}
 		}
 		
 		$environment->setShallowOutput($output);
-		FileUtils::saveToCSV($arguments->getOutputPath(), $arguments->getCSVOutputFilename(), $environment->getShallowOutput());
+		FileUtils::saveToCSV($arguments->getOutputPath(), $arguments->getCSVOutputFilename() . Constant::PATTERN_SHALLOW_EVAL, 
+				$environment->getShallowOutput());
+				
+		Logger::info('Shallow analysis is completed. ');
+				
+		return $environment;
 	}
 	
 	/**
@@ -205,6 +220,43 @@
 	 * @param $environment entity that might containt preprocessed assignments from earlier phases.
 	 */
 	function processFourthPhase($arguments, $environment) {
+		
+		// load assignments if previous phases were not done
+		$environment = WorkerUtils::getJSONByArguments($arguments, $environment);
+		$matching = new Matching();
+		
+		if (is_null($environment->getShallowOutput())) {
+			$environment->setShallowOutput(FileUtils::getResultsFromCSV($arguments->getInputCSV()));
+		} 
+		
+		// get pairs for depth analysis
+		$depthAnalysisPairs = array();
+		foreach ($environment->getShallowOutput() as $pair) {
+			$percentage = explode(' ', $pair[2], 2);
+			if ($percentage[0] >= Constant::LEVENSHTEIN_SIMILARITY_PERCENT || $pair[3] > Constant::LEVENSHTEIN_MAX_BLOCKS) {
+				try {
+					$foundedPair = ArrayUtils::findAssignmentsByName($pair[0], $pair[1], $environment);
+				} catch (UnexpectedValueException $ex) {
+					Logger::error('Could not find projects: ' . $pair[0] . ', ' .$pair[1]);
+					continue;
+				}
+				
+				$matching->evaluateWinnowing($foundedPair->getFirstAssignment(), $foundedPair->getSecondAssignment());
+				$output = array();
+				$output[] = $pair[0];
+				$output[] = $pair[1];
+				$output[] = $pair[2];
+				foreach ($matching->getSimilarityHashes() as $hash) {
+					$output[] = $hash;
+				}
+				if (!is_null($matching->getSimilarityHashes()) && count($matching->getSimilarityHashes()) > 0)
+					$depthAnalysisPairs[] = $output;
+			} 
+		}
+		
+		FileUtils::saveToCSV($arguments->getOutputPath(), $arguments->getCSVOutputFilename() . Constant::PATTERN_DEPTH_EVAL, $depthAnalysisPairs);
+		
+		Logger::info('Depth analysis is completed. ');
 		
 	}
 	
