@@ -6,3 +6,6 @@ where students deliberately perform semantics preserving transformations of an o
 working version to pass it of as their own. In order to detect such obfuscations we develop
 a tool in which we attempt to find transformations that have been applied, using several
 techniques and algorithms.
+
+Project is developed in PHP 5.3. Startup script Controller.php can be found in /src/controllers/. Thesis text can be found in /tex folder.
+All changeable parameters of the script that cant be modified throught script's arguments can be found in Constant.php file in /src/constants folder.
