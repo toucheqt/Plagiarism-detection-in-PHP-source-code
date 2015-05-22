@@ -223,7 +223,6 @@
 		
 		// load assignments if previous phases were not done
 		$environment = WorkerUtils::getJSONByArguments($arguments, $environment);
-		$matching = new Matching();
 		
 		if (is_null($environment->getShallowOutput())) {
 			$environment->setShallowOutput(FileUtils::getResultsFromCSV($arguments->getInputCSV()));
@@ -232,6 +231,7 @@
 		// get pairs for depth analysis
 		$depthAnalysisPairs = array();
 		foreach ($environment->getShallowOutput() as $pair) {
+      $matching = new Matching();
 			$percentage = explode(' ', $pair[2], 2);
 			if ($percentage[0] >= Constant::LEVENSHTEIN_SIMILARITY_PERCENT || $pair[3] > Constant::LEVENSHTEIN_MAX_BLOCKS) {
 				try {
