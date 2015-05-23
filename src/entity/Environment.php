@@ -33,9 +33,10 @@
 		 */
 		public function createPage($startIndex, $count) {
 			$page = array();
+			if ($startIndex < 1) $startIndex = 1;
 			(count($this->matchedPairs) < $count) ? $finalCount = count($this->matchedPairs) : $finalCount = $count;
 			for ($i = $startIndex - 1; $i < $startIndex * $finalCount; $i++) {
-				$page[] = $this->matchedPairs[$i];
+				@$page[] = $this->matchedPairs[$i];
 			}
 			$this->matchedPairs = $page;
 		}

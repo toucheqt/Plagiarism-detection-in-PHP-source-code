@@ -51,6 +51,8 @@
 					$arguments->setIsEval(true);
 				} else if (!strcmp($arg, Constant::ARG_GEN_PHASE)) {
 					$arguments->setIsGenerateFiles(true);
+				} else if (!strcmp($arg, Constant::ARG_DEBUG)) {
+					$arguments->setIsDebug(true);
 				} else if (!strcmp($arg, Constant::ARG_COMMENTS)) {
 					$arguments->setIsRemoveComments(true);
 				} else if (!strcmp($arg, Constant::ARG_HELP) || !strcmp($arg, Constant::ARG_HELP_SHORT)) {

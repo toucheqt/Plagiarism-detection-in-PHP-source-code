@@ -178,6 +178,7 @@
 		}
 
 		// compare all pairs in page
+		Logger::info('Starting shallow analysis of assignments. ');
 		$iterator = 0;
 		foreach ($environment->getMatchedPairs() as $matchedPair) {
 			try {
@@ -198,8 +199,12 @@
 			
 			$output[] = $tmpArray;
 			$iterator++;
-			if ($iterator % 100 == 0) {
+			if ($iterator % Constant::INFO_COUNT == 0) {
 				Logger::info('Evaluated ' . $iterator . ' pairs of assignments. ');
+			}
+			
+			if ($arguments->getIsDebug()) {
+				Logger::info('Evaluated ' . $matchedPair[0] . ' - ' . $matchedPair[1] . ' ');
 			}
 		}
 		
@@ -224,6 +229,15 @@
 		// load assignments if previous phases were not done
 		$environment = WorkerUtils::getJSONByArguments($arguments, $environment);
 		
+		// validate inputCSV
+		if ($arguments->getIsStepFour()) {
+			$csv = explode('-shallow.csv', $arguments->getInputCSV());
+			if (count($csv) <= 1) {
+				Logger::warning('Expected CSV file with suffix -shallow. Are you sure that you are using correct CSV file for fourth phase? ');
+				Logger::warning('Assignments may not be evaluated correctly. ');
+			}
+		}
+		
 		if (is_null($environment->getShallowOutput())) {
 			$environment->setShallowOutput(FileUtils::getResultsFromCSV($arguments->getInputCSV()));
 		} 
@@ -231,9 +245,9 @@
 		// get pairs for depth analysis
 		$depthAnalysisPairs = array();
 		foreach ($environment->getShallowOutput() as $pair) {
-      $matching = new Matching();
-			$percentage = explode(' ', $pair[2], 2);
-			if ($percentage[0] >= Constant::LEVENSHTEIN_SIMILARITY_PERCENT || $pair[3] > Constant::LEVENSHTEIN_MAX_BLOCKS) {
+      	$matching = new Matching();
+			@$percentage = explode(' ', $pair[2], 2);
+			if (@$percentage[0] >= Constant::LEVENSHTEIN_SIMILARITY_PERCENT || @$pair[3] > Constant::LEVENSHTEIN_MAX_BLOCKS) {
 				try {
 					$foundedPair = ArrayUtils::findAssignmentsByName($pair[0], $pair[1], $environment);
 				} catch (UnexpectedValueException $ex) {

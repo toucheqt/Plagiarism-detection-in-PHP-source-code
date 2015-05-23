@@ -20,6 +20,7 @@
 		const ARG_EVAL_PHASE = '-e';
 		const ARG_GEN_PHASE = '-g';
 		const ARG_COMMENTS = '-c';
+		const ARG_DEBUG = '-d';
 		
 		const ARG_HELP = '--help';
 		const ARG_HELP_SHORT = '-h';
@@ -80,6 +81,7 @@
 		const WINNOW_WINDOW_SIZE = 10; // window size for document's fingerprints
 		const WINNOW_K_GRAM_SIZE = 20; // default size of the k-gram for document's fingerprints
 		const WINNOW_DISTANCE = 20; // variable sets the minimum distance between similar hashes in the source code
+		const INFO_COUNT = 100;
 		
 		#################################  CONSTRUCTORS  ################################
 		

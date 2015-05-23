@@ -44,6 +44,8 @@
 		
 		private $force = false;
 		
+		private $isDebug = null;
+		
 		#################################  CONSTRUCTORS  ################################
 		
 		public function __construct() {}
@@ -224,6 +226,14 @@
 		
 		public function setInputTemplatePath($inputTemplatePath) {
 			$this->inputTemplatePath = $inputTemplatePath;
+		}
+		
+		public function getIsDebug() {
+			return $this->isDebug;
+		}
+		
+		public function setIsDebug($isDebug) {
+			$this->isDebug = $isDebug;
 		}
 	}
 
