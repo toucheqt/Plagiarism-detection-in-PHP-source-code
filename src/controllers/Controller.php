@@ -173,9 +173,13 @@
 	
 		if (is_null($environment->getMatchedPairs())) {
 			$environment->setMatchedPairs(FileUtils::getFromCSV($arguments->getInputCSV(), $arguments->getStartIndex(), $arguments->getCount()));
+			if (is_null($environment->getMatchedPairs())) {
+				Logger::error('No input pairs in selected page. Quiting... ');
+				exit();
+			}
 		} else if (!$arguments->getIsForce()) { // is force is false, create page 
 			$environment->createPage($arguments->getStartIndex(), $arguments->getCount());
-		}
+		} 
 
 		// compare all pairs in page
 		Logger::info('Starting shallow analysis of assignments. ');

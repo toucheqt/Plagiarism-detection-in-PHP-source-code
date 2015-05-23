@@ -103,6 +103,7 @@
 			}
 			
 			// implements paging
+			if ($startIndex < 1) $startIndex = 1;
 			$skippedFiles = ($startIndex - 1) * $count;
 			try {
 				$tmpPairs = array();
@@ -110,8 +111,7 @@
 					$tmp = fgetcsv($fd);
 					if (!is_array($tmp)) {
 						fclose($fd);
-						Logger::info('CSV file was successfuly loaded. ');
-						return $tmpPairs;
+						return null;
 					} else {
 						$tmpPairs[] = $tmp;
 					}
