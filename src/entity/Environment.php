@@ -49,8 +49,7 @@
 			}
 			
 			if ($isEmpty) {
-				Logger::warning('There are no projects on selected page. Quiting...');
-				exit();
+				Logger::warning('There are no projects on selected page. ');
 			}
 			
 			$this->matchedPairs = $page;
