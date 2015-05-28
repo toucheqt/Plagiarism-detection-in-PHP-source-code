@@ -32,12 +32,27 @@
 		 * @param $count Number of pairs per page.
 		 */
 		public function createPage($startIndex, $count) {
-			$page = array();
-			if ($startIndex < 1) $startIndex = 1;
-			(count($this->matchedPairs) < $count) ? $finalCount = count($this->matchedPairs) : $finalCount = $count;
-			for ($i = $startIndex - 1; $i < $startIndex * $finalCount; $i++) {
-				@$page[] = $this->matchedPairs[$i];
+			$finalCount = 0;
+			$isEmpty = true;
+			foreach ($this->matchedPairs as $iterable) {
+				$finalCount++;
 			}
+			$page = array();
+			if ($startIndex < 0) $startIndex = 0;
+			($finalCount < $count) ? $finalCount = count($this->matchedPairs) : $finalCount = $count;
+			
+			for ($i = $startIndex * $count; $i < ($startIndex * $count) + $count; $i++) {
+				if (@!is_null($this->matchedPairs[$i])) {
+					$page[] = $this->matchedPairs[$i];
+					$isEmpty = false;
+				}
+			}
+			
+			if ($isEmpty) {
+				Logger::warning('There are no projects on selected page. Quiting...');
+				exit();
+			}
+			
 			$this->matchedPairs = $page;
 		}
 		

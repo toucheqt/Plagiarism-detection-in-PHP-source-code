@@ -211,7 +211,7 @@
 				Logger::info('Evaluated ' . $matchedPair[0] . ' - ' . $matchedPair[1] . ' ');
 			}
 		}
-		
+
 		$environment->setShallowOutput($output);
 		FileUtils::saveToCSV($arguments->getOutputPath(), $arguments->getCSVOutputFilename() . Constant::PATTERN_SHALLOW_EVAL, 
 				$environment->getShallowOutput());

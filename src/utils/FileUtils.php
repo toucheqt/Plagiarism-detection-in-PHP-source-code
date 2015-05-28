@@ -123,7 +123,10 @@
 			
 			$matchedPairs = array();
 			for ($i = 0; $i < $count; $i++) {
-				$matchedPairs[] = fgetcsv($fd);
+				$pair = fgetcsv($fd);
+				if (!empty($pair)) {
+					$matchedPairs[] = $pair;
+				}
 			}
 			
 			fclose($fd);
